@@ -18,10 +18,17 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Bootstrap poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python - -y
+
+      - name: Configure poetry
+        run: poetry config virtualenvs.in-project true
+
       - name: Install dependencies
         run: |
-          poetry install
+          poetry install --with github-actions
 
       - name: Run tests
         run: |
-          pytest
+          poetry run pytest
