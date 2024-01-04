@@ -16,6 +16,13 @@ uvicorn = "^0.25.0"
 pytest = "^7.4.4"
 coverage = "^7.4.0"
 
+# only used in github actions
+[tool.poetry.group.github-actions]
+optional = true
+[tool.poetry.group.github-actions.dependencies]
+pytest-github-actions-annotate-failures = "^0.1.7"
+
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
