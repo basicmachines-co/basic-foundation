@@ -1,9 +1,10 @@
 # basic-foundation
+
 Opinionated Foundation Boilerplate for a SaaS Platform
 
-* Boring tech 
+* Boring tech
 * Reproducible builds
-* Development flow 
+* Development flow
 * 100% test coverage
 * Easy to extend
 
@@ -15,40 +16,26 @@ Opinionated Foundation Boilerplate for a SaaS Platform
 
 ## Getting started
 
-### Install Hatch 
+### Install Poetry
 
-https://hatch.pypa.io/latest/install/
-
-Using homebrew (OS X)
 ```bash
-brew install hatch
+curl -sSL https://install.python-poetry.org | python -
 ```
 
-Create a new project
-```bash
- hatch new "basic-api" 
-```
+Set the virtual env to be local to the project
 
 ```
-basic-api
-├── src
-│   └── basic_api
-│       ├── __about__.py
-│       └── __init__.py
-├── tests
-│   └── __init__.py
-├── LICENSE.txt
-├── README.md
-└── pyproject.toml
+virtualenvs.in-project
 ```
 
 cd basic-api
 
 ```bash
-hatch env create
+poetry init
 ```
 
-enter shell 
+enter shell
+
 ```bash
 hatch shell
 ```
