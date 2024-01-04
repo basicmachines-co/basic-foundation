@@ -15,6 +15,7 @@ uvicorn = "^0.25.0"
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.4"
 coverage = "^7.4.0"
+httpx = "^0.26.0"
 
 # only used in github actions
 [tool.poetry.group.github-actions]
