@@ -25,14 +25,12 @@ jobs:
       - name: Configure poetry
         run: poetry config virtualenvs.in-project true
 
-      - name: cd to basic-api
-        run: |
-          cd basic-api
-
       - name: Install dependencies
         run: |
+          cd basic-api
           poetry install --with github-actions
 
       - name: Run tests
         run: |
+          cd basic-api
           poetry run pytest
