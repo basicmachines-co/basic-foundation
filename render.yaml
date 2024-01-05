@@ -4,7 +4,7 @@ services:
     env: python
     plan: starter
     buildCommand: cd basic-api && poetry install
-    startCommand: uvicorn main:app --host 0.0.0.0 --port 10000
+    startCommand: uvicorn basic_api.main:app --host 0.0.0.0 --port 10000
 
     envVars:
       - key: POETRY_VERSION
