@@ -53,3 +53,12 @@ uvicorn basic_api.main:app --reload
 * Signup/Login to render.com dashboard
 * Select "New Blueprint"
 * Choose the basic-foundation repo from the list and click the "Connect" button
+* View the service on the [dashboard](https://dashboard.render.com/)
+
+Further steps:
+
+* View service details, enable preview environments
+* Enable health checks
+* Disable auto-deploy on git commit
+* Add render deploy hook to github pipeline for git commit
+* Use Docker builds and deploys for render
