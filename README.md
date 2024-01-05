@@ -37,5 +37,19 @@ poetry init
 enter shell
 
 ```bash
-hatch shell
+poetry shell
 ```
+
+## start service
+
+cd basic-api/src
+
+```bash
+uvicorn basic_api.main:app --reload
+```
+
+## deploy to render.com
+
+* Signup/Login to render.com dashboard
+* Select "New Blueprint"
+* Choose the basic-foundation repo from the list and click the "Connect" button
