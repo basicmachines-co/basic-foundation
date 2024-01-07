@@ -16,7 +16,30 @@ Opinionated Foundation Boilerplate for a SaaS Platform
 
 ## Getting started
 
-### Install Poetry
+### Setup the api
+
+Install pyenv
+https://github.com/pyenv/pyenv
+
+```bash
+brew update
+brew install pyenv 
+eval "$(pyenv init -)"
+```
+
+Install python
+
+```bash
+pyenv install 3.12 
+```
+
+set the local dir to use the python version
+
+```bash
+pyenv local 3.12 
+```
+
+Install Poetry
 
 ```bash
 curl -sSL https://install.python-poetry.org | python -
@@ -25,7 +48,7 @@ curl -sSL https://install.python-poetry.org | python -
 Set the virtual env to be local to the project
 
 ```
-virtualenvs.in-project
+poetry config virtualenvs.in-project true
 ```
 
 cd basic-api
@@ -34,7 +57,7 @@ cd basic-api
 poetry init
 ```
 
-enter shell
+enter the poetry shell
 
 ```bash
 poetry shell
@@ -47,6 +70,33 @@ cd basic-api/src
 ```bash
 uvicorn basic_api.main:app --reload
 ```
+
+### Setup the frontend
+
+Install node.js (currently v21.5.0)
+
+```bash
+brew install node
+```
+
+Install pnpm
+
+```bash
+npm install -g pnpm 
+```
+
+Astro
+
+* enable https://github.com/getsentry/spotlight/blob/main/packages/astro/README.md
+* go through astro docs
+* add flowbite
+* add htmx
+* add flowbite admin
+
+Jinja2
+
+* enable jinja templates: https://fastapi.tiangolo.com/advanced/templates/
+*
 
 ## deploy to render.com
 
