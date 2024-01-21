@@ -1,12 +1,12 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="basic-api" type="Python.FastAPI">
-    <option name="file" value="$PROJECT_DIR$/basic-api/src/basic_api/main.py" />
+    <option name="file" value="$PROJECT_DIR$/basic-api/src/basic_api/app.py" />
     <module name="basic-foundation" />
     <option name="ENV_FILES" value="" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
-    <option name="SDK_HOME" value="$PROJECT_DIR$/venv/bin/python" />
-    <option name="SDK_NAME" value="Python 3.11 (basic-foundation)" />
+    <option name="SDK_HOME" value="$PROJECT_DIR$/basic-api/.venv/bin/python" />
+    <option name="SDK_NAME" value="Python 3.12 (basic-foundation)" />
     <option name="WORKING_DIRECTORY" value="" />
     <option name="IS_MODULE_SDK" value="true" />
     <option name="ADD_CONTENT_ROOTS" value="true" />
