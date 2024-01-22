@@ -1,3 +1,3 @@
-# SPDX-FileCopyrightText: 2024-present phernandez <phernandez@oleaedge.com>
+# SPDX-FileCopyrightText: 2024-present Basic Machines LLC
 #
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: Apache-2.0
