@@ -4,6 +4,12 @@ Saas platform api using fastapi
 
 todo:
 
-- [ ] deploy to render
+- [x] deploy to render
 - [ ] create docker file
-- [ ] add fastapi-users
+- [x] add fastapi-users
+- [x] transactional tests
+- [x] add fastapi-users endpoint tests
+- [ ] test coverage
+- [ ] frontend app
+- [ ] stripe integration
+- [ ] queueing 

@@ -1,13 +1,9 @@
-from typing import AsyncGenerator
-
 import pytest_asyncio
 from sqlalchemy import event
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
 
 from basic_api.db import engine
-
-# Replace with your actual database URL
 
 # Create a new instance of the engine
 AsyncTestingSessionLocal = sessionmaker(
