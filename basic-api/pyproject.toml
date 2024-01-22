@@ -22,6 +22,7 @@ coverage = "^7.4.0"
 httpx = "^0.26.0"
 
 # only used in github actions
+pytest-asyncio = "^0.23.3"
 [tool.poetry.group.github-actions]
 optional = true
 [tool.poetry.group.github-actions.dependencies]

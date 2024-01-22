@@ -160,4 +160,4 @@ cython_debug/
 #.idea/
 
 #sqllite db
-/basic-api.db
+basic-api.db
