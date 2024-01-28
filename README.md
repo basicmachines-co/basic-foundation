@@ -73,16 +73,34 @@ uvicorn basic_api.main:app --reload
 
 ### Setup the frontend
 
-Install node.js (currently v21.5.0)
+https://ahastack.dev/
+
+Install bun
+https://bun.sh/docs/installation
 
 ```bash
-brew install node
+brew tap oven-sh/bun # for macOS and Linux
+brew install bun
 ```
 
 Install pnpm
 
 ```bash
 npm install -g pnpm 
+```
+
+create astro app
+
+```shell
+pnpm create astro@latest
+```
+
+cd ./basic-webapp
+
+install typescript types for bun
+
+```shell
+bun add -d @types/bun # dev dependency
 ```
 
 Astro

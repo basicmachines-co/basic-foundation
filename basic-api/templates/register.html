@@ -1,0 +1,23 @@
+<html>
+<head>
+    <title>Register</title>
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+</head>
+<body>
+
+
+{% for error in errors %}
+<div class="alert alert-danger">
+    <li>{{error}}</li>
+</div>
+
+{% endfor %}
+<form action="/register" method="POST">
+    <input name="email" placeholder="Email" type="text">
+    <input name="password" placeholder="Password" type="password">
+    <button type="submit">Register</button>
+</form>
+
+
+</body>
+</html>
