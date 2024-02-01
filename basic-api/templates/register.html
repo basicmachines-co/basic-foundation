@@ -1,23 +1,19 @@
-<html>
-<head>
-    <title>Register</title>
-    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
-</head>
-<body>
+{% extends "base.html" %} {% block content %}
+<!-- REGISTRATION FORM -->
+<div class="container" id="register">
+    <div class="row">
+        <div class="row col s4">
+            <h3>Register!</h3>
+        </div>
 
+        {% include 'register-form.html' %}
 
-{% for error in errors %}
-<div class="alert alert-danger">
-    <li>{{error}}</li>
+        <div class="row col s4">
+            <p>
+                Already have an Account? <a class="" href="/">Login here.</a>
+            </p>
+        </div>
+    </div>
 </div>
-
-{% endfor %}
-<form action="/register" method="POST">
-    <input name="email" placeholder="Email" type="text">
-    <input name="password" placeholder="Password" type="password">
-    <button type="submit">Register</button>
-</form>
-
-
-</body>
-</html>
+<!-- END REGISTRATION FORM -->
+{% endblock %}

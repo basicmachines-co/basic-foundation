@@ -5,11 +5,23 @@ Saas platform api using fastapi
 todo:
 
 - [x] deploy to render
-- [ ] create docker file
 - [x] add fastapi-users
 - [x] transactional tests
 - [x] add fastapi-users endpoint tests
+- [ ] cleanup app.py - split users into module/apirouter
+- [x] add htmx
+- [ ] add styling - tailwind/flowbite
+- [ ] jinjaX - https://jinjax.scaletti.dev/
+- [ ] csrf - https://github.com/simonw/asgi-csrf
+- [ ] dockerfile
+- [ ] postgres instead of sqlite
+- [ ] migrations
+- [ ] cicd
 - [ ] test coverage
-- [ ] frontend app
 - [ ] stripe integration
-- [ ] queueing 
+- [ ] webhooks
+- [ ] queueing
+
+refs:
+
+- https://github.com/mjhea0/awesome-fastapi

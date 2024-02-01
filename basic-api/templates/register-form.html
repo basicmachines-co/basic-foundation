@@ -1,0 +1,50 @@
+<form
+        class="col s12"
+        hx-post="/register"
+        hx-swap="innerHTML"
+        method="post"
+>
+    <div class="row" id="errors">
+        {% for i in errors %}
+        <p>{{ i }}</p>
+        {% endfor %}
+
+    </div>
+    <div class="row">
+        <div class="input-field col s12">
+            <input
+                    class="validate"
+                    id="email"
+                    name="email"
+                    type="email"
+            />
+            <label for="email">Email</label>
+            <span
+                    class="helper-text"
+                    data-error="Please enter a valid email."
+                    data-success=""
+            ></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12">
+            <input
+                    class="validate"
+                    id="password"
+                    name="password"
+                    type="password"
+            />
+            <label for="password">Password</label>
+        </div>
+    </div>
+    <div class="row col s4">
+        <button
+                class="btn waves-effect waves-light indigo darken-2"
+                name="action"
+                type="submit"
+        >
+            Register
+            <i class="material-icons right">send</i>
+        </button>
+    </div>
+</form>

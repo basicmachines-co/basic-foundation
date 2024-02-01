@@ -1,8 +1,15 @@
 import uuid
-from typing import Optional
+from typing import Optional, Union
 
 from fastapi import Depends, Request
-from fastapi_users import BaseUserManager, FastAPIUsers, UUIDIDMixin
+from fastapi_users import (
+    BaseUserManager,
+    FastAPIUsers,
+    UUIDIDMixin,
+    schemas,
+    models,
+    InvalidPasswordException,
+)
 from fastapi_users.authentication import (
     AuthenticationBackend,
     BearerTransport,
@@ -47,6 +54,12 @@ async def get_user_db(session: AsyncSession = Depends(get_async_session)):
 
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
+    async def validate_password(
+        self, password: str, user: Union[schemas.UC, models.UP]
+    ) -> None:
+        if len(password) < 3:
+            raise InvalidPasswordException(reason="Password must be > 3")
+
     reset_password_token_secret = SECRET
     verification_token_secret = SECRET
 
@@ -73,3 +86,7 @@ fastapi_users = FastAPIUsers[User, uuid.UUID](
 )
 
 current_active_user = fastapi_users.current_user(active=True)
+
+
+async def get_cookie_backend():
+    yield cookie_backend
