@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Flowbite Flask</title>
-    <link href="/static/dist/css/output.css" rel="stylesheet">
+    <title>{{ title }}</title>
 </head>
 <body>
+{% block content }
+{{ other }}
 
-
-{% block content %} {% endblock %}
 <!-- Load from unpkg -->
 <script src="https://unpkg.com/htmx.org@1.7.0"></script>
 <script src="https://unpkg.com/flowbite@2.2.1/dist/flowbite.js"></script>
