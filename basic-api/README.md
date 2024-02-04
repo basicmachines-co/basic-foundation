@@ -25,3 +25,6 @@ todo:
 refs:
 
 - https://github.com/mjhea0/awesome-fastapi
+
+tailwind
+https://github.com/themesberg/tailwind-flask-starter

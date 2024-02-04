@@ -161,3 +161,4 @@ cython_debug/
 
 #sqllite db
 basic-api.db
+/basic-api/node_modules/
