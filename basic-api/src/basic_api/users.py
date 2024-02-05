@@ -86,6 +86,7 @@ fastapi_users = FastAPIUsers[User, uuid.UUID](
 )
 
 current_active_user = fastapi_users.current_user(active=True)
+current_optional_user = fastapi_users.current_user(optional=True)
 
 
 async def get_cookie_backend():

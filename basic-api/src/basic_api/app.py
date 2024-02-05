@@ -1,31 +1,35 @@
 import os
 import uuid
 
-from fastapi import Depends, FastAPI, Request, Form
+from fastapi import Depends, FastAPI, Request, Form, Response
 from fastapi.security import OAuth2PasswordRequestForm
-from fastapi.templating import Jinja2Templates
 from fastapi_users import exceptions
 from fastapi_users.authentication import AuthenticationBackend, Strategy
+from jinja2.ext import DebugExtension
+from jinja2_fragments.fastapi import Jinja2Blocks
 from pydantic.error_wrappers import ValidationError
-from starlette.responses import HTMLResponse
+from starlette.responses import RedirectResponse
 from starlette.staticfiles import StaticFiles
 
 from basic_api.db import User, create_db_and_tables
 from basic_api.schemas import UserCreate, UserRead, UserUpdate
 from basic_api.users import (
     jwt_backend,
-    current_active_user,
     fastapi_users,
     get_user_manager,
     UserManager,
     get_cookie_backend,
+    current_optional_user,
 )
 
 CWD = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory=f"{CWD}/static"), name="static")
-templates = Jinja2Templates(directory=f"{CWD}/templates")
+templates = Jinja2Blocks(
+    directory=f"{CWD}/templates",
+)
+templates.env.add_extension(DebugExtension)
 
 app.include_router(
     fastapi_users.get_auth_router(jwt_backend), prefix="/auth/jwt", tags=["auth"]
@@ -53,20 +57,21 @@ app.include_router(
 
 
 @app.get("/")
-def index(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+async def index(request: Request, user=Depends(current_optional_user)):
+    if not user:
+        return RedirectResponse(url=app.url_path_for("login"))
 
-
-@app.get("/items/{id}", response_class=HTMLResponse)
-async def read_item(request: Request, id: str):
     return templates.TemplateResponse(
-        request=request, name="item.html", context={"id": id}
+        "pages/index.html.jinja",
+        {"request": request, "title": "Basic Foundation", "user": user.email},
     )
 
 
 @app.get("/register")
-def register(request: Request):
-    return templates.TemplateResponse("register.html", {"request": request})
+async def register(request: Request):
+    return templates.TemplateResponse(
+        "pages/register.html.jinja", {"request": request, "title": "Register"}
+    )
 
 
 @app.post("/register")
@@ -77,10 +82,10 @@ async def register(
     user_manager: UserManager = Depends(get_user_manager),
 ):
     errors = []
+    register_form = None
     try:
-        user = await user_manager.create(
-            UserCreate(email=email, password=password), safe=True, request=request
-        )
+        register_form = UserCreate(email=email, password=password)
+        user = await user_manager.create(register_form, safe=True, request=request)
         return templates.TemplateResponse(
             "success.html",
             {
@@ -98,13 +103,15 @@ async def register(
         errors.append(e.reason)
 
     return templates.TemplateResponse(
-        "register-form.html", {"request": request, "errors": errors}
+        "pages/register.html.jinja",
+        {"request": request, "errors": errors, "email": register_form.email},
+        block_name="register_form",
     )
 
 
 @app.get("/login")
-def register(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request})
+async def register(request: Request):
+    return templates.TemplateResponse("pages/login.html.jinja", {"request": request})
 
 
 @app.post(
@@ -120,42 +127,43 @@ async def login(
 
     if user is None or not user.is_active:
         return templates.TemplateResponse(
-            "error.html",
+            "pages/login.html.jinja",
             {
                 "request": request,
-                "detail": "Incorrect Username or Password",
+                "error": "Incorrect Username or Password",
                 "status_code": 401,
+                "username": form_data.username,
             },
+            block_name="login_form",
         )
 
     strategy: Strategy[User, uuid.UUID] = auth_backend.get_strategy()
     login_response = await auth_backend.login(strategy, user)
     await user_manager.on_after_login(user, request, login_response)
 
-    return templates.TemplateResponse(
-        "success.html",
-        {
-            "request": request,
-            "USERNAME": user.email,
-            "success_msg": "Welcome back! ",
-            "path_route": "/private/",
-            "path_msg": "Go to your private page!",
-        },
-        headers=login_response.headers,
+    login_response.headers["HX-Redirect"] = app.url_path_for("index")
+    return Response(headers=login_response.headers)
+
+
+@app.get("/logout")
+async def logout(
+    request: Request,
+    user_token=Depends(fastapi_users.authenticator.current_user_token(optional=True)),
+    auth_backend: AuthenticationBackend = Depends(get_cookie_backend),
+):
+    # if the user is not logged in, redirect to index
+    user, token = user_token
+    if not user:
+        response = RedirectResponse(url=app.url_path_for("index"))
+        return response
+
+    # clear cookie
+    logout_response = await auth_backend.logout(
+        auth_backend.get_strategy(), user, token
     )
-
-
-@app.get("/authenticated-route")
-async def authenticated_route(user: User = Depends(current_active_user)):
-    return {"message": f"Hello {user.email}!"}
-
-
-@app.get("/private/", response_class=HTMLResponse)
-async def private(request: Request, user: User = Depends(current_active_user)):
-    try:
-        return templates.TemplateResponse("private.html", {"request": request})
-    except:
-        raise Exception()
+    return RedirectResponse(
+        url=app.url_path_for("index"), headers=logout_response.headers
+    )
 
 
 @app.on_event("startup")

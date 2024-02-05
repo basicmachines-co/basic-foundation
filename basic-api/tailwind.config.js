@@ -2,7 +2,7 @@
 module.exports = {
     darkMode: 'class',
     content: [
-        "./templates/**/*.html",
+        "./templates/**/*.html.jinja",
         "./static/src/**/*.js",
         "./node_modules/flowbite/**/*.js"
     ],
