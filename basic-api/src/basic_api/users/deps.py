@@ -1,27 +1,20 @@
 import uuid
-from typing import Optional, Union
 
-from fastapi import Depends, Request
-from fastapi_users import (
-    BaseUserManager,
-    FastAPIUsers,
-    UUIDIDMixin,
-    schemas,
-    models,
-    InvalidPasswordException,
-)
+from fastapi import Depends
+from fastapi_users import FastAPIUsers
 from fastapi_users.authentication import (
     AuthenticationBackend,
     BearerTransport,
     JWTStrategy,
     CookieTransport,
 )
-from fastapi_users.db import SQLAlchemyUserDatabase
+from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from basic_api.db import User, get_async_session
-
-SECRET = "SECRET"
+from basic_api.config import SECRET
+from basic_api.deps import get_async_session
+from basic_api.users.managers import UserManager
+from basic_api.users.models import User
 
 bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
 cookie_transport = CookieTransport(cookie_max_age=3600)
@@ -43,6 +36,10 @@ cookie_backend = AuthenticationBackend(
 )
 
 
+async def get_cookie_backend():
+    yield cookie_backend
+
+
 async def get_user_db(session: AsyncSession = Depends(get_async_session)):
     """
     Retrieve the fastapi-users SQLAlchemyUserDatabase for the provided session.
@@ -51,30 +48,6 @@ async def get_user_db(session: AsyncSession = Depends(get_async_session)):
     :return: The SQLAlchemyUserDatabase instance.
     """
     yield SQLAlchemyUserDatabase(session, User)
-
-
-class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
-    async def validate_password(
-        self, password: str, user: Union[schemas.UC, models.UP]
-    ) -> None:
-        if len(password) < 3:
-            raise InvalidPasswordException(reason="Password must be > 3")
-
-    reset_password_token_secret = SECRET
-    verification_token_secret = SECRET
-
-    async def on_after_register(self, user: User, request: Optional[Request] = None):
-        print(f"User {user.id} has registered.")
-
-    async def on_after_forgot_password(
-        self, user: User, token: str, request: Optional[Request] = None
-    ):
-        print(f"User {user.id} has forgot their password. Reset token: {token}")
-
-    async def on_after_request_verify(
-        self, user: User, token: str, request: Optional[Request] = None
-    ):
-        print(f"Verification requested for user {user.id}. Verification token: {token}")
 
 
 async def get_user_manager(user_db: SQLAlchemyUserDatabase = Depends(get_user_db)):
@@ -87,7 +60,3 @@ fastapi_users = FastAPIUsers[User, uuid.UUID](
 
 current_active_user = fastapi_users.current_user(active=True)
 current_optional_user = fastapi_users.current_user(optional=True)
-
-
-async def get_cookie_backend():
-    yield cookie_backend

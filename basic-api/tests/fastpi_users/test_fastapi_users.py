@@ -62,7 +62,7 @@ async def test_app_client(
     def current_superuser(
         user: UserModel = Depends(
             fastapi_users.current_user(active=True, superuser=True)
-        )
+        ),
     ):
         return user
 
