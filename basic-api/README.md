@@ -18,13 +18,14 @@ todo:
 - [-] jinjaX - https://jinjax.scaletti.dev/
 - [ ] fix registration flow
 - [ ] csrf - https://github.com/simonw/asgi-csrf
+- [ ] upgrade to pydantic v2 (newer fastapi?)
 - [ ] .env for config
 - [ ] view profile
 - [ ] crud users
 - [ ] forgot password flow
 - [ ] mailapi - sendgrid?
-- [ ] ruff
-- [ ] makefile
+- [x] ruff
+- [x] makefile
 - [ ] dockerfile - https://inboard.bws.bio/?
 - [ ] deploy docker to render
 - [ ] postgres instead of sqlite
