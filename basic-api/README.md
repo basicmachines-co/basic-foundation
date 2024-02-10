@@ -23,9 +23,10 @@ todo:
 - [x] postgres instead of sqlite
 - [x] fix registration flow
 - [x] fix tests
-- [ ] logging
+- [x] logging
 - [ ] configure postgres on render.com
 - [ ] configure postgres on gitlab actions
+- [ ] db migrations
 - [ ] playwright
 - [ ] test coverage
 - [ ] csrf - https://github.com/simonw/asgi-csrf
@@ -41,7 +42,6 @@ todo:
     - https://pramod4040.medium.com/fastapi-forget-password-api-setup-632ab90ba958
 - [ ] dockerfile - https://inboard.bws.bio/?
 - [ ] deploy docker to render
-- [ ] migrations
 - [ ] cicd deployment pipeline
 - [ ] branch deploys
 - [ ] stripe integration

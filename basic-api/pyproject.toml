@@ -46,3 +46,9 @@ build-backend = "poetry.core.masonry.api"
 pythonpath = [
     ".", "src",
 ]
+markers = [
+    "fastapi_users",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning:",
+]

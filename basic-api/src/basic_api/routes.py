@@ -6,7 +6,7 @@ from fastapi_users import exceptions
 from fastapi_users.authentication import AuthenticationBackend, Strategy
 from jinja2.ext import DebugExtension
 from jinja2_fragments.fastapi import Jinja2Blocks
-from pydantic.error_wrappers import ValidationError
+from pydantic import ValidationError
 from starlette.responses import RedirectResponse, HTMLResponse
 
 from basic_api.config import BASE_DIR

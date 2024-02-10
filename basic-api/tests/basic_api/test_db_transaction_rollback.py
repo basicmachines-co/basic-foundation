@@ -30,9 +30,9 @@ async def test_sync_session():
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
-    async with async_session() as session:
-        async with session.begin():
-            session.add_all(
+    async with async_session() as sess:
+        async with sess.begin():
+            sess.add_all(
                 [
                     ExampleModel(id=1, name="Test Name"),
                 ]
@@ -40,19 +40,19 @@ async def test_sync_session():
 
         stmt = select(ExampleModel)
 
-        result = await session.execute(stmt)
+        result = await sess.execute(stmt)
 
         for a1 in result.scalars():
             print(a1)
             print(f"created at: {a1.id}")
 
-        result = await session.execute(select(ExampleModel))
+        result = await sess.execute(select(ExampleModel))
 
         a1 = result.scalars().first()
 
         a1.name = "new data"
 
-        await session.commit()
+        await sess.commit()
 
         # access attribute subsequent to commit; this is what
         # expire_on_commit=False allows
@@ -72,7 +72,7 @@ def event_loop(request):
     loop.close()
 
 
-@pytest_asyncio.fixture(scope="session")
+@pytest_asyncio.fixture(autouse=True)
 async def setup_database(event_loop) -> AsyncGenerator[AsyncSession, None]:
     # Create the tables
     async with engine.begin() as conn:
@@ -80,19 +80,19 @@ async def setup_database(event_loop) -> AsyncGenerator[AsyncSession, None]:
         await conn.run_sync(Base.metadata.create_all)
 
     # Insert test data
-    async with async_session() as session:
-        async with session.begin():
+    async with async_session() as sess:
+        async with sess.begin():
             test_instance = ExampleModel(id=1, name="Test Name")
-            session.add(test_instance)
+            sess.add(test_instance)
 
-        yield session
+        yield sess
 
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
 
 
 @pytest.mark.asyncio
-async def test_example(session: AsyncSession, setup_database):
+async def test_example(session: AsyncSession):
     # Assume there's an entry in ExampleModel with id 1
     test_id = 1
     new_name = "Updated Name"
