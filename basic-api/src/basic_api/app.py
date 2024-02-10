@@ -1,14 +1,21 @@
+import sys
+
 from fastapi import FastAPI
+from loguru import logger
 from starlette.staticfiles import StaticFiles
 
-from basic_api.config import CWD
+from basic_api.config import BASE_DIR
 from basic_api.db import create_db_and_tables
 from basic_api.routes import html_router
 from basic_api.users.routes import auth_router, user_router
 
+# delete all existing default loggers
+logger.remove()
+logger.add(sys.stderr, colorize=True, backtrace=True, diagnose=True)
+
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory=f"{CWD}/static"), name="static")
+app.mount("/static", StaticFiles(directory=f"{BASE_DIR}/static"), name="static")
 
 app.include_router(auth_router, prefix="/api")
 app.include_router(user_router, prefix="/api")

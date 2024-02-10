@@ -9,12 +9,12 @@ from jinja2_fragments.fastapi import Jinja2Blocks
 from pydantic.error_wrappers import ValidationError
 from starlette.responses import RedirectResponse, HTMLResponse
 
-from basic_api.config import CWD
+from basic_api.config import BASE_DIR
 from basic_api.users.deps import (
-    current_optional_user,
     get_cookie_backend,
     fastapi_users,
     get_user_manager,
+    current_optional_user,
 )
 from basic_api.users.managers import UserManager
 from basic_api.users.models import User
@@ -25,7 +25,7 @@ html_router = APIRouter(
 )
 
 templates = Jinja2Blocks(
-    directory=f"{CWD}/templates",
+    directory=f"{BASE_DIR}/templates",
 )
 templates.env.add_extension(DebugExtension)
 
@@ -34,10 +34,9 @@ templates.env.add_extension(DebugExtension)
 async def index(request: Request, user=Depends(current_optional_user)):
     if not user:
         return RedirectResponse(url=html_router.url_path_for("login"))
-
     return templates.TemplateResponse(
         "pages/index.html.jinja",
-        {"request": request, "title": "Basic Foundation", "user": user.email},
+        {"request": request, "title": "Basic Foundation", "user": user},
     )
 
 
