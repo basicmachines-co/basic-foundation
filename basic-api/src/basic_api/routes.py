@@ -53,21 +53,14 @@ async def register_post(
     email: str = Form(),
     password: str = Form(),
     user_manager: UserManager = Depends(get_user_manager),
+    auth_backend: AuthenticationBackend = Depends(get_cookie_backend),
 ):
     errors = []
     register_form = None
     try:
         register_form = UserCreate(email=email, password=password)
-        await user_manager.create(register_form, safe=True, request=request)
-        return templates.TemplateResponse(
-            "success.html",
-            {
-                "request": request,
-                "success_msg": "Registration Successful!",
-                "path_route": "/",
-                "path_msg": "Click here to login!",
-            },
-        )
+        user = await user_manager.create(register_form, safe=True, request=request)
+        return await login_user(request, user, user_manager, auth_backend)
     except ValidationError:
         errors.append("Validation Error")
     except exceptions.UserAlreadyExists:
@@ -108,10 +101,13 @@ async def login_post(
             block_name="login_form",
         )
 
+    return await login_user(request, user, user_manager, auth_backend)
+
+
+async def login_user(request, user, user_manager, auth_backend):
     strategy: Strategy[User, uuid.UUID] = auth_backend.get_strategy()
     login_response = await auth_backend.login(strategy, user)
     await user_manager.on_after_login(user, request, login_response)
-
     login_response.headers["HX-Redirect"] = html_router.url_path_for("index")
     return Response(headers=login_response.headers)
 
