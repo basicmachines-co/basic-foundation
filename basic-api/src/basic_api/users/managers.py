@@ -10,8 +10,10 @@ from fastapi_users import (
     InvalidPasswordException,
 )
 
-from basic_api.config import SECRET
+from basic_api import config
 from basic_api.users.models import User
+
+SECRET = config.settings.jwt_secret
 
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
