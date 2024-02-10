@@ -24,8 +24,8 @@ todo:
 - [x] fix registration flow
 - [x] fix tests
 - [x] logging
+- [x] configure postgres on gitlab actions
 - [ ] configure postgres on render.com
-- [ ] configure postgres on gitlab actions
 - [ ] db migrations
 - [ ] playwright
 - [ ] test coverage
