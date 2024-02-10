@@ -11,6 +11,21 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: api
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s 
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
@@ -29,6 +44,10 @@ jobs:
         run: |
           cd basic-api
           poetry install --with github-actions
+
+      - name: Create CI .env file
+        run: |
+          cp .env.ci .env
 
       - name: Run tests
         run: |
