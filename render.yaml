@@ -9,3 +9,10 @@ services:
     envVars:
       - key: POETRY_VERSION
         value: 1.7.1
+
+databases:
+  - name: basic-api-postgres
+    databaseName: api
+
+envVarGroups:
+  - name: dev
