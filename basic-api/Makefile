@@ -1,6 +1,6 @@
 include ../.env
 
-.PHONY: install test clean lint format lint-fix
+.PHONY: install test clean lint lint-fix format  migrate-new migrate-up migrate-down migrate-dump migrate-resetØ
 
 install:
 	poetry install
@@ -24,7 +24,6 @@ format:
 
 tailwind:
 	npx tailwindcss -i ./static/src/input.css -o ./static/dist/css/output.css
-
 
 # Database migrations
 
