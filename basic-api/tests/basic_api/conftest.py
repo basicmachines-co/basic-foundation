@@ -16,8 +16,18 @@ AsyncTestingSessionLocal = sessionmaker(
 @pytest_asyncio.fixture
 async def async_db_session_rollback() -> AsyncGenerator[AsyncSession, None]:
     """
-    Yields an async SQLAlchemy session that rolls back at the end of each test function.
-    See: https://docs.sqlalchemy.org/en/14/orm/session_transaction.html#joining-a-session-into-an-external-transaction-such-as-for-test-suites
+    Creates a database session with rollback functionality.
+
+    This method:
+    1. Creates a connection to the database.
+    2. Begins a transaction.
+    3. Starts a SQLAlchemy session using the created connection.
+    4. Begins a nested transaction within the session using the connection.
+    5. Registers a listener to restart the nested transaction on commit.
+    6. Yields the session to run tests.
+    7. Once the tests are done, rolls back the transaction and closes the session.
+
+    :return: An asynchronous generator that yields the session.
     """
 
     # create a connection
@@ -55,5 +65,7 @@ async def async_db_session_rollback() -> AsyncGenerator[AsyncSession, None]:
 
 @pytest_asyncio.fixture
 async def session(async_db_session_rollback) -> AsyncGenerator[AsyncSession, None]:
-    """Alias fixture name for tests"""
+    """
+    Alias async_db_session_rollback fixture name for tests
+    """
     yield async_db_session_rollback
