@@ -8,13 +8,17 @@ from basic_api.db import async_session
 
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
+    """
+    :return: An asynchronous generator that yields an AsyncSession object.
+    :rtype: AsyncGenerator[AsyncSession, None]
+    """
     async with async_session() as session:
         yield session
 
 
 async def log_request(request: Request):
     """
-    Log all requst info. Can be added to a router or a route
+    Log all request info. Can be added to a router or a route
     `dependencies=[Depends(log_request)]`
     """
     logger.debug(f"{request.method} {request.url}")

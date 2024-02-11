@@ -24,5 +24,10 @@ app.include_router(html_router, tags=["html"])
 
 @app.on_event("startup")
 async def on_startup():
+    """
+    Set up tasks to be executed on application startup.
+
+    :return: None
+    """
     # Not needed if you set up a migration system like Alembic
     logger.info(f"Welcome to {config.settings.app_name}")

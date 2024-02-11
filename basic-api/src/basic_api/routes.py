@@ -32,6 +32,16 @@ templates.env.add_extension(DebugExtension)
 
 @html_router.get("/", response_class=HTMLResponse)
 async def index(request: Request, user=Depends(current_optional_user)):
+    """
+    :param request: Request object representing the HTTP request.
+    :param user: Optional user object representing the current user.
+    :return: A TemplateResponse object representing the HTML response.
+
+    The index function handles the root route ("/"). It expects a Request object and an optional user object as
+    parameters. If the user object is not provided, the function redirects the * user to the login page. Otherwise,
+    it returns a TemplateResponse object that renders the "pages/index.html.jinja" template. The TemplateResponse
+    object includes the request object *, the title "Basic Foundation", and the user object as template variables.
+    """
     if not user:
         return RedirectResponse(url=html_router.url_path_for("login"))
     return templates.TemplateResponse(
@@ -42,6 +52,15 @@ async def index(request: Request, user=Depends(current_optional_user)):
 
 @html_router.get("/register", response_class=HTMLResponse)
 async def register(request: Request):
+    """
+    Register Method
+
+    This method is used to handle the GET request for the "/register" route.
+    It returns a template response for the registration page.
+
+    :param request: The request object representing the HTTP request.
+    :return: The template response object for the registration page.
+    """
     return templates.TemplateResponse(
         "pages/register.html.jinja", {"request": request, "title": "Register"}
     )

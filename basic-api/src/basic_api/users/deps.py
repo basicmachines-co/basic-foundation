@@ -1,5 +1,4 @@
 import uuid
-from typing import Annotated
 
 from fastapi import Depends
 from fastapi_users import FastAPIUsers
@@ -24,6 +23,12 @@ cookie_transport = CookieTransport(
 
 
 def get_jwt_strategy() -> JWTStrategy:
+    """
+    Returns a JWTStrategy object with the specified secret and lifetime.
+
+    :return: The JWTStrategy object.
+    :rtype: JWTStrategy
+    """
     return JWTStrategy(secret=config.settings.jwt_secret, lifetime_seconds=3600)
 
 
@@ -40,27 +45,39 @@ cookie_backend = AuthenticationBackend(
 
 
 async def get_cookie_backend():
+    """
+    Returns the cookie backend.
+
+    :return: A generator that yields the cookie backend.
+    """
     yield cookie_backend
 
 
 async def get_user_db(session: AsyncSession = Depends(get_async_session)):
     """
-    Retrieve the fastapi-users SQLAlchemyUserDatabase for the provided session.
+    Retrieve the user database.
 
-    :param session: The asynchronous session used to interact with the database.
-    :return: The SQLAlchemyUserDatabase instance.
+    :param session: The async session to connect to the database.
+    :return: The user database object.
     """
     return SQLAlchemyUserDatabase(session, User)
 
 
 async def get_user_manager(user_db: SQLAlchemyUserDatabase = Depends(get_user_db)):
+    """
+    Return an instance of the UserManager using the provided user database.
+
+    :param user_db: The user database to be used by the UserManager.
+    :type user_db: SQLAlchemyUserDatabase
+    :return: An instance of the UserManager.
+    :rtype: UserManager
+    """
     return UserManager(user_db)
 
 
 fastapi_users = FastAPIUsers[User, uuid.UUID](
     get_user_manager, [jwt_backend, cookie_backend]
 )
-
 
 current_active_user = fastapi_users.current_user(active=True)
 current_optional_user = fastapi_users.current_user(optional=True)
