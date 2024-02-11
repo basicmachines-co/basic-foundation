@@ -32,7 +32,9 @@ CREATE TABLE public."user" (
     hashed_password character varying(1024) NOT NULL,
     is_active boolean NOT NULL,
     is_superuser boolean NOT NULL,
-    is_verified boolean NOT NULL
+    is_verified boolean NOT NULL,
+    first_name character varying,
+    last_name character varying
 );
 
 
@@ -68,3 +70,5 @@ CREATE UNIQUE INDEX ix_user_email ON public."user" USING btree (email);
 -- Dbmate schema migrations
 --
 
+INSERT INTO public.schema_migrations (version) VALUES
+    ('20240211163316');

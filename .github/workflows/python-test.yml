@@ -44,10 +44,16 @@ jobs:
         run: |
           cd basic-api
           poetry install --with github-actions
+          npm install
 
       - name: Create CI .env file
         run: |
           cp .env.ci .env
+
+      - name: Run dbmate migrations
+        run: |
+          cd basic-api
+          make migrate-up
 
       - name: Run tests
         run: |

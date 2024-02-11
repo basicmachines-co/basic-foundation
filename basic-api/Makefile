@@ -34,30 +34,27 @@ DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:
 # Path to migrations directory
 MIGRATIONS_DIR=./db/migrations
 
-# dbmate docker image
-DBMATE_IMAGE=amacneil/dbmate
-
 # Create a new migration
 # make new-migration name=create_users_table
 new-migration:
-	@docker run --rm -v $(shell pwd)/$(MIGRATIONS_DIR):/db/migrations $(DBMATE_IMAGE) new $(name)
+	npx dbmate new $(name)
 
 # Run all pending migrations
 migrate-up:
-	@docker run --rm -v $(shell pwd)/$(MIGRATIONS_DIR):/db/migrations --network="host" -e DATABASE_URL=$(DATABASE_URL) $(DBMATE_IMAGE) -s "./db/schema.sql" up
+	@npx dbmate -s "./db/schema.sql" -u $(DATABASE_URL) up
 
 # Rollback the latest migration
 migrate-down:
-	@docker run --rm -v $(shell pwd)/$(MIGRATIONS_DIR):/db/migrations --network="host" -e DATABASE_URL=$(DATABASE_URL) $(DBMATE_IMAGE) -s "./db/schema.sql" down
+	@npx dbmate -s "./db/schema.sql" -u $(DATABASE_URL) down
 
 # dump the schema.sql file
 migrate-dump:
-	docker run --rm -v $(shell pwd)/db:/db --network="host" -e DATABASE_URL=$(DATABASE_URL) $(DBMATE_IMAGE) -s "./db/schema.sql" dump
+	@npx dbmate -s "./db/schema.sql" -u $(DATABASE_URL) dump
 
 # Rollback all migrations
 migrate-reset:
-	@docker run --rm -v $(shell pwd)/$(MIGRATIONS_DIR):/db/migrations --network="host" -e DATABASE_URL=$(DATABASE_URL) $(DBMATE_IMAGE) -s "./db/schema.sql" drop
-	@docker run --rm -v $(shell pwd)/$(MIGRATIONS_DIR):/db/migrations --network="host" -e DATABASE_URL=$(DATABASE_URL) $(DBMATE_IMAGE) -s "./db/schema.sql" up
+	@npx dbmate -s "./db/schema.sql" -u DATABASE_URL=$(DATABASE_URL) drop
+	@npx dbmate-s "./db/schema.sql" -u DATABASE_URL=$(DATABASE_URL) up
 
 # Note: The `--network="host"` option is used to allow the Docker container to access the host network.
 # This is necessary for the container to connect to the local database.

@@ -4,6 +4,10 @@
     <option name="pathToExecutable" value="/opt/homebrew/bin/black" />
     <option name="sdkName" value="Python 3.12 (basic-foundation)" />
   </component>
+  <component name="PWA">
+    <option name="enabled" value="true" />
+    <option name="wasEnabledAtLeastOnce" value="true" />
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_21" project-jdk-name="Python 3.11 (basic-foundation)" project-jdk-type="Python SDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
