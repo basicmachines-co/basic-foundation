@@ -4,8 +4,8 @@ from fastapi import FastAPI
 from loguru import logger
 from starlette.staticfiles import StaticFiles
 
+from basic_api import config
 from basic_api.config import BASE_DIR
-from basic_api.db import create_db_and_tables
 from basic_api.routes import html_router
 from basic_api.users.routes import auth_router, user_router
 
@@ -25,4 +25,4 @@ app.include_router(html_router, tags=["html"])
 @app.on_event("startup")
 async def on_startup():
     # Not needed if you set up a migration system like Alembic
-    await create_db_and_tables()
+    logger.info(f"Welcome to {config.settings.app_name}")

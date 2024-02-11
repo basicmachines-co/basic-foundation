@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+from loguru import logger
 from pydantic import PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -9,7 +10,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 CWD = os.getcwd()
 # print(f"CWD={CWD}")
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-print(f"BASE_DIR={BASE_DIR}")
+logger.info(f"BASE_DIR={BASE_DIR}")
 
 # find the .env in parent dirs
 load_dotenv(verbose=True)
