@@ -60,6 +60,3 @@ jobs:
         run: |
           cd basic-api
           poetry run pytest
-
-      - name: Diff poetry.lock
-        uses: nborrmann/diff-poetry-lock@v1.0.0
