@@ -6,7 +6,7 @@ Saas platform api using
 - htmx
 - tailwindUI/Flowbite
 
-todo:
+## todo
 
 - [x] deploy to render
 - [x] add fastapi-users
@@ -26,9 +26,10 @@ todo:
 - [x] logging
 - [x] configure postgres on gitlab actions
 - [x] configure postgres on render.com
-- [ ] db migrations
+- [x] db migrations
 - [ ] crud users
 - [ ] test coverage
+    - codecov https://github.com/marketplace/codecov/plan/MDIyOk1hcmtldHBsYWNlTGlzdGluZ1BsYW4xNg==#plan-16
 - [ ] playwright
 - [ ] csrf - https://github.com/simonw/asgi-csrf
 - [ ] view profile
@@ -39,13 +40,9 @@ todo:
     - example: render.com dashboard
     - https://devdojo.com/wave#demo
 - [ ] forgot password flow
-- [ ] mailapi - sendgrid?
+- [ ] mailapi - sendgrid? or mailgun?
     - https://sabuhish.github.io/fastapi-mail/example/
     - https://pramod4040.medium.com/fastapi-forget-password-api-setup-632ab90ba958
-- [ ] dockerfile - https://inboard.bws.bio/?
-- [ ] deploy docker to render
-    - https://docs.render.com/docker
-- [ ] cicd deployment pipeline
 - [ ] branch deploys (preview environments)
 - [ ] stripe integration
 - [ ] webhooks
@@ -53,23 +50,27 @@ todo:
 - [ ] dependabot
 - [ ] sentry
 - [ ] codecov
-- [ ] static files
+- [ ] static object storage
     - https://docs.render.com/deploy-minio
     - run minio
       locally https://ktyptorio.medium.com/simple-openweather-api-service-using-fastapi-and-minio-object-storage-docker-version-f3587f7eb3de
-- [ ] postgres rls
 - [ ] multi tenant
+- [ ] postgres row level security
 - [ ] web components
     - lit
     - shoelace
+- [ ] dockerfile - https://inboard.bws.bio/?
+- [ ] deploy docker to render
+    - https://docs.render.com/docker
 
-refs:
+## references
 
 - https://github.com/mjhea0/awesome-fastapi
 - https://github.com/whythawk/full-stack-fastapi-postgresql/blob/master/docs/development-guide.md
 
 tailwind
-https://github.com/themesberg/tailwind-flask-starter
+
+- https://github.com/themesberg/tailwind-flask-starter
 
 ui elements
 
