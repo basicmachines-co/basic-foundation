@@ -71,4 +71,5 @@ CREATE UNIQUE INDEX ix_user_email ON public."user" USING btree (email);
 --
 
 INSERT INTO public.schema_migrations (version) VALUES
-    ('20240211163316');
+    ('20240211180307'),
+    ('20240211180503');

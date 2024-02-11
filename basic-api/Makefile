@@ -35,8 +35,8 @@ DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:
 MIGRATIONS_DIR=./db/migrations
 
 # Create a new migration
-# make new-migration name=create_users_table
-new-migration:
+# make migrate-new name=create_users_table
+migrate-new:
 	npx dbmate new $(name)
 
 # Run all pending migrations
