@@ -1,9 +1,9 @@
 -- migrate:up
 
 alter table "user"
-    add column first_name varchar;
+    add column if not exists first_name varchar;
 alter table "user"
-    add column last_name varchar;
+    add column if not exists last_name varchar;
 
 -- migrate:down
 
