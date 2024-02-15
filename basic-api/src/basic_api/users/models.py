@@ -1,7 +1,10 @@
 from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTableUUID
+from sqlalchemy import String
+from sqlalchemy.orm import mapped_column
 
-from basic_api.db import Base
+from basic_api.models import Base
 
 
 class User(SQLAlchemyBaseUserTableUUID, Base):
-    pass
+    first_name = mapped_column(String)
+    last_name = mapped_column(String)

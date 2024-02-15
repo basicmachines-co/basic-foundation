@@ -1,4 +1,3 @@
-import asyncio
 from typing import AsyncGenerator
 
 import pytest
@@ -61,15 +60,6 @@ async def test_sync_session():
     # for AsyncEngine created in function scope, close and
     # clean-up pooled connections
     await engine.dispose()
-
-
-@pytest.yield_fixture(scope="session")
-def event_loop(request):
-    """Create an instance of the default event loop for each test case."""
-    # see https://github.com/pytest-dev/pytest-asyncio/issues/38
-    loop = asyncio.get_event_loop_policy().new_event_loop()
-    yield loop
-    loop.close()
 
 
 @pytest_asyncio.fixture(autouse=True)

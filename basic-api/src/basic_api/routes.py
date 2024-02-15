@@ -69,6 +69,8 @@ async def register(request: Request):
 @html_router.post("/register", response_class=HTMLResponse)
 async def register_post(
     request: Request,
+    first_name: str = Form(),
+    last_name: str = Form(),
     email: str = Form(),
     password: str = Form(),
     user_manager: UserManager = Depends(get_user_manager),
@@ -77,7 +79,12 @@ async def register_post(
     errors = []
     register_form = None
     try:
-        register_form = UserCreate(email=email, password=password)
+        register_form = UserCreate(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            password=password,
+        )
         user = await user_manager.create(register_form, safe=True, request=request)
         return await login_user(request, user, user_manager, auth_backend)
     except ValidationError:
