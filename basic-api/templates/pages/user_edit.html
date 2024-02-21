@@ -1,0 +1,36 @@
+{% extends "layouts/dashboard.html" %}
+
+{% block content %}
+
+    <!-- user  edit -->
+    <section class="card col-span-12 overflow-hidden bg-base-100 shadow-sm">
+        <div class="card-body grow-0">
+            <div class="flex justify-between gap-2 pb-6">
+                <h2 class="card-title grow">
+                    <a class="link-hover link">Update User</a>
+                </h2>
+            </div>
+            <div><label class="input input-bordered flex items-center gap-2"> First Name <input type="text"
+                    class="grow"
+                    placeholder="Daisy"/> </label></div>
+            <div><label class="input input-bordered flex items-center gap-2"> Last Name <input type="text"
+                    class="grow"
+                    placeholder="Daisy"/> </label></div>
+            <div><label class="input input-bordered flex items-center gap-2"> Email <input type="text"
+                    class="grow"
+                    placeholder="daisy@site.com"/> </label></div>
+            <div><label class="label cursor-pointer"> <span class="label-text">Validated</span> <input type="checkbox"
+                    checked="checked"
+                    class="checkbox checkbox-sm"/> </label></div>
+            <div><label class="label cursor-pointer"> <span class="label-text">Admin</span> <input type="checkbox"
+                    checked="checked"
+                    class="checkbox checkbox-sm"/> </label></div>
+            <div class="card-actions justify-end gap-2">
+                <button class="btn btn-sm btn-primary">Save</button>
+                <button class="btn btn-sm bnt-error">Delete</button>
+            </div>
+        </div>
+    </section>
+    <!-- /user  edit -->
+
+{% endblock content %}

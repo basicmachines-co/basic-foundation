@@ -1,0 +1,29 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block layout_content %}
+
+    <!-- drawer -->
+    <body class="drawer min-h-screen bg-base-200 lg:drawer-open">
+    <input id="my-drawer" type="checkbox" class="drawer-toggle"/>
+
+    <!-- content -->
+    <main class="drawer-content">
+        <div class="grid grid-cols-12 grid-rows-[min-content] gap-y-12 p-4 lg:gap-x-12 lg:p-10">
+
+            {% include 'partials/navbar.html' %}
+
+            {% block content %}
+            {% endblock content %}
+
+        </div>
+    </main>
+    <!-- /content -->
+
+    {% include 'partials/side_navbar.html' %}
+    </body>
+    <!-- /drawer -->
+
+
+{% endblock layout_content %}

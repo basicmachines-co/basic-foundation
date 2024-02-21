@@ -30,6 +30,48 @@ templates = Jinja2Blocks(
 templates.env.add_extension(DebugExtension)
 
 
+@html_router.get("/dashboard", response_class=HTMLResponse)
+async def dashboard(request: Request, user=Depends(current_optional_user)):
+    return templates.TemplateResponse(
+        "pages/index.html",
+        {"request": request, "params": {"nav": "dashboard"}},
+    )
+
+
+@html_router.get("/users", response_class=HTMLResponse)
+async def users(request: Request, user=Depends(current_optional_user)):
+    return templates.TemplateResponse(
+        "pages/user_list.html",
+        {"request": request, "params": {"nav": "users"}},
+    )
+
+
+@html_router.get("/users/{id}", response_class=HTMLResponse)
+async def user(request: Request, user=Depends(current_optional_user)):
+    return templates.TemplateResponse(
+        "pages/user_view.html",
+        {"request": request, "params": {"nav": "users"}},
+    )
+
+
+@html_router.get("/users/{id}/view", response_class=HTMLResponse)
+async def user_view(request: Request, user=Depends(current_optional_user)):
+    return templates.TemplateResponse(
+        "pages/user_view.html",
+        {"request": request, "params": {"nav": "users"}},
+        block_name="content",
+    )
+
+
+@html_router.get("/users/{id}/edit", response_class=HTMLResponse)
+async def user_edit(request: Request, user=Depends(current_optional_user)):
+    return templates.TemplateResponse(
+        "pages/user_edit.html",
+        {"request": request, "params": {"nav": "users"}},
+        block_name="content",
+    )
+
+
 @html_router.get("/", response_class=HTMLResponse)
 async def index(request: Request, user=Depends(current_optional_user)):
     """

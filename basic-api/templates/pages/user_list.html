@@ -1,0 +1,64 @@
+{% extends "layouts/dashboard.html" %}
+
+{% block page_title %}Users{% endblock %}
+
+{% block content %}
+
+    <!-- user list -->
+    <section id="user_list" class="card col-span-12 overflow-hidden bg-base-100 shadow-sm">
+        <div class="card-body grow-0">
+            <div class="flex justify-between gap-2">
+                <h2 class="card-title grow">
+                    <a class="link-hover link">Users</a>
+                </h2>
+                <button class="btn btn-sm">Add User</button>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="table table-zebra">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Verified</th>
+                    <th>Admin</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <div class="flex items-center gap-4">
+                            <div class="avatar">
+                                <div class="mask mask-squircle h-10 w-10">
+                                    <img src="https://picsum.photos/80/80?1" alt="Avatar Tailwind CSS Component"/>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-sm font-bold"><a href="/users/foo" class="link">Hart Hagerty</a></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>email</td>
+                    <td class="w-0"><input type="checkbox" class="checkbox checkbox-sm"/></td>
+                    <td class="w-0"><input type="checkbox" class="checkbox checkbox-sm"/></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- /user list -->
+        <!-- pagination -->
+        <div class="join flex justify-between p-1">
+            <div></div>
+            <div class="join">
+                <button class="join-item btn">1</button>
+                <button class="join-item btn btn-active">2</button>
+                <button class="join-item btn">3</button>
+                <button class="join-item btn">4</button>
+            </div>
+        </div>
+    </section>
+
+
+
+
+{% endblock content %}

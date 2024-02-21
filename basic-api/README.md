@@ -14,7 +14,6 @@ Saas platform api using
 - [x] add fastapi-users endpoint tests
 - [x] cleanup app.py - split users into module/apirouter
 - [x] add htmx
-- [x] add styling - tailwind/flowbite
 - [-] jinjaX - https://jinjax.scaletti.dev/
 - [x] makefile
 - [x] upgrade to pydantic v2 (newer fastapi?)
@@ -27,6 +26,9 @@ Saas platform api using
 - [x] configure postgres on gitlab actions
 - [x] configure postgres on render.com
 - [x] db migrations
+- [x] add styling - tailwind/flowbite
+    - [ ] alpine
+    - [ ] tailwind plugins
 - [ ] crud users
 - [ ] test coverage
     - codecov https://github.com/marketplace/codecov/plan/MDIyOk1hcmtldHBsYWNlTGlzdGluZ1BsYW4xNg==#plan-16
