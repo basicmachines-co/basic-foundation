@@ -31,7 +31,9 @@
                             stroke-width="1.5"
                             stroke="currentColor"
                             aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                        <path stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M6 18L18 6M6 6l12 12"/>
                     </svg>
                 </button>
             </div>
@@ -73,17 +75,20 @@
                             aria-orientation="vertical"
                             aria-labelledby="user-menu-button"
                             tabindex="-1">
-                        <!-- Profile dropdown items -->
+                        <!-- Profile dropdown items with hover effect -->
                         <a href="/profile"
-                                class="block px-4 py-2 text-sm text-gray-700"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100"
                                 role="menuitem"
                                 tabindex="-1"
-                                id="user-menu-item-0">Your Profile</a> <a href="/logout"
-                            class="block px-4 py-2 text-sm text-gray-700"
+                                id="user-menu-item-0">Your Profile</a> <a href="/settings"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100"
                             role="menuitem"
                             tabindex="-1"
-                            id="user-menu-item-0">Log out</a>
-                        <!-- More items -->
+                            id="user-menu-item-1">Settings</a> <a href="/logout"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100"
+                            role="menuitem"
+                            tabindex="-1"
+                            id="user-menu-item-2">Log out</a>
                     </div>
                 </div>
             </div>
