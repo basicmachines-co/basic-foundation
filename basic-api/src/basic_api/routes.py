@@ -33,7 +33,7 @@ templates.env.add_extension(DebugExtension)
 @html_router.get("/dashboard", response_class=HTMLResponse)
 async def dashboard(request: Request, user=Depends(current_optional_user)):
     return templates.TemplateResponse(
-        "pages/index.html",
+        "pages/dashboard.html",
         {"request": request, "params": {"nav": "dashboard"}},
     )
 
@@ -51,15 +51,6 @@ async def user(request: Request, user=Depends(current_optional_user)):
     return templates.TemplateResponse(
         "pages/user_view.html",
         {"request": request, "params": {"nav": "users"}},
-    )
-
-
-@html_router.get("/users/{id}/view", response_class=HTMLResponse)
-async def user_view(request: Request, user=Depends(current_optional_user)):
-    return templates.TemplateResponse(
-        "pages/user_view.html",
-        {"request": request, "params": {"nav": "users"}},
-        block_name="content",
     )
 
 
@@ -87,7 +78,7 @@ async def index(request: Request, user=Depends(current_optional_user)):
     if not user:
         return RedirectResponse(url=html_router.url_path_for("login"))
     return templates.TemplateResponse(
-        "pages/index.html.jinja",
+        "pages/index.html",
         {"request": request, "title": "Basic Foundation", "user": user},
     )
 
@@ -104,7 +95,7 @@ async def register(request: Request):
     :return: The template response object for the registration page.
     """
     return templates.TemplateResponse(
-        "pages/register.html.jinja", {"request": request, "title": "Register"}
+        "pages/register.html", {"request": request, "title": "Register"}
     )
 
 
@@ -118,7 +109,6 @@ async def register_post(
     user_manager: UserManager = Depends(get_user_manager),
     auth_backend: AuthenticationBackend = Depends(get_cookie_backend),
 ):
-    errors = []
     register_form = None
     try:
         register_form = UserCreate(
@@ -130,22 +120,22 @@ async def register_post(
         user = await user_manager.create(register_form, safe=True, request=request)
         return await login_user(request, user, user_manager, auth_backend)
     except ValidationError:
-        errors.append("Validation Error")
+        error = "Validation Error"
     except exceptions.UserAlreadyExists:
-        errors.append("User already exists")
+        error = "User already exists"
     except exceptions.InvalidPasswordException as e:
-        errors.append(e.reason)
+        error = e.reason
 
     return templates.TemplateResponse(
-        "pages/register.html.jinja",
-        {"request": request, "errors": errors, "email": register_form.email},
+        "pages/register.html",
+        {"request": request, "error": error, **register_form.dict()},
         block_name="register_form",
     )
 
 
 @html_router.get("/login", response_class=HTMLResponse)
 async def login(request: Request):
-    return templates.TemplateResponse("pages/login.html.jinja", {"request": request})
+    return templates.TemplateResponse("pages/login.html", {"request": request})
 
 
 @html_router.post("/login", response_class=HTMLResponse)
@@ -159,7 +149,7 @@ async def login_post(
 
     if user is None or not user.is_active:
         return templates.TemplateResponse(
-            "pages/login.html.jinja",
+            "pages/login.html",
             {
                 "request": request,
                 "error": "Incorrect Username or Password",
@@ -176,7 +166,7 @@ async def login_user(request, user, user_manager, auth_backend):
     strategy: Strategy[User, uuid.UUID] = auth_backend.get_strategy()
     login_response = await auth_backend.login(strategy, user)
     await user_manager.on_after_login(user, request, login_response)
-    login_response.headers["HX-Redirect"] = html_router.url_path_for("index")
+    login_response.headers["HX-Redirect"] = html_router.url_path_for("dashboard")
     return Response(headers=login_response.headers)
 
 

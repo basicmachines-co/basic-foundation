@@ -1,21 +1,23 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" class="{{ html_class }}">
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="UTF-8">
     <title>Basic Machines</title>
-    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Dashboard Layout</title>
+    <!-- local tailwind -->
     <link href="/static/dist/css/output.css" rel="stylesheet"/>
-    <!-- chart library -->
-    <script async
-            src="https://cdn.jsdelivr.net/npm/@weblogin/trendchart-elements@1.1.0/dist/index.js/+esm"
-            type="module"></script>
-    <!-- svg loader for icons -->
-    <script async src="https://cdn.jsdelivr.net/npm/external-svg-loader@1.6.10/svg-loader.min.js"></script>
+    <!-- tailwind cdn -->{#    <script src="https://cdn.tailwindcss.com"></script>#}
+    <!-- albine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- tailwind inter font -->
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <!-- htmx -->
     <script src="https://unpkg.com/htmx.org@1.7.0"></script>
 </head>
+<body class="{{ body_class }}">
 {% block layout_content %}
 
 {% endblock layout_content %}
-
+</body>
 </html>

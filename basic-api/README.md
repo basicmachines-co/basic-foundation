@@ -27,8 +27,10 @@ Saas platform api using
 - [x] configure postgres on render.com
 - [x] db migrations
 - [x] add styling - tailwind/flowbite
-    - [ ] alpine
-    - [ ] tailwind plugins
+    - [x] alpine
+    - [x] tailwind plugins
+    - [ ] login
+    - [ ] register
 - [ ] crud users
 - [ ] test coverage
     - codecov https://github.com/marketplace/codecov/plan/MDIyOk1hcmtldHBsYWNlTGlzdGluZ1BsYW4xNg==#plan-16
@@ -37,7 +39,6 @@ Saas platform api using
 - [ ] view profile
 - [ ] app user management
     - click to edit forms: https://htmx.org/examples/click-to-edit/
-    - dashboard: https://flowbite-admin-dashboard.vercel.app/layouts/stacked/
     - icons: https://github.com/sirvan3tr/jinja-primer-icons
     - example: render.com dashboard
     - https://devdojo.com/wave#demo

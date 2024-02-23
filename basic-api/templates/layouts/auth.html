@@ -1,10 +1,9 @@
 {% extends "layouts/base.html" %}
-
-{% block title %}Dashboard{% endblock %}
+{# override class for html for full page #}{% set html_class = "h-full bg-white" %}
+{# override class for body for full page #}{% set body_class = "h-full" %}
 
 {% block layout_content %}
 
-    {% include "partials/navbar.html" %}
 
     <main>
         <!-- Full-width on mobile, constrained with padded content above -->
