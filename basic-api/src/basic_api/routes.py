@@ -166,6 +166,8 @@ async def login_user(request, user, user_manager, auth_backend):
     strategy: Strategy[User, uuid.UUID] = auth_backend.get_strategy()
     login_response = await auth_backend.login(strategy, user)
     await user_manager.on_after_login(user, request, login_response)
+
+    # redirect user to the dashboard
     login_response.headers["HX-Redirect"] = html_router.url_path_for("dashboard")
     return Response(headers=login_response.headers)
 

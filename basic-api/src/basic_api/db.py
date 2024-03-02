@@ -9,4 +9,4 @@ DATABASE_URL = settings.postgres_dsn
 engine = create_async_engine(DATABASE_URL, echo=True)
 
 # create a reusable factory for new AsyncSession instances
-async_session = async_sessionmaker(engine, expire_on_commit=False)
+async_sessionmaker = async_sessionmaker(engine, expire_on_commit=False)

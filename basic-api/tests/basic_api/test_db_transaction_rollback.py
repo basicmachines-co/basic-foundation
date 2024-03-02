@@ -6,7 +6,7 @@ from sqlalchemy import Column, Integer, String, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.declarative import declarative_base
 
-from basic_api.db import engine, async_session
+from basic_api.db import engine, async_sessionmaker
 
 Base = declarative_base()
 
@@ -20,7 +20,7 @@ class ExampleModel(Base):
 
 
 @pytest.mark.asyncio
-async def test_sync_session():
+async def test_async_session():
     """
     Reference for using SQLAlchemy async_session
     see: https://docs.sqlalchemy.org/en/14/orm/extensions/asyncio.html
@@ -29,7 +29,7 @@ async def test_sync_session():
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
-    async with async_session() as sess:
+    async with async_sessionmaker() as sess:
         async with sess.begin():
             sess.add_all(
                 [
@@ -70,7 +70,7 @@ async def setup_database(event_loop) -> AsyncGenerator[AsyncSession, None]:
         await conn.run_sync(Base.metadata.create_all)
 
     # Insert test data
-    async with async_session() as sess:
+    async with async_sessionmaker() as sess:
         async with sess.begin():
             test_instance = ExampleModel(id=1, name="Test Name")
             sess.add(test_instance)

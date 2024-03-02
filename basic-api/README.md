@@ -29,8 +29,8 @@ Saas platform api using
 - [x] add styling - tailwind/flowbite
     - [x] alpine
     - [x] tailwind plugins
-    - [ ] login
-    - [ ] register
+    - [x] login
+    - [x] register
 - [ ] crud users
 - [ ] test coverage
     - codecov https://github.com/marketplace/codecov/plan/MDIyOk1hcmtldHBsYWNlTGlzdGluZ1BsYW4xNg==#plan-16

@@ -4,7 +4,7 @@ from fastapi import Request
 from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from basic_api.db import async_session
+from basic_api.db import async_sessionmaker
 
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
@@ -12,7 +12,7 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
     :return: An asynchronous generator that yields an AsyncSession object.
     :rtype: AsyncGenerator[AsyncSession, None]
     """
-    async with async_session() as session:
+    async with async_sessionmaker() as session:
         yield session
 
 

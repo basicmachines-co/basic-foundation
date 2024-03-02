@@ -20,6 +20,8 @@ pydantic-settings = "^2.1.0"
 sqlalchemy = { extras = ["asyncio"], version = "^2.0.25" }
 asyncpg = "^0.29.0"
 loguru = "^0.7.2"
+playwright = "^1.41.2"
+pytest-playwright = "^0.4.4"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -48,12 +48,12 @@ async def async_db_session_rollback(event_loop) -> AsyncGenerator[AsyncSession, 
     transaction = await connection.begin()
 
     # start a SQLAlchemy session
-    session = AsyncTestingSessionLocal(bind=connection)
+    async_session = AsyncTestingSessionLocal(bind=connection)
 
     # begin a nested transaction
-    nested = session.begin_nested()
+    nested = await async_session.begin_nested()
 
-    @event.listens_for(session.sync_session, "after_transaction_end")
+    @event.listens_for(async_session.sync_session, "after_transaction_end")
     def end_savepoint(session, transaction):
         """
         listener to restart a nested transaction on commit
@@ -66,10 +66,10 @@ async def async_db_session_rollback(event_loop) -> AsyncGenerator[AsyncSession, 
             nested = connection.sync_connection.begin_nested()
 
     # yield the session to run tests
-    yield session
+    yield async_session
 
     # rollback and close
-    await session.close()
+    await async_session.close()
     await transaction.rollback()
     await connection.close()
 
