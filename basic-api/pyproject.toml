@@ -54,3 +54,5 @@ markers = [
 filterwarnings = [
     "ignore::DeprecationWarning:",
 ]
+
+norecursedirs = ["tests/playwright"]
