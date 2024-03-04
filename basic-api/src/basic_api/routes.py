@@ -1,6 +1,9 @@
-import uuid
+from typing import Callable, Coroutine, Any
+from uuid import UUID
 
-from fastapi import Depends, Request, Form, Response, APIRouter
+from fastapi import Depends, HTTPException, status
+from fastapi import Request, Form, Response, APIRouter
+from fastapi.routing import APIRoute
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_users import exceptions
 from fastapi_users.authentication import AuthenticationBackend, Strategy
@@ -10,19 +13,36 @@ from pydantic import ValidationError
 from starlette.responses import RedirectResponse, HTMLResponse
 
 from basic_api.config import BASE_DIR
+from basic_api.deps import get_user_repository
+from basic_api.repository import Repository
 from basic_api.users.deps import (
     get_cookie_backend,
     fastapi_users,
     get_user_manager,
     current_optional_user,
+    current_active_user,
 )
 from basic_api.users.managers import UserManager
 from basic_api.users.models import User
 from basic_api.users.schemas import UserCreate
 
-html_router = APIRouter(
-    tags=["html"],
-)
+
+class HTMLRoute(APIRoute):
+    def get_route_handler(self) -> Callable[[Request], Coroutine[Any, Any, Response]]:
+        original_route_handler = super().get_route_handler()
+
+        async def login_redirect_handler(request: Request) -> Response:
+            try:
+                return await original_route_handler(request)
+            except HTTPException as exc:
+                if exc.status_code == status.HTTP_401_UNAUTHORIZED:
+                    response = RedirectResponse(url=html_router.url_path_for("login"))
+                    return response
+
+        return login_redirect_handler
+
+
+html_router = APIRouter(tags=["html"], route_class=HTMLRoute)
 
 templates = Jinja2Blocks(
     directory=f"{BASE_DIR}/templates",
@@ -31,7 +51,7 @@ templates.env.add_extension(DebugExtension)
 
 
 @html_router.get("/dashboard", response_class=HTMLResponse)
-async def dashboard(request: Request, user=Depends(current_optional_user)):
+async def dashboard(request: Request, current_user=Depends(current_active_user)):
     return templates.TemplateResponse(
         "pages/dashboard.html",
         {"request": request, "params": {"nav": "dashboard"}},
@@ -39,27 +59,38 @@ async def dashboard(request: Request, user=Depends(current_optional_user)):
 
 
 @html_router.get("/users", response_class=HTMLResponse)
-async def users(request: Request, user=Depends(current_optional_user)):
+async def users(
+    request: Request,
+    current_user=Depends(current_active_user),
+    user_repo: Repository[User] = Depends(get_user_repository),
+):
+    users = await user_repo.find_all()
     return templates.TemplateResponse(
         "pages/user_list.html",
-        {"request": request, "params": {"nav": "users"}},
+        {"request": request, "users": users},
     )
 
 
 @html_router.get("/users/{id}", response_class=HTMLResponse)
-async def user(request: Request, user=Depends(current_optional_user)):
+async def user(request: Request, current_active_user=Depends(current_active_user)):
     return templates.TemplateResponse(
         "pages/user_view.html",
         {"request": request, "params": {"nav": "users"}},
     )
 
 
-@html_router.get("/users/{id}/edit", response_class=HTMLResponse)
-async def user_edit(request: Request, user=Depends(current_optional_user)):
+@html_router.get("/users/{user_id}/edit", response_class=HTMLResponse)
+async def user_edit(
+    request: Request,
+    user_id: UUID,
+    current_active_user=Depends(current_active_user),
+    user_repo: Repository[User] = Depends(get_user_repository),
+):
+    user = await user_repo.find_by_id(user_id)
     return templates.TemplateResponse(
         "pages/user_edit.html",
-        {"request": request, "params": {"nav": "users"}},
-        block_name="content",
+        {"request": request, "user": user},
+        # block_name="content",
     )
 
 

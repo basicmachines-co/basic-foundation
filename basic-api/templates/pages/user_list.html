@@ -32,32 +32,38 @@
                             <div class="absolute inset-y-0 left-0 -z-10 w-screen border-b border-b-gray-200"></div>
                         </th>
                         <th scope="col"
-                                class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Title
+                                class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Email
                         </th>
                         <th scope="col"
-                                class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell">Email
+                                class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell">Is Active
                         </th>
-                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Role</th>
+                        <th scope="col"
+                                class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Is Verified
+                        </th>
                         <th scope="col" class="relative py-3.5 pl-3">
                             <span class="sr-only">Edit</span>
                         </th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td class="relative py-4 pr-3 text-sm font-medium text-gray-900">
-                            <a href="/users/foo">Lindsay Walton</a>
-                            <div class="absolute bottom-0 right-full h-px w-screen bg-gray-100"></div>
-                            <div class="absolute bottom-0 left-0 h-px w-screen bg-gray-100"></div>
-                        </td>
-                        <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">Front-end Developer</td>
-                        <td class="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">lindsay.walton@example.com</td>
-                        <td class="px-3 py-4 text-sm text-gray-500">Member</td>
-                        <td class="relative py-4 pl-3 text-right text-sm font-medium">
-                            <a href="#"
-                                    class="text-indigo-600 hover:text-indigo-900">Edit<span class="sr-only">, Lindsay Walton</span></a>
-                        </td>
-                    </tr>
+                    {% for user in users %}
+                        <tr>
+                            <td class="relative py-4 pr-3 text-sm font-medium text-gray-900">
+                                <a href="/users/{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</a>
+                                <div class="absolute bottom-0 right-full h-px w-screen bg-gray-100"></div>
+                                <div class="absolute bottom-0 left-0 h-px w-screen bg-gray-100"></div>
+                            </td>
+                            <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">{{ user.email }}</td>
+                            <td class="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">{{ user.is_active }}</td>
+                            <td class="px-3 py-4 text-sm text-gray-500">{{ user.is_verified }}</td>
+                            <td class="relative py-4 pl-3 text-right text-sm font-medium">
+                                <a href="/users/{{ user.id }}/edit"
+                                        class="text-indigo-600 hover:text-indigo-900">Edit<span class="sr-only">: {{ user.first_name }} {{ user.last_name }}</span></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+
                     <!-- More people...222 -->
                     </tbody>
                 </table>
