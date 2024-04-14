@@ -41,13 +41,13 @@ jobs:
       - name: Configure poetry
         run: poetry config virtualenvs.in-project true
 
-      - name: Install dependencies
-        run: |
-          make install
-
       - name: Create CI .env file
         run: |
           cp .env.ci .env
+
+      - name: Install dependencies
+        run: |
+          make install
 
       - name: Run dbmate migrations
         run: |
