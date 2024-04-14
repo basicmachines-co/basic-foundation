@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
-from basic_api.config import settings
+from api.config import settings
 
 DATABASE_URL = settings.postgres_dsn
 

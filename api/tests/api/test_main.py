@@ -3,7 +3,7 @@ from typing import AsyncGenerator
 import pytest
 from fastapi.testclient import TestClient
 
-from basic_api.app import app
+from api.app import app
 
 
 @pytest.fixture(scope="module")

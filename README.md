@@ -90,7 +90,7 @@ poetry shell
 cd basic-api/src
 
 ```bash
-uvicorn basic_api.main:app --reload
+uvicorn api.main:app --reload
 ```
 
 ### Setup the frontend

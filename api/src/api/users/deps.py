@@ -11,10 +11,10 @@ from fastapi_users.authentication import (
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from basic_api import config
-from basic_api.deps import get_async_session
-from basic_api.users.managers import UserManager
-from basic_api.users.models import User
+from api import config
+from api.deps import get_async_session
+from api.users.managers import UserManager
+from api.users.models import User
 
 bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
 cookie_transport = CookieTransport(

@@ -4,10 +4,10 @@ from fastapi import FastAPI
 from loguru import logger
 from starlette.staticfiles import StaticFiles
 
-from basic_api import config
-from basic_api.config import BASE_DIR
-from basic_api.routes import html_router
-from basic_api.users.routes import auth_router, user_router
+from api import config
+from api.config import BASE_DIR
+from api.routes import html_router
+from api.users.routes import auth_router, user_router
 
 # delete all existing default loggers
 logger.remove()

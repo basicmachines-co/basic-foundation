@@ -4,9 +4,9 @@ from fastapi import Request, Depends
 from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from basic_api.db import async_sessionmaker
-from basic_api.repository import Repository
-from basic_api.users.models import User
+from api.db import async_sessionmaker
+from api.repository import Repository
+from api.users.models import User
 
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
@@ -33,6 +33,6 @@ async def log_request(request: Request):
 
 
 def get_user_repository(
-    async_session: AsyncSession = Depends(get_async_session),
+        async_session: AsyncSession = Depends(get_async_session),
 ) -> Repository[User]:
     return Repository(async_session, User)

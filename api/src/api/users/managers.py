@@ -10,15 +10,15 @@ from fastapi_users import (
     InvalidPasswordException,
 )
 
-from basic_api import config
-from basic_api.users.models import User
+from api import config
+from api.users.models import User
 
 SECRET = config.settings.jwt_secret
 
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
     async def validate_password(
-        self, password: str, user: Union[schemas.UC, models.UP]
+            self, password: str, user: Union[schemas.UC, models.UP]
     ) -> None:
         if len(password) < 3:
             raise InvalidPasswordException(reason="Password must be > 3")
@@ -30,11 +30,11 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         print(f"User {user.id} has registered.")
 
     async def on_after_forgot_password(
-        self, user: User, token: str, request: Optional[Request] = None
+            self, user: User, token: str, request: Optional[Request] = None
     ):
         print(f"User {user.id} has forgot their password. Reset token: {token}")
 
     async def on_after_request_verify(
-        self, user: User, token: str, request: Optional[Request] = None
+            self, user: User, token: str, request: Optional[Request] = None
     ):
         print(f"Verification requested for user {user.id}. Verification token: {token}")

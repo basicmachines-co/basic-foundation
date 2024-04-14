@@ -12,19 +12,19 @@ from jinja2_fragments.fastapi import Jinja2Blocks
 from pydantic import ValidationError
 from starlette.responses import RedirectResponse, HTMLResponse
 
-from basic_api.config import BASE_DIR
-from basic_api.deps import get_user_repository
-from basic_api.repository import Repository
-from basic_api.users.deps import (
+from api.config import BASE_DIR
+from api.deps import get_user_repository
+from api.repository import Repository
+from api.users.deps import (
     get_cookie_backend,
     fastapi_users,
     get_user_manager,
     current_optional_user,
     current_active_user,
 )
-from basic_api.users.managers import UserManager
-from basic_api.users.models import User
-from basic_api.users.schemas import UserCreate
+from api.users.managers import UserManager
+from api.users.models import User
+from api.users.schemas import UserCreate
 
 
 class HTMLRoute(APIRoute):
@@ -60,9 +60,9 @@ async def dashboard(request: Request, current_user=Depends(current_active_user))
 
 @html_router.get("/users", response_class=HTMLResponse)
 async def users(
-    request: Request,
-    current_user=Depends(current_active_user),
-    user_repo: Repository[User] = Depends(get_user_repository),
+        request: Request,
+        current_user=Depends(current_active_user),
+        user_repo: Repository[User] = Depends(get_user_repository),
 ):
     users = await user_repo.find_all()
     return templates.TemplateResponse(
@@ -81,10 +81,10 @@ async def user(request: Request, current_active_user=Depends(current_active_user
 
 @html_router.get("/users/{user_id}/edit", response_class=HTMLResponse)
 async def user_edit(
-    request: Request,
-    user_id: UUID,
-    current_active_user=Depends(current_active_user),
-    user_repo: Repository[User] = Depends(get_user_repository),
+        request: Request,
+        user_id: UUID,
+        current_active_user=Depends(current_active_user),
+        user_repo: Repository[User] = Depends(get_user_repository),
 ):
     user = await user_repo.find_by_id(user_id)
     return templates.TemplateResponse(
@@ -132,13 +132,13 @@ async def register(request: Request):
 
 @html_router.post("/register", response_class=HTMLResponse)
 async def register_post(
-    request: Request,
-    first_name: str = Form(),
-    last_name: str = Form(),
-    email: str = Form(),
-    password: str = Form(),
-    user_manager: UserManager = Depends(get_user_manager),
-    auth_backend: AuthenticationBackend = Depends(get_cookie_backend),
+        request: Request,
+        first_name: str = Form(),
+        last_name: str = Form(),
+        email: str = Form(),
+        password: str = Form(),
+        user_manager: UserManager = Depends(get_user_manager),
+        auth_backend: AuthenticationBackend = Depends(get_cookie_backend),
 ):
     register_form = None
     try:
@@ -171,10 +171,10 @@ async def login(request: Request):
 
 @html_router.post("/login", response_class=HTMLResponse)
 async def login_post(
-    request: Request,
-    form_data: OAuth2PasswordRequestForm = Depends(),
-    user_manager: UserManager = Depends(get_user_manager),
-    auth_backend: AuthenticationBackend = Depends(get_cookie_backend),
+        request: Request,
+        form_data: OAuth2PasswordRequestForm = Depends(),
+        user_manager: UserManager = Depends(get_user_manager),
+        auth_backend: AuthenticationBackend = Depends(get_cookie_backend),
 ):
     user = await user_manager.authenticate(form_data)
 
@@ -205,9 +205,9 @@ async def login_user(request, user, user_manager, auth_backend):
 
 @html_router.get("/logout", response_class=HTMLResponse)
 async def logout(
-    request: Request,
-    user_token=Depends(fastapi_users.authenticator.current_user_token(optional=True)),
-    auth_backend: AuthenticationBackend = Depends(get_cookie_backend),
+        request: Request,
+        user_token=Depends(fastapi_users.authenticator.current_user_token(optional=True)),
+        auth_backend: AuthenticationBackend = Depends(get_cookie_backend),
 ):
     # if the user is not logged in, redirect to index
     user, token = user_token

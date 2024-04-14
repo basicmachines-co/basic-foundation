@@ -7,7 +7,7 @@ from sqlalchemy import event
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
 
-from basic_api.db import engine
+from api.db import engine
 
 # Create a new instance of the engine
 AsyncTestingSessionLocal = sessionmaker(

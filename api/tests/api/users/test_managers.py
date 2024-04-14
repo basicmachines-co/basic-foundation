@@ -4,8 +4,8 @@ import pytest
 import pytest_asyncio
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 
-from basic_api.users.managers import InvalidPasswordException, UserManager
-from basic_api.users.models import User
+from api.users.managers import InvalidPasswordException, UserManager
+from api.users.models import User
 
 
 @pytest_asyncio.fixture
