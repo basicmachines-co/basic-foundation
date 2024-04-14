@@ -43,9 +43,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd basic-api
-          poetry install --with github-actions
-          npm install
+          make install
 
       - name: Create CI .env file
         run: |
@@ -53,10 +51,8 @@ jobs:
 
       - name: Run dbmate migrations
         run: |
-          cd basic-api
           make migrate-up
 
       - name: Run tests
         run: |
-          cd basic-api
-          poetry run pytest
+          make test
