@@ -61,12 +61,7 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 
-# Flask stuff:
-instance/
-.webassets-cache
 
-# Scrapy stuff:
-.scrapy
 
 # Sphinx documentation
 docs/_build/
@@ -161,7 +156,8 @@ cython_debug/
 
 #sqllite db
 basic-api.db
-/basic-api/node_modules/
+/api/node_modules/
 
 
 .DS_Store
+/.idea/

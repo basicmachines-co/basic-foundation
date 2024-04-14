@@ -2,13 +2,13 @@ from typing import AsyncGenerator
 
 import pytest
 import pytest_asyncio
+import sqlalchemy.orm
 from sqlalchemy import Column, Integer, String, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.ext.declarative import declarative_base
 
 from basic_api.db import engine, async_sessionmaker
 
-Base = declarative_base()
+Base = sqlalchemy.orm.declarative_base()
 
 
 class ExampleModel(Base):

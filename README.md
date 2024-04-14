@@ -16,10 +16,32 @@ Opinionated Foundation Boilerplate for a SaaS Platform
 
 ## Getting started
 
-### Setup the api
+```bash
+brew update
+```
+
+### Install python tools
 
 Install pyenv
 https://github.com/pyenv/pyenv
+
+```bash
+brew install pyenv 
+```
+
+using pyenv
+
+```bash
+pyenv version
+```
+
+https://pipx.pypa.io/stable/
+
+```bash
+brew install pipx
+pipx ensurepath
+sudo pipx --global ensurepath  # optional to allow pipx actions with --global argument
+```
 
 ```bash
 brew update
@@ -73,60 +95,9 @@ uvicorn basic_api.main:app --reload
 
 ### Setup the frontend
 
-https://ahastack.dev/
-
-Install bun
-https://bun.sh/docs/installation
-
-```bash
-brew tap oven-sh/bun # for macOS and Linux
-brew install bun
-```
-
-Install pnpm
-
-```bash
-npm install -g pnpm 
-```
-
-create astro app
-
-```shell
-pnpm create astro@latest
-```
-
-cd ./basic-webapp
-
-install typescript types for bun
-
-```shell
-bun add -d @types/bun # dev dependency
-```
-
-Astro
-
-* enable https://github.com/getsentry/spotlight/blob/main/packages/astro/README.md
-* go through astro docs
-* add flowbite
-* add htmx
-* add flowbite admin
-
-Jinja2
-
-* enable jinja templates: https://fastapi.tiangolo.com/advanced/templates/
-*
-
 ## deploy to render.com
 
 * Signup/Login to render.com dashboard
 * Select "New Blueprint"
 * Choose the basic-foundation repo from the list and click the "Connect" button
 * View the service on the [dashboard](https://dashboard.render.com/)
-
-Further steps:
-
-* View service details, enable preview environments
-* Enable health checks
-* Disable auto-deploy on git commit
-* Add render deploy hook to github pipeline for git commit
-* Use Docker builds and deploys for render

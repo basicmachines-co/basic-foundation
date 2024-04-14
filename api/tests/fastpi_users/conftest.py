@@ -18,10 +18,6 @@ import httpx
 import pytest
 from asgi_lifespan import LifespanManager
 from fastapi import FastAPI, Response
-from httpx_oauth.oauth2 import OAuth2
-from pydantic import UUID4, SecretStr
-from pytest_mock import MockerFixture
-
 from fastapi_users import exceptions, models, schemas
 from fastapi_users.authentication import AuthenticationBackend, BearerTransport
 from fastapi_users.authentication.strategy import Strategy
@@ -30,6 +26,9 @@ from fastapi_users.jwt import SecretType
 from fastapi_users.manager import BaseUserManager, UUIDIDMixin
 from fastapi_users.openapi import OpenAPIResponseType
 from fastapi_users.password import PasswordHelper
+from httpx_oauth.oauth2 import OAuth2
+from pydantic import UUID4, SecretStr
+from pytest_mock import MockerFixture
 
 password_helper = PasswordHelper()
 guinevere_password_hash = password_helper.hash("guinevere")
@@ -37,7 +36,6 @@ angharad_password_hash = password_helper.hash("angharad")
 viviane_password_hash = password_helper.hash("viviane")
 lancelot_password_hash = password_helper.hash("lancelot")
 excalibur_password_hash = password_helper.hash("excalibur")
-
 
 IDType = UUID4
 
@@ -92,7 +90,7 @@ class BaseTestUserManager(
     verification_token_secret = "SECRET"
 
     async def validate_password(
-        self, password: str, user: Union[schemas.UC, models.UP]
+            self, password: str, user: Union[schemas.UC, models.UP]
     ) -> None:
         if len(password) < 3:
             raise exceptions.InvalidPasswordException(
@@ -126,11 +124,11 @@ class UserManagerMock(BaseTestUserManager[models.UP]):
     _update: MagicMock
 
 
-@pytest.fixture(scope="session")
-def event_loop():
-    loop = asyncio.get_event_loop()
-    yield loop
-    loop.close()
+# @pytest.fixture(scope="session")
+# def event_loop():
+#     loop = asyncio.get_event_loop()
+#     yield loop
+#     loop.close()
 
 
 AsyncMethodMocker = Callable[..., MagicMock]
@@ -139,9 +137,9 @@ AsyncMethodMocker = Callable[..., MagicMock]
 @pytest.fixture
 def async_method_mocker(mocker: MockerFixture) -> AsyncMethodMocker:
     def _async_method_mocker(
-        object: Any,
-        method: str,
-        return_value: Any = None,
+            object: Any,
+            method: str,
+            return_value: Any = None,
     ) -> MagicMock:
         mock: MagicMock = mocker.MagicMock()
 
@@ -172,7 +170,7 @@ def user() -> UserModel:
 
 @pytest.fixture
 def user_oauth(
-    oauth_account1: OAuthAccountModel, oauth_account2: OAuthAccountModel
+        oauth_account1: OAuthAccountModel, oauth_account2: OAuthAccountModel
 ) -> UserOAuthModel:
     return UserOAuthModel(
         email="king.arthur@camelot.bt",
@@ -317,11 +315,11 @@ def oauth_account5() -> OAuthAccountModel:
 
 @pytest.fixture
 def mock_user_db(
-    user: UserModel,
-    verified_user: UserModel,
-    inactive_user: UserModel,
-    superuser: UserModel,
-    verified_superuser: UserModel,
+        user: UserModel,
+        verified_user: UserModel,
+        inactive_user: UserModel,
+        superuser: UserModel,
+        verified_superuser: UserModel,
 ) -> BaseUserDatabase[UserModel, IDType]:
     class MockUserDatabase(BaseUserDatabase[UserModel, IDType]):
         async def get(self, id: UUID4) -> Optional[UserModel]:
@@ -355,7 +353,7 @@ def mock_user_db(
             return UserModel(**create_dict)
 
         async def update(
-            self, user: UserModel, update_dict: Dict[str, Any]
+                self, user: UserModel, update_dict: Dict[str, Any]
         ) -> UserModel:
             for field, value in update_dict.items():
                 setattr(user, field, value)
@@ -369,11 +367,11 @@ def mock_user_db(
 
 @pytest.fixture
 def mock_user_db_oauth(
-    user_oauth: UserOAuthModel,
-    verified_user_oauth: UserOAuthModel,
-    inactive_user_oauth: UserOAuthModel,
-    superuser_oauth: UserOAuthModel,
-    verified_superuser_oauth: UserOAuthModel,
+        user_oauth: UserOAuthModel,
+        verified_user_oauth: UserOAuthModel,
+        inactive_user_oauth: UserOAuthModel,
+        superuser_oauth: UserOAuthModel,
+        verified_superuser_oauth: UserOAuthModel,
 ) -> BaseUserDatabase[UserOAuthModel, IDType]:
     class MockUserDatabase(BaseUserDatabase[UserOAuthModel, IDType]):
         async def get(self, id: UUID4) -> Optional[UserOAuthModel]:
@@ -404,19 +402,19 @@ def mock_user_db_oauth(
             return None
 
         async def get_by_oauth_account(
-            self, oauth: str, account_id: str
+                self, oauth: str, account_id: str
         ) -> Optional[UserOAuthModel]:
             user_oauth_account = user_oauth.oauth_accounts[0]
             if (
-                user_oauth_account.oauth_name == oauth
-                and user_oauth_account.account_id == account_id
+                    user_oauth_account.oauth_name == oauth
+                    and user_oauth_account.account_id == account_id
             ):
                 return user_oauth
 
             inactive_user_oauth_account = inactive_user_oauth.oauth_accounts[0]
             if (
-                inactive_user_oauth_account.oauth_name == oauth
-                and inactive_user_oauth_account.account_id == account_id
+                    inactive_user_oauth_account.oauth_name == oauth
+                    and inactive_user_oauth_account.account_id == account_id
             ):
                 return inactive_user_oauth
             return None
@@ -425,7 +423,7 @@ def mock_user_db_oauth(
             return UserOAuthModel(**create_dict)
 
         async def update(
-            self, user: UserOAuthModel, update_dict: Dict[str, Any]
+                self, user: UserOAuthModel, update_dict: Dict[str, Any]
         ) -> UserOAuthModel:
             for field, value in update_dict.items():
                 setattr(user, field, value)
@@ -435,25 +433,25 @@ def mock_user_db_oauth(
             pass
 
         async def add_oauth_account(
-            self, user: UserOAuthModel, create_dict: Dict[str, Any]
+                self, user: UserOAuthModel, create_dict: Dict[str, Any]
         ) -> UserOAuthModel:
             oauth_account = OAuthAccountModel(**create_dict)
             user.oauth_accounts.append(oauth_account)
             return user
 
         async def update_oauth_account(  # type: ignore
-            self,
-            user: UserOAuthModel,
-            oauth_account: OAuthAccountModel,
-            update_dict: Dict[str, Any],
+                self,
+                user: UserOAuthModel,
+                oauth_account: OAuthAccountModel,
+                update_dict: Dict[str, Any],
         ) -> UserOAuthModel:
             for field, value in update_dict.items():
                 setattr(oauth_account, field, value)
             updated_oauth_accounts = []
             for existing_oauth_account in user.oauth_accounts:
                 if (
-                    existing_oauth_account.account_id == oauth_account.account_id
-                    and existing_oauth_account.oauth_name == oauth_account.oauth_name
+                        existing_oauth_account.account_id == oauth_account.account_id
+                        and existing_oauth_account.oauth_name == oauth_account.oauth_name
                 ):
                     updated_oauth_accounts.append(oauth_account)
                 else:
@@ -527,7 +525,7 @@ class MockTransport(BearerTransport):
 
 class MockStrategy(Strategy[UserModel, IDType]):
     async def read_token(
-        self, token: Optional[str], user_manager: BaseUserManager[UserModel, IDType]
+            self, token: Optional[str], user_manager: BaseUserManager[UserModel, IDType]
     ) -> Optional[UserModel]:
         if token is not None:
             try:
@@ -562,7 +560,7 @@ def get_test_client():
     async def _get_test_client(app: FastAPI) -> AsyncGenerator[httpx.AsyncClient, None]:
         async with LifespanManager(app):
             async with httpx.AsyncClient(
-                app=app, base_url="http://app.io"
+                    app=app, base_url="http://app.io"
             ) as test_client:
                 yield test_client
 
