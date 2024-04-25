@@ -3,10 +3,9 @@ from typing import AsyncGenerator
 import pytest
 import pytest_asyncio
 import sqlalchemy.orm
+from app.db import engine, async_sessionmaker
 from sqlalchemy import Column, Integer, String, select
 from sqlalchemy.ext.asyncio import AsyncSession
-
-from api.db import engine, async_sessionmaker
 
 Base = sqlalchemy.orm.declarative_base()
 

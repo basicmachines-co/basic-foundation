@@ -1,13 +1,13 @@
 import sys
 
+from app.config import BASE_DIR
+from app.routes import html_router
+from app.users.routes import auth_router, user_router
 from fastapi import FastAPI
 from loguru import logger
 from starlette.staticfiles import StaticFiles
 
-from api import config
-from api.config import BASE_DIR
-from api.routes import html_router
-from api.users.routes import auth_router, user_router
+from app import config
 
 # delete all existing default loggers
 logger.remove()

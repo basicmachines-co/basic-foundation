@@ -1,6 +1,19 @@
 from typing import Callable, Coroutine, Any
 from uuid import UUID
 
+from app.config import BASE_DIR
+from app.deps import get_user_repository
+from app.repository import Repository
+from app.users.deps import (
+    get_cookie_backend,
+    fastapi_users,
+    get_user_manager,
+    current_optional_user,
+    current_active_user,
+)
+from app.users.managers import UserManager
+from app.users.models import User
+from app.users.schemas import UserCreate
 from fastapi import Depends, HTTPException, status
 from fastapi import Request, Form, Response, APIRouter
 from fastapi.routing import APIRoute
@@ -11,20 +24,6 @@ from jinja2.ext import DebugExtension
 from jinja2_fragments.fastapi import Jinja2Blocks
 from pydantic import ValidationError
 from starlette.responses import RedirectResponse, HTMLResponse
-
-from api.config import BASE_DIR
-from api.deps import get_user_repository
-from api.repository import Repository
-from api.users.deps import (
-    get_cookie_backend,
-    fastapi_users,
-    get_user_manager,
-    current_optional_user,
-    current_active_user,
-)
-from api.users.managers import UserManager
-from api.users.models import User
-from api.users.schemas import UserCreate
 
 
 class HTMLRoute(APIRoute):

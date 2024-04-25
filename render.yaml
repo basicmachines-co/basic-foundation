@@ -3,8 +3,8 @@ services:
     name: basic-api
     env: python
     plan: starter
-    buildCommand: make install && make tailwind && make migrate-up && cd api
-    startCommand: uvicorn api.app:app --host 0.0.0.0 --port 10000
+    buildCommand: make install && make tailwind && make migrate-up
+    startCommand: make run-render
     envVars:
       - key: POETRY_VERSION
         value: 1.7.1

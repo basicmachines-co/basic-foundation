@@ -4,10 +4,10 @@ include .env
 
 install:
 	poetry install
-	cd api && npm install
+	npm install
 
 test:
-	cd api/tests && poetry run pytest
+	poetry run pytest
 
 clean:
 	find . -type f -name '*.pyc' -delete
@@ -23,7 +23,7 @@ format:
 	poetry run ruff format .
 
 tailwind: install
-	cd api && npx tailwindcss -i ./static/src/input.css -o ./static/dist/css/output.css
+	npx tailwindcss -i ./static/src/input.css -o ./static/dist/css/output.css
 
 # Database migrations
 
@@ -31,7 +31,7 @@ tailwind: install
 DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable"
 
 # Path to migrations directory
-DB_DIR="./api/db"
+DB_DIR="./db"
 MIGRATIONS_DIR="$(DB_DIR)/migrations"
 
 # Create a new migration
@@ -59,3 +59,6 @@ migrate-reset:
 # Note: The `--network="host"` option is used to allow the Docker container to access the host network.
 # This is necessary for the container to connect to the local database.
 # You might need to adjust this depending on your Docker setup and database location.
+
+run-render:
+	uvicorn app.app:app --host 0.0.0.0 --port 10000

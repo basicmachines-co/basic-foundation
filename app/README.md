@@ -1,6 +1,6 @@
-# basic-api
+# basic-app
 
-Saas platform api using
+Saas platform app using
 
 - fastapi
 - htmx

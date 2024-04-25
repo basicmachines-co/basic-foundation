@@ -1,12 +1,11 @@
 from typing import AsyncGenerator
 
+from app.db import async_sessionmaker
+from app.repository import Repository
+from app.users.models import User
 from fastapi import Request, Depends
 from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
-
-from api.db import async_sessionmaker
-from api.repository import Repository
-from api.users.models import User
 
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:

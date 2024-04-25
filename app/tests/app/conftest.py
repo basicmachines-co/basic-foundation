@@ -3,11 +3,10 @@ from typing import AsyncGenerator
 
 import pytest
 import pytest_asyncio
+from app.db import engine
 from sqlalchemy import event
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
-
-from api.db import engine
 
 # Create a new instance of the engine
 AsyncTestingSessionLocal = sessionmaker(

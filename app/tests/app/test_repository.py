@@ -1,8 +1,8 @@
 import pytest
 import pytest_asyncio
 
-from api.repository import Repository
-from api.users.models import User
+from app.repository import Repository
+from app.users.models import User
 
 
 @pytest_asyncio.fixture

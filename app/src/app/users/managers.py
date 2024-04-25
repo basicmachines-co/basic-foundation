@@ -1,6 +1,7 @@
 import uuid
 from typing import Union, Optional
 
+from app.users.models import User
 from fastapi import Request
 from fastapi_users import (
     UUIDIDMixin,
@@ -10,8 +11,7 @@ from fastapi_users import (
     InvalidPasswordException,
 )
 
-from api import config
-from api.users.models import User
+from app import config
 
 SECRET = config.settings.jwt_secret
 

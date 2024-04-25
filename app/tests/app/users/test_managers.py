@@ -2,10 +2,9 @@ from typing import AsyncGenerator
 
 import pytest
 import pytest_asyncio
+from app.users.managers import InvalidPasswordException, UserManager
+from app.users.models import User
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
-
-from api.users.managers import InvalidPasswordException, UserManager
-from api.users.models import User
 
 
 @pytest_asyncio.fixture

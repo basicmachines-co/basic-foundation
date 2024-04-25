@@ -9,7 +9,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 # get the current working directory
 CWD = os.getcwd()
 # print(f"CWD={CWD}")
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 logger.info(f"BASE_DIR={BASE_DIR}")
 
 # find the .env in parent dirs
