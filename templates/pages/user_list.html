@@ -40,8 +40,8 @@
                         <th scope="col"
                                 class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Is Verified
                         </th>
-                        <th scope="col" class="relative py-3.5 pl-3">
-                            <span class="sr-only">Edit</span>
+                        <th scope="col"
+                                class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Is Admin
                         </th>
                     </tr>
                     </thead>
@@ -56,10 +56,7 @@
                             <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">{{ user.email }}</td>
                             <td class="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">{{ user.is_active }}</td>
                             <td class="px-3 py-4 text-sm text-gray-500">{{ user.is_verified }}</td>
-                            <td class="relative py-4 pl-3 text-right text-sm font-medium">
-                                <a href="/users/{{ user.id }}/edit"
-                                        class="text-indigo-600 hover:text-indigo-900">Edit<span class="sr-only">: {{ user.first_name }} {{ user.last_name }}</span></a>
-                            </td>
+                            <td class="px-3 py-4 text-sm text-gray-500">{{ user.is_superuser }}</td>
                         </tr>
                     {% endfor %}
 

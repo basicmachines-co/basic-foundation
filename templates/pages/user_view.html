@@ -6,11 +6,10 @@
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="sm:flex sm:items-center">
                 <div class="sm:flex-auto">
-                    <h1 class="text-xl font-semibold leading-6 text-gray-900">User</h1>
-                    <p class="mt-2 text-sm text-gray-700">Full Name</p>
+                    <h1 class="text-xl font-semibold leading-6  text-gray-900">{{ user.first_name }} {{ user.last_name }}</h1>
                 </div>
                 <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                    <a hx-get="/users/foo/edit" hx-target="#user_view" hx-swap="outerHTML">
+                    <a hx-get="/users/{{ user.id }}/edit" hx-target="#user_view" hx-swap="outerHTML">
                         <button type="button"
                                 class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Edit user
                         </button>
@@ -23,23 +22,24 @@
             <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 <div class="sm:col-span-3">
                     <label for="first-name" class="block text-sm font-medium leading-6 text-gray-900">First name</label>
-                    <p class="mt-2 text-gray-900 sm:text-sm">Jane</p>
+                    <p class="mt-2 text-gray-900 sm:text-sm">{{ user.first_name }}</p>
                 </div>
                 <div class="sm:col-span-3">
                     <label for="last-name" class="block text-sm font-medium leading-6 text-gray-900">Last name</label>
-                    <p class="mt-2 text-gray-900 sm:text-sm">Smith</p>
+                    <p class="mt-2 text-gray-900 sm:text-sm">{{ user.last_name }}</p>
                 </div>
                 <div class="sm:col-span-4">
                     <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
-                    <p class="mt-2 text-gray-900 sm:text-sm">jane.smith@example.com</p>
+                    <p class="mt-2 text-gray-900 sm:text-sm">{{ user.email }}</p>
                 </div>
             </div>
             <div class="mt-10 space-y-10">
                 <fieldset>
                     <legend class="text-sm font-semibold leading-6 text-gray-900">Info</legend>
                     <ul class="mt-6 space-y-6 text-sm leading-6 text-gray-500">
-                        <li>Verified: <span class="text-gray-900">True</span></li>
-                        <li>is Admin: <span class="text-gray-900">True</span></li>
+                        <li>is Active: <span class="text-gray-900">{{ user.is_active }}</span></li>
+                        <li>Verified: <span class="text-gray-900">{{ user.is_verified }}</span></li>
+                        <li>is Admin: <span class="text-gray-900">{{ user.is_superuser }}</span></li>
                     </ul>
                 </fieldset>
             </div>

@@ -3,100 +3,128 @@
 {% block content %}
 
     <section id="user_edit">
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div class="sm:flex sm:items-center">
-                <div class="sm:flex-auto">
-                    <h1 class="text-xl font-semibold leading-6 text-gray-900">Edit User</h1>
-                    <p class="mt-2 text-sm text-gray-700">{{ user.first_name }} {{ user.last_name }}</p>
+        <!-- USER EDIT FORM -->
+        <form class="space-y-6" hx-post="/users/{{ user.id }}" hx-swap="outerHTML" method="post">
+            {% if error %}
+                <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" id="errors" role="alert">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="sm:flex sm:items-center">
+                    <div class="sm:flex-auto">
+                        <h1 class="text-xl font-semibold leading-6 text-gray-900">{{ user.first_name }} {{ user.last_name }}</h1>
+                    </div>
+                    <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+                        <a href="/users/{{ user.id }}">
+                            <button type="button"
+                                    class="text-sm font-semibold leading-6 text-gray-900">Cancel
+                            </button>
+                        </a>
+                        <button type="submit"
+                                class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save
+                        </button>
+                        <button type="button"
+                                class="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">Delete
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- user detail -->
-        <div class="mt-8 mx-auto max-w-7xl px-4 sm:px-6 border border-gray-200 lg:px-8 pb-12">
-            <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div class="sm:col-span-3">
-                    <label for="first-name" class="block text-sm font-medium leading-6 text-gray-900">First name</label>
-                    <div class="mt-2">
-                        <input type="text"
-                                name="first-name"
-                                id="first-name"
-                                value="{{ user.first_name }}"
-                                autocomplete="given-name"
-                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                    </div>
-                </div>
-                <div class="sm:col-span-3">
-                    <label for="last-name" class="block text-sm font-medium leading-6 text-gray-900">Last name</label>
-                    <div class="mt-2">
-                        <input type="text"
-                                name="last-name"
-                                id="last-name"
-                                value="{{ user.last_name }}"
-                                autocomplete="family-name"
-                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                    </div>
-                </div>
-                <div class="sm:col-span-3">
-                    <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
-                    <div class="mt-2">
-                        <input id="email"
-                                name="email"
-                                type="email"
-                                value="{{ user.email }}"
-                                autocomplete="email"
-                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                    </div>
-                </div>
-                <div class="mt-4 sm:col-span-full">
-                    <fieldset>
-                        <legend class="text-sm font-semibold leading-6 text-gray-900">Info</legend>
-                        <div class="mt-6 space-y-6">
-                            <div class="relative flex gap-x-3">
-                                <div class="flex h-6 items-center">
-                                    <input id="comments"
-                                            name="comments"
-                                            type="checkbox"
-                                            {% if user.is_verified %}
-                                                checked
-                                            {% endif %}
-                                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
-                                </div>
-                                <div class="text-sm leading-6">
-                                    <label for="comments" class="font-medium text-gray-900">Verified</label>
-                                    <p class="text-gray-500">The user has processed a verification link via email.</p>
-                                </div>
-                            </div>
-                            <div class="relative flex gap-x-3">
-                                <div class="flex h-6 items-center">
-                                    <input id="candidates"
-                                            name="candidates"
-                                            type="checkbox"
-                                            {% if user.is_admin %}
-                                                checked
-                                            {% endif %}
-                                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
-                                </div>
-                                <div class="text-sm leading-6">
-                                    <label for="candidates" class="font-medium text-gray-900">Admin</label>
-                                    <p class="text-gray-500">The user has admin privileges.</p>
-                                </div>
-                            </div>
+            <!-- user detail -->
+            <div class="mt-8 mx-auto max-w-7xl px-4 sm:px-6 border border-gray-200 lg:px-8 pb-12">
+                <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                    <div class="sm:col-span-3">
+                        <label for="first_name"
+                                class="block text-sm font-medium leading-6 text-gray-900">First name</label>
+                        <div class="mt-2">
+                            <input type="text"
+                                    name="first_name"
+                                    id="first_name"
+                                    value="{{ user.first_name }}"
+                                    autocomplete="given-name"
+                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
-                    </fieldset>
+                    </div>
+                    <div class="sm:col-span-3">
+                        <label for="last_name"
+                                class="block text-sm font-medium leading-6 text-gray-900">Last name</label>
+                        <div class="mt-2">
+                            <input type="text"
+                                    name="last_name"
+                                    id="last_name"
+                                    value="{{ user.last_name }}"
+                                    autocomplete="family-name"
+                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        </div>
+                    </div>
+                    <div class="sm:col-span-3">
+                        <label for="email"
+                                class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+                        <div class="mt-2">
+                            <input id="email"
+                                    name="email"
+                                    type="email"
+                                    value="{{ user.email }}"
+                                    autocomplete="email"
+                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        </div>
+                    </div>
+                    <div class="mt-4 sm:col-span-full">
+                        <fieldset>
+                            <legend class="text-sm font-semibold leading-6 text-gray-900">Info</legend>
+                            <div class="mt-6 space-y-6">
+                                <div class="relative flex gap-x-3">
+                                    <div class="flex h-6 items-center">
+                                        <input id="is_active"
+                                                name="is_active"
+                                                type="checkbox"
+                                                {% if user.is_active %}
+                                                    checked
+                                                {% endif %}
+                                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                                    </div>
+                                    <div class="text-sm leading-6">
+                                        <label for="is_active" class="font-medium text-gray-900">Active</label>
+                                        <p class="text-gray-500">The user is active.</p>
+                                    </div>
+                                </div>
+                                <div class="relative flex gap-x-3">
+                                    <div class="flex h-6 items-center">
+                                        <input id="is_verified"
+                                                name="is_verified"
+                                                type="checkbox"
+                                                {% if user.is_verified %}
+                                                    checked
+                                                {% endif %}
+                                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                                    </div>
+                                    <div class="text-sm leading-6">
+                                        <label for="is_verified" class="font-medium text-gray-900">Verified</label>
+                                        <p class="text-gray-500">The user has processed a verification link via email.</p>
+                                    </div>
+                                </div>
+                                <div class="relative flex gap-x-3">
+                                    <div class="flex h-6 items-center">
+                                        <input id="is_superuser"
+                                                name="is_superuser"
+                                                type="checkbox"
+                                                {% if user.is_superuser %}
+                                                    checked
+                                                {% endif %}
+                                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                                    </div>
+                                    <div class="text-sm leading-6">
+                                        <label for="candidates" class="font-medium text-gray-900">Admin</label>
+                                        <p class="text-gray-500">The user has admin privileges.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="mt-6 flex items-center justify-end gap-x-2">
-            <a href="/users/foo">
-                <button type="button" class="text-sm font-semibold leading-6 text-gray-900">Cancel</button>
-            </a>
-            <button type="submit"
-                    class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save
-            </button>
-            <button type="button"
-                    class="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">Delete
-            </button>
-        </div>
+        </form>
     </section>
 
 {% endblock content %}

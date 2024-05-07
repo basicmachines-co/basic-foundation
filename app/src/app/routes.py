@@ -1,5 +1,14 @@
-from typing import Callable, Coroutine, Any
 from uuid import UUID
+
+from fastapi import Depends, HTTPException, status
+from fastapi import Request, Form, Response, APIRouter
+from fastapi.security import OAuth2PasswordRequestForm
+from fastapi_users import exceptions
+from fastapi_users.authentication import AuthenticationBackend, Strategy
+from jinja2.ext import DebugExtension
+from jinja2_fragments.fastapi import Jinja2Blocks
+from pydantic import ValidationError
+from starlette.responses import RedirectResponse, HTMLResponse
 
 from app.config import BASE_DIR
 from app.deps import get_user_repository
@@ -9,39 +18,21 @@ from app.users.deps import (
     fastapi_users,
     get_user_manager,
     current_optional_user,
-    current_active_user,
 )
 from app.users.managers import UserManager
 from app.users.models import User
-from app.users.schemas import UserCreate
-from fastapi import Depends, HTTPException, status
-from fastapi import Request, Form, Response, APIRouter
-from fastapi.routing import APIRoute
-from fastapi.security import OAuth2PasswordRequestForm
-from fastapi_users import exceptions
-from fastapi_users.authentication import AuthenticationBackend, Strategy
-from jinja2.ext import DebugExtension
-from jinja2_fragments.fastapi import Jinja2Blocks
-from pydantic import ValidationError
-from starlette.responses import RedirectResponse, HTMLResponse
+from app.users.schemas import UserCreate, UserUpdate
 
 
-class HTMLRoute(APIRoute):
-    def get_route_handler(self) -> Callable[[Request], Coroutine[Any, Any, Response]]:
-        original_route_handler = super().get_route_handler()
-
-        async def login_redirect_handler(request: Request) -> Response:
-            try:
-                return await original_route_handler(request)
-            except HTTPException as exc:
-                if exc.status_code == status.HTTP_401_UNAUTHORIZED:
-                    response = RedirectResponse(url=html_router.url_path_for("login"))
-                    return response
-
-        return login_redirect_handler
+def logged_in(user: User = Depends(current_optional_user)):
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_307_TEMPORARY_REDIRECT,
+            headers={'Location': html_router.url_path_for("login")})
+    return user
 
 
-html_router = APIRouter(tags=["html"], route_class=HTMLRoute)
+html_router = APIRouter(include_in_schema=False, default_response_class=HTMLResponse)
 
 templates = Jinja2Blocks(
     directory=f"{BASE_DIR}/templates",
@@ -49,87 +40,109 @@ templates = Jinja2Blocks(
 templates.env.add_extension(DebugExtension)
 
 
-@html_router.get("/dashboard", response_class=HTMLResponse)
-async def dashboard(request: Request, current_user=Depends(current_active_user)):
+@html_router.get("/dashboard")
+async def dashboard(request: Request, current_user=Depends(logged_in)):
     return templates.TemplateResponse(
         "pages/dashboard.html",
-        {"request": request, "params": {"nav": "dashboard"}},
+        {"request": request, "current_user": current_user},
     )
 
 
-@html_router.get("/users", response_class=HTMLResponse)
+@html_router.get("/users")
 async def users(
         request: Request,
-        current_user=Depends(current_active_user),
+        current_user=Depends(logged_in),
         user_repo: Repository[User] = Depends(get_user_repository),
 ):
     users = await user_repo.find_all()
     return templates.TemplateResponse(
         "pages/user_list.html",
-        {"request": request, "users": users},
+        {"request": request, "current_user": current_user, "users": users},
     )
 
 
-@html_router.get("/users/{id}", response_class=HTMLResponse)
-async def user(request: Request, current_active_user=Depends(current_active_user)):
+@html_router.get("/users/{user_id}")
+async def user(
+        request: Request,
+        user_id: UUID,
+        current_user=Depends(logged_in),
+        user_repo: Repository[User] = Depends(get_user_repository),
+):
+    view_user = await user_repo.find_by_id(user_id)
     return templates.TemplateResponse(
         "pages/user_view.html",
-        {"request": request, "params": {"nav": "users"}},
+        {"request": request, "current_user": current_user, "user": view_user},
     )
 
 
-@html_router.get("/users/{user_id}/edit", response_class=HTMLResponse)
+@html_router.get("/users/{user_id}/edit")
 async def user_edit(
         request: Request,
         user_id: UUID,
-        current_active_user=Depends(current_active_user),
+        current_user=Depends(logged_in),
+        user_repo: Repository[User] = Depends(get_user_repository),
+):
+    edit_user = await user_repo.find_by_id(user_id)
+    return templates.TemplateResponse(
+        "pages/user_edit.html",
+        {"request": request, "current_user": current_user, "user": edit_user},
+        block_name="content",
+    )
+
+
+@html_router.post("/users/{user_id}")
+async def user_edit_post(
+        request: Request,
+        user_id: UUID,
+        current_user=Depends(logged_in),
+        first_name: str = Form(),
+        last_name: str = Form(),
+        email: str = Form(),
+        is_active: str = Form(False),
+        is_verified: str = Form(False),
+        is_superuser: str = Form(False),
         user_repo: Repository[User] = Depends(get_user_repository),
 ):
     user = await user_repo.find_by_id(user_id)
+    # todo handle 404
+    error = None
+    try:
+        update_form = UserUpdate(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            is_active=is_active,
+            is_verified=is_verified,
+            is_superuser=is_superuser,
+        )
+    except ValidationError:
+        error = "Validation Error"
+
+    updated_user = await user_repo.update(user.id, update_form.dict())
+
     return templates.TemplateResponse(
-        "pages/user_edit.html",
-        {"request": request, "user": user},
-        # block_name="content",
+        "pages/user_view.html",
+        {"request": request, "error": error, "user": updated_user},
+        block_name="content",
     )
 
 
-@html_router.get("/", response_class=HTMLResponse)
-async def index(request: Request, user=Depends(current_optional_user)):
-    """
-    :param request: Request object representing the HTTP request.
-    :param user: Optional user object representing the current user.
-    :return: A TemplateResponse object representing the HTML response.
-
-    The index function handles the root route ("/"). It expects a Request object and an optional user object as
-    parameters. If the user object is not provided, the function redirects the * user to the login page. Otherwise,
-    it returns a TemplateResponse object that renders the "pages/index.html.jinja" template. The TemplateResponse
-    object includes the request object *, the title "Basic Foundation", and the user object as template variables.
-    """
-    if not user:
-        return RedirectResponse(url=html_router.url_path_for("login"))
+@html_router.get("/")
+async def index(request: Request, current_user=Depends(logged_in)):
     return templates.TemplateResponse(
         "pages/index.html",
-        {"request": request, "title": "Basic Foundation", "user": user},
+        {"request": request, "current_user": current_user},
     )
 
 
-@html_router.get("/register", response_class=HTMLResponse)
+@html_router.get("/register")
 async def register(request: Request):
-    """
-    Register Method
-
-    This method is used to handle the GET request for the "/register" route.
-    It returns a template response for the registration page.
-
-    :param request: The request object representing the HTTP request.
-    :return: The template response object for the registration page.
-    """
     return templates.TemplateResponse(
-        "pages/register.html", {"request": request, "title": "Register"}
+        "pages/register.html", {"request": request}
     )
 
 
-@html_router.post("/register", response_class=HTMLResponse)
+@html_router.post("/register")
 async def register_post(
         request: Request,
         first_name: str = Form(),
@@ -163,12 +176,12 @@ async def register_post(
     )
 
 
-@html_router.get("/login", response_class=HTMLResponse)
+@html_router.get("/login")
 async def login(request: Request):
     return templates.TemplateResponse("pages/login.html", {"request": request})
 
 
-@html_router.post("/login", response_class=HTMLResponse)
+@html_router.post("/login")
 async def login_post(
         request: Request,
         form_data: OAuth2PasswordRequestForm = Depends(),
@@ -202,7 +215,7 @@ async def login_user(request, user, user_manager, auth_backend):
     return Response(headers=login_response.headers)
 
 
-@html_router.get("/logout", response_class=HTMLResponse)
+@html_router.get("/logout")
 async def logout(
         request: Request,
         user_token=Depends(fastapi_users.authenticator.current_user_token(optional=True)),
