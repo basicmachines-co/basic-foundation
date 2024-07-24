@@ -133,6 +133,10 @@ uvicorn app.main:app --reload
     - [x] tailwind plugins
     - [x] login
     - [x] register
+- [ ] replace auth
+    - remove fastapi-users
+    - replace with vanilla auth
+- [ ] shadcn components
 - [ ] crud users
 - [ ] test coverage
     - codecov https://github.com/marketplace/codecov/plan/MDIyOk1hcmtldHBsYWNlTGlzdGluZ1BsYW4xNg==#plan-16
