@@ -1,6 +1,6 @@
 from typing import Type, TypeVar, Generic, Optional, Any, Sequence
 
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import declarative_base
@@ -82,3 +82,11 @@ class Repository(Generic[T]):
             return entity
         except NoResultFound:
             return None
+
+    async def count(self) -> int:
+        """
+        Return the count of entities in the database.
+        """
+        count_stmt = select(func.count()).select_from(self.model)
+        result = await self.session.execute(count_stmt)
+        return result.scalar()

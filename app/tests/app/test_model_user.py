@@ -66,3 +66,9 @@ async def test_delete_user(user_repository, sample_user, session):
     await user_repository.delete(sample_user.id)
     deleted_user = await session.get(User, sample_user.id)
     assert deleted_user is None
+
+
+@pytest.mark.asyncio
+async def test_count_user(user_repository, sample_user, session):
+    count = await user_repository.count()
+    assert count > 0

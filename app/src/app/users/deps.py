@@ -1,8 +1,5 @@
 import uuid
 
-from app.deps import get_async_session
-from app.users.managers import UserManager
-from app.users.models import User
 from fastapi import Depends
 from fastapi_users import FastAPIUsers
 from fastapi_users.authentication import (
@@ -15,6 +12,9 @@ from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app import config
+from app.deps import get_async_session
+from app.users.managers import UserManager
+from app.users.models import User
 
 bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
 cookie_transport = CookieTransport(
@@ -53,7 +53,7 @@ async def get_cookie_backend():
     yield cookie_backend
 
 
-async def get_user_db(session: AsyncSession = Depends(get_async_session)):
+async def get_user_db(session: AsyncSession = Depends(get_async_session)) -> AsyncSession:
     """
     Retrieve the user database.
 

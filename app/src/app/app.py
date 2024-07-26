@@ -5,9 +5,9 @@ from loguru import logger
 from starlette.staticfiles import StaticFiles
 
 from app import config
+from app.api.users.routes import router as user_api_router
 from app.config import BASE_DIR
 from app.routes import html_router
-from app.routesm.api.users import user_router as user_api_router
 from app.users.routes import auth_router, user_router
 
 # delete all existing default loggers
