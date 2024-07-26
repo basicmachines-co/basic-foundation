@@ -15,6 +15,7 @@ python = "3.12.1"
 ruff = "^0.2.1"
 setuptools = "^69.0.3"
 loguru = "^0.7.2"
+fastapi-jwt = {extras = ["authlib"], version = "^0.3.0"}
 
 [tool.poetry.group.app.dependencies]
 fastapi = "0.110.1"

@@ -1,4 +1,4 @@
-from typing import Type, TypeVar, Generic, List, Optional, Any
+from typing import Type, TypeVar, Generic, Optional, Any, Sequence
 
 from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
@@ -19,7 +19,7 @@ class Repository(Generic[T]):
         self.session = session
         self.model = model
 
-    async def find_all(self, skip: int = 0, limit: int = 100) -> List[T]:
+    async def find_all(self, skip: int = 0, limit: int = 100) -> Sequence[T]:
         """
         Finds entities that match given options.
         """

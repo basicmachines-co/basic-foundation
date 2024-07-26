@@ -115,6 +115,20 @@ docs = ["Sphinx (>=5.3.0,<5.4.0)", "sphinx-rtd-theme (>=1.2.2)", "sphinxcontrib-
 test = ["flake8 (>=6.1,<7.0)", "uvloop (>=0.15.3)"]
 
 [[package]]
+name = "authlib"
+version = "1.3.1"
+description = "The ultimate Python library in building OAuth and OpenID Connect servers and clients."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "Authlib-1.3.1-py2.py3-none-any.whl", hash = "sha256:d35800b973099bbadc49b42b256ecb80041ad56b7fe1216a362c7943c088f377"},
+    {file = "authlib-1.3.1.tar.gz", hash = "sha256:7ae843f03c06c5c0debd63c9db91f9fda64fa62a42a77419fa15fbb7e7a58917"},
+]
+
+[package.dependencies]
+cryptography = "*"
+
+[[package]]
 name = "bcrypt"
 version = "4.1.2"
 description = "Modern password hashing for your software and your servers"
@@ -524,6 +538,26 @@ typing-extensions = ">=4.8.0"
 
 [package.extras]
 all = ["email-validator (>=2.0.0)", "httpx (>=0.23.0)", "itsdangerous (>=1.1.0)", "jinja2 (>=2.11.2)", "orjson (>=3.2.1)", "pydantic-extra-types (>=2.0.0)", "pydantic-settings (>=2.0.0)", "python-multipart (>=0.0.7)", "pyyaml (>=5.3.1)", "ujson (>=4.0.1,!=4.0.2,!=4.1.0,!=4.2.0,!=4.3.0,!=5.0.0,!=5.1.0)", "uvicorn[standard] (>=0.12.0)"]
+
+[[package]]
+name = "fastapi-jwt"
+version = "0.3.0"
+description = "`FastAPI` extension for JTW Auth"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "fastapi_jwt-0.3.0-py3-none-any.whl", hash = "sha256:b4255ce929f1c59c2bbcf5295b485995c8263466aa733a0dd164b052b4a476a3"},
+]
+
+[package.dependencies]
+Authlib = {version = ">=1.3.0", optional = true, markers = "extra == \"authlib\""}
+fastapi = ">=0.50.0"
+
+[package.extras]
+authlib = ["Authlib (>=1.3.0)"]
+docs = ["MkAutoDoc (>=0.2.0,<1.0.0)", "lazydocs (>=0.4.5,<1.0.0)", "mike (>=1.1.0,<3.0.0)", "mkdocs (>=1.4.0,<2.0.0)", "mkdocs-awesome-pages-plugin (>=2.8.0,<3.0.0)", "mkdocs-include-markdown-plugin (>=4.0.0,<7.0.0)", "mkdocs-material (>=9.0.0,<10.0.0)"]
+python-jose = ["python-jose[cryptography] (>=3.3.0)"]
+test = ["Authlib (>=1.3.0)", "black (==24.4.2)", "flake8 (>=6.0.0,<8.0.0)", "httpx (>=0.23.0,<1.0.0)", "isort (>=5.11.0,<6.0.0)", "mypy (>=1.0.0,<2.0.0)", "pytest (>=7.0.0,<9.0.0)", "pytest-cov (>=4.0.0,<6.0.0)", "pytest-mock (>=3.0.0,<4.0.0)", "python-jose[cryptography] (>=3.3.0)", "requests (>=2.28.0,<3.0.0)", "ruff (>=0.1.0,<1.0.0)", "types-python-jose (==3.3.4.8)"]
 
 [[package]]
 name = "fastapi-users"
@@ -1506,4 +1540,4 @@ dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.12.1"
-content-hash = "2c35b1fb5aef47b4451a10cfac559702bff667699877f0b57d12359a1520f32d"
+content-hash = "1e86ef4cba63e3b2112620d7c2dac8348d453496c2c853653bbc2c882da76f6f"

@@ -99,8 +99,6 @@ cd basic-app/src
 uvicorn app.main:app --reload
 ```
 
-### Setup the frontend
-
 ## deploy to render.com
 
 * Signup/Login to render.com dashboard

@@ -1,8 +1,8 @@
 import pytest
 import pytest_asyncio
 
+from app.models import User
 from app.repository import Repository
-from app.users.models import User
 
 
 @pytest_asyncio.fixture
@@ -13,13 +13,13 @@ def user_repository(session):
 @pytest_asyncio.fixture
 async def sample_user(session):
     user = User(
-        first_name="John",
-        last_name="Doe",
+        full_name="John Doe",
         email="johndoe@sample.test",
         hashed_password="hash",
     )
     session.add(user)
     await session.commit()
+    await session.refresh(user)
     return user
 
 
@@ -27,15 +27,13 @@ async def sample_user(session):
 async def test_create_user(user_repository, session):
     new_user = await user_repository.create(
         {
-            "first_name": "Jane",
-            "last_name": "Smith",
+            "full_name": "John Doe",
             "email": "john@smith.com",
             "hashed_password": "hash",
         }
     )
     found_user = await user_repository.find_by_id(new_user.id)
-    assert found_user.first_name == "Jane"
-    assert found_user.last_name == "Smith"
+    assert found_user.full_name == "John Doe"
 
 
 @pytest.mark.asyncio
@@ -43,15 +41,24 @@ async def test_find_user_by_id(user_repository, sample_user):
     found_user = await user_repository.find_by_id(sample_user.id)
     assert found_user is not None
     assert found_user.id == sample_user.id
-    assert found_user.first_name == sample_user.first_name
-    assert found_user.last_name == sample_user.last_name
+    assert found_user.full_name == sample_user.full_name
+
+
+@pytest.mark.asyncio
+async def test_find_all_users(user_repository, sample_user):
+    found_users = await user_repository.find_all(limit=1)
+    assert found_users is not None
+    assert len(found_users) == 1
 
 
 @pytest.mark.asyncio
 async def test_update_user(user_repository, sample_user, session):
-    await user_repository.update(sample_user.id, {"last_name": "Updated"})
+    updated_at_orig = sample_user.updated_at
+    await user_repository.update(sample_user.id, {"full_name": "Updated"})
     await session.refresh(sample_user)  # Refresh to get updated data
-    assert sample_user.last_name == "Updated"
+    assert sample_user.full_name == "Updated"
+    # assert updated_at is also changed
+    assert updated_at_orig <= sample_user.updated_at
 
 
 @pytest.mark.asyncio
