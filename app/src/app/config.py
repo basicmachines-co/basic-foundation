@@ -44,9 +44,17 @@ class Settings(BaseSettings):
     postgres_port: int
     env_file: str = None
 
+    superuser_name: str
+    superuser_email: str
+    superuser_password: str
+
     @property
     def postgres_dsn(self) -> PostgresDsn:
         return f"postgresql+asyncpg://{self.postgres_user}:{self.postgres_password}@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
+
+    @property
+    def postgres_dsn_sync(self) -> PostgresDsn:
+        return f"postgresql://{self.postgres_user}:{self.postgres_password}@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
 
     # assume the .env file is in the directory above the project
     model_config = SettingsConfigDict(env_file=f"{CWD}/../.env", extra="allow")

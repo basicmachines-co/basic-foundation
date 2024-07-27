@@ -60,5 +60,8 @@ migrate-reset:
 # This is necessary for the container to connect to the local database.
 # You might need to adjust this depending on your Docker setup and database location.
 
+init_data:
+	poetry run python app/src/tools/init_data.py
+
 run-render:
 	uvicorn app.app:app --host 0.0.0.0 --port 10000
