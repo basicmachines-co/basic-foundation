@@ -7,8 +7,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
 from app.config import settings
+from app.core.security import get_password_hash
 from app.models import User
-from app.security import get_password_hash
 
 # silence bcrypt noise
 logging.getLogger('passlib').setLevel(logging.ERROR)

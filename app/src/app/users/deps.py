@@ -12,7 +12,7 @@ from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app import config
-from app.deps import get_async_session
+from app.core.deps import get_async_session
 from app.users.managers import UserManager
 from app.users.models import User
 

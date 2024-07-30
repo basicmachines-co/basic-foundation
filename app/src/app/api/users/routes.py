@@ -5,7 +5,7 @@ from fastapi_jwt import JwtAccessBearer, JwtRefreshBearer
 
 from app.api.deps import JwtAuthorizationCredentialsDep, get_current_active_superuser
 from app.api.users.schemas import UsersPublic
-from app.deps import UserRepositoryDep
+from app.core.deps import UserRepositoryDep
 
 ## security
 # Read access token from bearer header and cookie (bearer priority)

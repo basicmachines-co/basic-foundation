@@ -9,10 +9,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
 
 from app.app import app
-from app.db import engine
-from app.deps import get_user_repository
+from app.core.db import engine
+from app.core.deps import get_user_repository
+from app.core.repository import Repository
 from app.models import User
-from app.repository import Repository
 from utils import get_superuser_token_headers
 
 # Create a new instance of the engine

@@ -7,7 +7,7 @@ from fastapi_jwt import JwtAuthorizationCredentials, JwtAccessBearer, JwtRefresh
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
-from app.deps import get_async_session
+from app.core.deps import get_async_session
 from app.models import User
 
 # Read access token from bearer header and cookie (bearer priority)

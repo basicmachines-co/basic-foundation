@@ -1,8 +1,8 @@
 import pytest
 from httpx import AsyncClient
 
+from app.core.repository import Repository
 from app.models import User
-from app.repository import Repository
 from utils import random_email, random_lower_string
 
 

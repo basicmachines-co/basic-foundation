@@ -8,7 +8,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from app.api.deps import access_token_security
 from app.api.login.schemas import AuthToken, AuthTokenPayload
 from app.config import settings
-from app.deps import UserRepositoryDep
+from app.core.deps import UserRepositoryDep
 from app.services import authenticate
 
 router = APIRouter()

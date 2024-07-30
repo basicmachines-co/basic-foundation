@@ -1,6 +1,6 @@
 include .env
 
-.PHONY: install test clean lint lint-fix format  migrate-new migrate-up migrate-down migrate-dump migrate-resetØ
+.PHONY: install test clean lint lint-fix format migrate-new migrate-up migrate-down migrate-dump migrate-resetØ
 
 install:
 	poetry install

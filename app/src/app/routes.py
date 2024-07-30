@@ -11,8 +11,8 @@ from pydantic import ValidationError
 from starlette.responses import RedirectResponse, HTMLResponse
 
 from app.config import BASE_DIR
-from app.deps import get_user_repository
-from app.repository import Repository
+from app.core.deps import get_user_repository
+from app.core.repository import Repository
 from app.users.deps import (
     get_cookie_backend,
     fastapi_users,
