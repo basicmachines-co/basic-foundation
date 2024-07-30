@@ -90,3 +90,17 @@ class Repository(Generic[T]):
         count_stmt = select(func.count()).select_from(self.model)
         result = await self.session.execute(count_stmt)
         return result.scalar()
+
+    async def execute_query(self, query: str) -> Any:
+        """
+        Executes a custom SQL query and returns the result.
+        """
+        result = await self.session.execute(query)
+        return result
+
+    async def find_one(self, query: str) -> Optional[T]:
+        """
+        Executes a custom SQL query and returns the result for one entity
+        """
+        result = await self.execute_query(query)
+        return result.scalars().one_or_none()

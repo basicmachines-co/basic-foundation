@@ -5,6 +5,7 @@ from loguru import logger
 from starlette.staticfiles import StaticFiles
 
 from app import config
+from app.api.login.routes import router as login_api_router
 from app.api.users.routes import router as user_api_router
 from app.config import BASE_DIR
 from app.routes import html_router
@@ -18,7 +19,8 @@ app = FastAPI()
 
 app.mount("/static", StaticFiles(directory=f"{BASE_DIR}/static"), name="static")
 
-app.include_router(user_api_router, prefix="/user")
+app.include_router(login_api_router, prefix="")
+app.include_router(user_api_router, prefix="/users")
 app.include_router(auth_router, prefix="/api")
 app.include_router(user_router, prefix="/api")
 app.include_router(html_router, tags=["html"])

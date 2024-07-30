@@ -2,12 +2,6 @@ import pytest
 import pytest_asyncio
 
 from app.models import User
-from app.repository import Repository
-
-
-@pytest_asyncio.fixture
-def user_repository(session):
-    return Repository[User](session, User)
 
 
 @pytest_asyncio.fixture

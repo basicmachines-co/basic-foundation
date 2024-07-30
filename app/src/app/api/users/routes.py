@@ -1,15 +1,11 @@
-from typing import Annotated, Any
+from typing import Any
 
-from fastapi import Depends, HTTPException
-from fastapi import Response, APIRouter
-from fastapi import Security
-from fastapi_jwt import JwtAuthorizationCredentials, JwtAccessBearer, JwtRefreshBearer
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import Response, APIRouter, Depends
+from fastapi_jwt import JwtAccessBearer, JwtRefreshBearer
 
+from app.api.deps import JwtAuthorizationCredentialsDep, get_current_active_superuser
 from app.api.users.schemas import UsersPublic
-from app.deps import get_async_session, get_user_repository
-from app.models import User
-from app.repository import Repository
+from app.deps import UserRepositoryDep
 
 ## security
 # Read access token from bearer header and cookie (bearer priority)
@@ -25,30 +21,6 @@ refresh_token_security = JwtRefreshBearer(
 )
 
 ## deps
-JwtAuthorizationCredentialsDep = Annotated[JwtAuthorizationCredentials, Security(access_token_security)]
-SessionDep = Annotated[AsyncSession, Depends(get_async_session)]
-
-
-async def get_current_user(session: SessionDep, credentials: JwtAuthorizationCredentialsDep) -> User:
-    # the "subject" (sub) field of the jwt contains the id PK for the user
-    # https://github.com/k4black/fastapi-jwt/issues/13
-    user: User | None = await session.get(User, credentials.subject)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    if not user.is_active:
-        raise HTTPException(status_code=400, detail="Inactive user")
-    return user
-
-
-CurrentUser = Annotated[User, Depends(get_current_user)]
-
-
-async def get_current_active_superuser(current_user: CurrentUser) -> User:
-    if not current_user.is_superuser:
-        raise HTTPException(
-            status_code=403, detail="The user doesn't have enough privileges"
-        )
-    return current_user
 
 
 router = APIRouter()
@@ -76,14 +48,11 @@ def read_current_user(
     return {"username": credentials["username"], "role": credentials["role"]}
 
 
-UserRepositoryDep = Annotated[Repository[User], Depends(get_user_repository)]
-
-
 ## new user routes
 
 @router.get(
     "/",
-    # dependencies=[Depends(get_current_active_superuser)],
+    dependencies=[Depends(get_current_active_superuser)],
     response_model=UsersPublic,
 )
 async def read_users(user_repository: UserRepositoryDep, skip: int = 0, limit: int = 100) -> Any:

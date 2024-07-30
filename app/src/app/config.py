@@ -35,6 +35,8 @@ class Settings(BaseSettings):
         postgres_dsn: Property that returns the PostgreSQL database connection URL.
     """
 
+    API_V1_STR: str = "/api/v1"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
     app_name: str = "Basic API"
     jwt_secret: str
     postgres_user: str

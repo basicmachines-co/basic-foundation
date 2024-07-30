@@ -1,7 +1,6 @@
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Annotated
 
-from fastapi import Request, Depends
-from loguru import logger
+from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db import async_sessionmaker
@@ -18,21 +17,10 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
         yield session
 
 
-def log_request(request: Request):
-    """
-    Log all request info. Can be added to a router or a route
-    `dependencies=[Depends(log_request)]`
-    """
-    logger.debug(f"{request.method} {request.url}")
-    logger.debug("Params:")
-    for name, value in request.path_params.items():
-        logger.debug(f"\t{name}: {value}")
-    logger.debug("Headers:")
-    for name, value in request.headers.items():
-        logger.debug(f"\t{name}: {value}")
-
-
 def get_user_repository(
         async_session: AsyncSession = Depends(get_async_session),
 ) -> Repository[User]:
     return Repository(async_session, User)
+
+
+UserRepositoryDep = Annotated[Repository[User], Depends(get_user_repository)]

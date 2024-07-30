@@ -1,12 +1,19 @@
 import asyncio
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Generator
 
 import pytest
 import pytest_asyncio
-from app.db import engine
+from httpx import AsyncClient
 from sqlalchemy import event
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
+
+from app.app import app
+from app.db import engine
+from app.deps import get_user_repository
+from app.models import User
+from app.repository import Repository
+from utils import get_superuser_token_headers
 
 # Create a new instance of the engine
 AsyncTestingSessionLocal = sessionmaker(
@@ -34,11 +41,12 @@ async def async_db_session_rollback(event_loop) -> AsyncGenerator[AsyncSession, 
     3. Starts a SQLAlchemy session using the created connection.
     4. Begins a nested transaction within the session using the connection.
     5. Registers a listener to restart the nested transaction on commit.
-    6. Yields the session to run tests.
-    7. Once the tests are done, rolls back the transaction and closes the session.
+    6. Yields the session to run a test.
+    7. Once a test is done, rolls back the transaction and closes the session.
 
     :return: An asynchronous generator that yields the session.
     """
+    print(f"Using event loop {event_loop}")
 
     # create a connection
     connection = await engine.connect()
@@ -64,6 +72,8 @@ async def async_db_session_rollback(event_loop) -> AsyncGenerator[AsyncSession, 
         if not nested.is_active:
             nested = connection.sync_connection.begin_nested()
 
+    print("Yielding test rollback session...")
+
     # yield the session to run tests
     yield async_session
 
@@ -72,6 +82,8 @@ async def async_db_session_rollback(event_loop) -> AsyncGenerator[AsyncSession, 
     await transaction.rollback()
     await connection.close()
 
+    print("test session closed")
+
 
 @pytest_asyncio.fixture
 async def session(async_db_session_rollback) -> AsyncGenerator[AsyncSession, None]:
@@ -79,3 +91,26 @@ async def session(async_db_session_rollback) -> AsyncGenerator[AsyncSession, Non
     Alias async_db_session_rollback fixture name for tests
     """
     yield async_db_session_rollback
+
+
+@pytest_asyncio.fixture
+async def db(session) -> AsyncGenerator[AsyncSession, None]:
+    yield session
+
+
+@pytest_asyncio.fixture
+async def user_repository(session) -> Repository[User]:
+    return Repository[User](session, User)
+
+
+@pytest_asyncio.fixture
+async def client(user_repository: Repository[User]) -> Generator[AsyncClient, None, None]:
+    print(f"tclient fixture: user_repository: {user_repository}")
+    app.dependency_overrides[get_user_repository] = lambda: user_repository
+    async with AsyncClient(app=app, base_url="http://test") as c:
+        yield c
+
+
+@pytest_asyncio.fixture
+async def superuser_token_headers(client: AsyncClient) -> dict[str, str]:
+    return await get_superuser_token_headers(client)

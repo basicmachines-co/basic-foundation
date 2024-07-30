@@ -1,6 +1,6 @@
 import uuid
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 
 
 class UserBase(BaseModel):
@@ -39,7 +39,11 @@ class UpdatePassword(BaseModel):
 class UserPublic(UserBase):
     id: uuid.UUID
 
+    model_config = ConfigDict(from_attributes=True)
+
 
 class UsersPublic(BaseModel):
     data: list[UserPublic]
     count: int
+
+    model_config = ConfigDict(from_attributes=True)
