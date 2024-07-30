@@ -2,7 +2,7 @@ from sqlalchemy import select
 
 from app.core.repository import Repository
 from app.core.security import verify_password
-from app.models import User
+from app.users.models import User
 
 
 async def get_user_by_email(*, repository: Repository[User], email: str) -> User | None:

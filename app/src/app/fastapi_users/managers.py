@@ -1,7 +1,6 @@
 import uuid
 from typing import Union, Optional
 
-from app.users.models import User
 from fastapi import Request
 from fastapi_users import (
     UUIDIDMixin,
@@ -12,6 +11,7 @@ from fastapi_users import (
 )
 
 from app import config
+from app.fastapi_users.models import User
 
 SECRET = config.settings.jwt_secret
 

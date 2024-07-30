@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import async_sessionmaker
 from app.core.repository import Repository
-from app.models import User
+from app.users.models import User
 
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:

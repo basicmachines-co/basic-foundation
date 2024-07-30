@@ -1,7 +1,7 @@
 import pytest
 import pytest_asyncio
 
-from app.models import User
+from app.users.models import User
 
 
 @pytest_asyncio.fixture

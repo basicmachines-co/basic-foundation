@@ -13,15 +13,15 @@ from starlette.responses import RedirectResponse, HTMLResponse
 from app.config import BASE_DIR
 from app.core.deps import get_user_repository
 from app.core.repository import Repository
-from app.users.deps import (
+from app.fastapi_users.deps import (
     get_cookie_backend,
     fastapi_users,
     get_user_manager,
     current_optional_user,
 )
-from app.users.managers import UserManager
-from app.users.models import User
-from app.users.schemas import UserCreate, UserUpdate
+from app.fastapi_users.managers import UserManager
+from app.fastapi_users.models import User
+from app.fastapi_users.schemas import UserCreate, UserUpdate
 
 
 def logged_in(user: User = Depends(current_optional_user)):

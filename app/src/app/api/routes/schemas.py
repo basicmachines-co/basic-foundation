@@ -3,6 +3,15 @@ import uuid
 from pydantic import BaseModel, EmailStr, ConfigDict
 
 
+class AuthToken(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+
+
+class AuthTokenPayload(BaseModel):
+    id: uuid.UUID
+
+
 class UserBase(BaseModel):
     email: EmailStr
     is_active: bool = True
@@ -35,7 +44,6 @@ class UpdatePassword(BaseModel):
     new_password: str
 
 
-# Properties to return via API, id is always required
 class UserPublic(UserBase):
     id: uuid.UUID
 

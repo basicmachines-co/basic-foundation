@@ -2,13 +2,12 @@ from typing import Annotated
 
 from fastapi import Depends, HTTPException
 from fastapi import Security
-from fastapi.security import OAuth2PasswordBearer
 from fastapi_jwt import JwtAuthorizationCredentials, JwtAccessBearer, JwtRefreshBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
 from app.core.deps import get_async_session
-from app.models import User
+from app.users.models import User
 
 # Read access token from bearer header and cookie (bearer priority)
 access_token_security = JwtAccessBearer(
@@ -22,16 +21,9 @@ refresh_token_security = JwtRefreshBearer(
     auto_error=True  # automatically raise HTTPException: HTTP_401_UNAUTHORIZED
 )
 
-reusable_oauth2 = OAuth2PasswordBearer(
-    tokenUrl=f"{settings.API_V1_STR}/login/access-token"
-)
-
 SessionDep = Annotated[AsyncSession, Depends(get_async_session)]
 
 JwtAuthorizationCredentialsDep = Annotated[JwtAuthorizationCredentials, Security(access_token_security)]
-
-# remove
-AuthTokenDep = Annotated[str, Depends(reusable_oauth2)]
 
 
 async def get_current_user(session: SessionDep, credentials: JwtAuthorizationCredentialsDep) -> User:

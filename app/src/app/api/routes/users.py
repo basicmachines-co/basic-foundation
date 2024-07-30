@@ -4,7 +4,7 @@ from fastapi import Response, APIRouter, Depends
 from fastapi_jwt import JwtAccessBearer, JwtRefreshBearer
 
 from app.api.deps import JwtAuthorizationCredentialsDep, get_current_active_superuser
-from app.api.users.schemas import UsersPublic
+from app.api.routes.schemas import UsersPublic
 from app.core.deps import UserRepositoryDep
 
 ## security
