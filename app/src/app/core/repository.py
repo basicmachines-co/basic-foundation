@@ -1,15 +1,13 @@
-from typing import Type, TypeVar, Generic, Optional, Any, Sequence
+from typing import Type, Optional, Any, Sequence
+from uuid import UUID
 
-from sqlalchemy import select, func
+from sqlalchemy import select, func, Select, Executable, inspect, Result
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import declarative_base
 
-# Define a generic type variable for the entity/model
-T = TypeVar("T", bound=declarative_base())
 
-
-class Repository(Generic[T]):
+class Repository[T: (declarative_base())]:
     def __init__(self, session: AsyncSession, model: Type[T]):
         """
         Repository is supposed to work with your entity objects.
@@ -18,6 +16,7 @@ class Repository(Generic[T]):
         """
         self.session = session
         self.model = model
+        self.primary_key = inspect(self.model).mapper.primary_key[0]
 
     async def find_all(self, skip: int = 0, limit: int = 100) -> Sequence[T]:
         """
@@ -28,14 +27,14 @@ class Repository(Generic[T]):
         )
         return result.scalars().all()
 
-    async def find_by_id(self, id: Any) -> Optional[T]:
+    async def find_by_id(self, entity_id: UUID) -> Optional[T]:
         """
         Finds first entity that matches given id.
         If entity was not found in the database - returns None.
         """
         try:
             result = await self.session.execute(
-                select(self.model).filter(self.model.id == id)
+                select(self.model).filter(self.primary_key == entity_id)
             )
             return result.scalars().one()
         except NoResultFound:
@@ -51,13 +50,13 @@ class Repository(Generic[T]):
         await self.session.refresh(entity)
         return entity
 
-    async def update(self, id: Any, entity_data: dict) -> Optional[T]:
+    async def update(self, entity_id: UUID, entity_data: dict) -> Optional[T]:
         """
         Updates an entity by id with the provided data.
         """
         try:
             result = await self.session.execute(
-                select(self.model).filter(self.model.id == id)
+                select(self.model).filter(self.model.id == entity_id)
             )
             entity = result.scalars().one()
             for key, value in entity_data.items():
@@ -68,20 +67,20 @@ class Repository(Generic[T]):
         except NoResultFound:
             return None
 
-    async def delete(self, id: Any) -> Optional[T]:
+    async def delete(self, entity_id: UUID) -> bool:
         """
         Deletes an entity by id.
         """
         try:
             result = await self.session.execute(
-                select(self.model).filter(self.model.id == id)
+                select(self.model).filter(entity_id == self.primary_key)
             )
             entity = result.scalars().one()
             await self.session.delete(entity)
             await self.session.commit()
-            return entity
-        except NoResultFound:
-            return None
+            return True
+        except NoResultFound as e:
+            return False
 
     async def count(self) -> int:
         """
@@ -91,14 +90,14 @@ class Repository(Generic[T]):
         result = await self.session.execute(count_stmt)
         return result.scalar()
 
-    async def execute_query(self, query: str) -> Any:
+    async def execute_query(self, query: Executable) -> Result[Any]:
         """
         Executes a custom SQL query and returns the result.
         """
         result = await self.session.execute(query)
         return result
 
-    async def find_one(self, query: str) -> Optional[T]:
+    async def find_one(self, query: Select[tuple[T]]) -> Optional[T]:
         """
         Executes a custom SQL query and returns the result for one entity
         """

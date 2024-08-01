@@ -6,7 +6,7 @@ from app.users.models import User
 
 
 async def get_user_by_email(*, repository: Repository[User], email: str) -> User | None:
-    stmt = select(User).where(User.email == email)
+    stmt = select(User).where(email == User.email)
     user = await repository.find_one(stmt)
     return user
 

@@ -1,5 +1,8 @@
+import uuid
+
 import pytest
 import pytest_asyncio
+from sqlalchemy import select
 
 from app.users.models import User
 
@@ -63,6 +66,33 @@ async def test_delete_user(user_repository, sample_user, session):
 
 
 @pytest.mark.asyncio
+async def test_delete_user_not_exits(user_repository, sample_user, session):
+    result = await user_repository.delete(uuid.uuid4())
+    assert result is False
+
+
+@pytest.mark.asyncio
 async def test_count_user(user_repository, sample_user, session):
     count = await user_repository.count()
     assert count > 0
+
+
+@pytest.mark.asyncio
+async def test_find_one(user_repository, sample_user, session):
+    stmt = select(User).where(sample_user.email == User.email)
+    found_user = await user_repository.find_one(stmt)
+    assert found_user is not None
+    assert found_user.id == sample_user.id
+    assert found_user.full_name == sample_user.full_name
+
+
+@pytest.mark.asyncio
+async def test_execute_query(user_repository, sample_user, session):
+    stmt = select(User).where(sample_user.email == User.email)
+    result = await user_repository.execute_query(stmt)
+    found_users = result.fetchall()
+    assert found_users is not None
+    assert len(found_users) == 1
+    found_user = found_users[0][0]
+    assert found_user.id == sample_user.id
+    assert found_user.full_name == sample_user.full_name
