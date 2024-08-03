@@ -5,7 +5,7 @@ from fastapi import Security
 from fastapi_jwt import JwtAuthorizationCredentials, JwtAccessBearer, JwtRefreshBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.config import settings
+from app.core.config import settings
 from app.core.deps import get_async_session
 from app.users.models import User
 

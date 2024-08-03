@@ -1,27 +1,11 @@
 from typing import Any
 
 from fastapi import Response, APIRouter, Depends
-from fastapi_jwt import JwtAccessBearer, JwtRefreshBearer
 
 from app.api.deps import JwtAuthorizationCredentialsDep, get_current_active_superuser
 from app.api.routes.schemas import UsersPublic
 from app.core.deps import UserRepositoryDep
-
-## security
-# Read access token from bearer header and cookie (bearer priority)
-access_token_security = JwtAccessBearer(
-    secret_key="secret_key",
-    auto_error=True  # automatically raise HTTPException: HTTP_401_UNAUTHORIZED
-)
-
-# Read refresh token from bearer header only
-refresh_token_security = JwtRefreshBearer(
-    secret_key="secret_key",
-    auto_error=True  # automatically raise HTTPException: HTTP_401_UNAUTHORIZED
-)
-
-## deps
-
+from app.core.security import access_token_security
 
 router = APIRouter()
 

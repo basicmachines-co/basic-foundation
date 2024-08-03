@@ -1,15 +1,16 @@
 import os
 from pathlib import Path
+from typing import Literal
 
 from dotenv import load_dotenv
 from loguru import logger
-from pydantic import PostgresDsn
+from pydantic import PostgresDsn, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # get the current working directory
 CWD = os.getcwd()
 # print(f"CWD={CWD}")
-BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent
 logger.info(f"BASE_DIR={BASE_DIR}")
 
 # find the .env in parent dirs
@@ -37,6 +38,9 @@ class Settings(BaseSettings):
 
     API_V1_STR: str = "/api/v1"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
+    DOMAIN: str = "localhost"
+    ENVIRONMENT: Literal["local", "staging", "production"] = "local"
+
     app_name: str = "Basic API"
     jwt_secret: str
     postgres_user: str
@@ -50,6 +54,16 @@ class Settings(BaseSettings):
     superuser_email: str
     superuser_password: str
 
+    EMAIL_SMTP_TLS: bool = True
+    EMAIL_SMTP_SSL: bool = False
+    EMAIL_SMTP_PORT: int = 587
+    EMAIL_SMTP_HOST: str | None = None
+    EMAIL_SMTP_USER: str | None = None
+    EMAIL_SMTP_PASSWORD: str | None = None
+    EMAIL_FROM_EMAIL: str | None = None
+    EMAIL_FROM_NAME: str | None = None
+    EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = 48
+
     @property
     def postgres_dsn(self) -> PostgresDsn:
         return f"postgresql+asyncpg://{self.postgres_user}:{self.postgres_password}@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
@@ -58,8 +72,21 @@ class Settings(BaseSettings):
     def postgres_dsn_sync(self) -> PostgresDsn:
         return f"postgresql://{self.postgres_user}:{self.postgres_password}@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
 
+    @computed_field  # type: ignore[misc]
+    @property
+    def emails_enabled(self) -> bool:
+        return bool(self.EMAIL_SMTP_HOST and self.EMAIL_FROM_EMAIL)
+
     # assume the .env file is in the directory above the project
     model_config = SettingsConfigDict(env_file=f"{CWD}/../.env", extra="allow")
+
+    @computed_field  # type: ignore[misc]
+    @property
+    def server_host(self) -> str:
+        # Use HTTPS for anything other than local development
+        if self.ENVIRONMENT == "local":
+            return f"http://{self.DOMAIN}"
+        return f"https://{self.DOMAIN}"
 
 
 # Note:

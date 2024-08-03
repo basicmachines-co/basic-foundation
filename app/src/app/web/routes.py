@@ -10,7 +10,7 @@ from jinja2_fragments.fastapi import Jinja2Blocks
 from pydantic import ValidationError
 from starlette.responses import RedirectResponse, HTMLResponse
 
-from app.config import BASE_DIR
+from app.core.config import BASE_DIR
 from app.core.deps import get_user_repository
 from app.core.repository import Repository
 from app.fastapi_users.deps import (

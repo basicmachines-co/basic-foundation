@@ -6,7 +6,7 @@ from loguru import logger
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
-from app.config import settings
+from app.core.config import settings
 from app.core.security import get_password_hash
 from app.users.models import User
 
