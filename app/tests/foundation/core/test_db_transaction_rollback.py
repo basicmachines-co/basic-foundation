@@ -6,7 +6,7 @@ import sqlalchemy.orm
 from sqlalchemy import Column, Integer, String, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.db import engine, async_sessionmaker
+from foundation.core.db import engine, async_sessionmaker
 
 Base = sqlalchemy.orm.declarative_base()
 

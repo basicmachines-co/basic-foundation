@@ -3,7 +3,8 @@ import pytest
 from emails.backend.response import SMTPResponse
 from mockito import when, mock
 
-from app.core.emails import generate_test_email, send_email, generate_reset_password_email, generate_new_account_email, \
+from foundation.core.emails import generate_test_email, send_email, generate_reset_password_email, \
+    generate_new_account_email, \
     generate_password_reset_token, verify_password_reset_token
 
 

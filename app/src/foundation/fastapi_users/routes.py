@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from app.fastapi_users.deps import fastapi_users, jwt_backend
-from app.fastapi_users.schemas import UserRead, UserCreate, UserUpdate
+from foundation.fastapi_users.deps import fastapi_users, jwt_backend
+from foundation.fastapi_users.schemas import UserRead, UserCreate, UserUpdate
 
 auth_router = APIRouter(
     prefix="/auth",

@@ -2,10 +2,10 @@ from typing import Any
 
 from fastapi import Response, APIRouter, Depends
 
-from app.api.deps import JwtAuthorizationCredentialsDep, get_current_active_superuser
-from app.api.routes.schemas import UsersPublic
-from app.core.deps import UserRepositoryDep
-from app.core.security import access_token_security
+from foundation.api.deps import JwtAuthorizationCredentialsDep, get_current_active_superuser
+from foundation.api.routes.schemas import UsersPublic
+from foundation.core.deps import UserRepositoryDep
+from foundation.core.security import access_token_security
 
 router = APIRouter()
 

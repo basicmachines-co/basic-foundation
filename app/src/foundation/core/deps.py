@@ -3,9 +3,9 @@ from typing import AsyncGenerator, Annotated
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.db import async_sessionmaker
-from app.core.repository import Repository
-from app.users.models import User
+from foundation.core.db import async_sessionmaker
+from foundation.core.repository import Repository
+from foundation.users.models import User
 
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:

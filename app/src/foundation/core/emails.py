@@ -8,9 +8,9 @@ from jinja2 import Template
 from jwt.exceptions import InvalidTokenError
 from loguru import logger
 
-from app.core.config import BASE_DIR
-from app.core.config import settings
-from app.core.security import reset_token
+from foundation.core.config import BASE_DIR
+from foundation.core.config import settings
+from foundation.core.security import reset_token
 
 
 @dataclass

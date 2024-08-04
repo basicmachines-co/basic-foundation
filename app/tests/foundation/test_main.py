@@ -1,7 +1,7 @@
 from typing import AsyncGenerator
 
 import pytest
-from app.app import app
+from foundation.app import app
 from fastapi.testclient import TestClient
 
 

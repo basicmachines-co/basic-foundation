@@ -79,7 +79,7 @@ Set the virtual env to be local to the project
 poetry config virtualenvs.in-project true
 ```
 
-cd basic-app
+cd basic-foundation
 
 ```bash
 poetry init

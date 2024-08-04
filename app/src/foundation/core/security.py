@@ -2,7 +2,7 @@ from fastapi_jwt import JwtAccessBearer, JwtRefreshBearer
 from fastapi_jwt.jwt import JwtAccess
 from passlib.context import CryptContext
 
-from app.core.config import settings
+from foundation.core.config import settings
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

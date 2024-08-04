@@ -4,7 +4,7 @@ import pytest
 import pytest_asyncio
 from sqlalchemy import select
 
-from app.users.models import User
+from foundation.users.models import User
 
 
 @pytest_asyncio.fixture

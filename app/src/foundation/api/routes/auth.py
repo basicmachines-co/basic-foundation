@@ -5,11 +5,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app.api.deps import access_token_security
-from app.api.routes.schemas import AuthToken, AuthTokenPayload
-from app.core.config import settings
-from app.core.deps import UserRepositoryDep
-from app.users.services import authenticate
+from foundation.api.deps import access_token_security
+from foundation.api.routes.schemas import AuthToken, AuthTokenPayload
+from foundation.core.config import settings
+from foundation.core.deps import UserRepositoryDep
+from foundation.users.services import authenticate
 
 router = APIRouter()
 

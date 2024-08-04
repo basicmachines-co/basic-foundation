@@ -10,8 +10,8 @@ from fastapi_users import (
     InvalidPasswordException,
 )
 
-from app.core import config
-from app.fastapi_users.models import User
+from foundation.core import config
+from foundation.fastapi_users.models import User
 
 SECRET = config.settings.jwt_secret
 
