@@ -64,4 +64,4 @@ init_data:
 	poetry run python app/src/tools/init_data.py
 
 run-render:
-	uvicorn app.app:app --host 0.0.0.0 --port 10000
+	poetry run fastapi run app/src/foundation/app.py  --port 10000
