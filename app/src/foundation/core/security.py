@@ -20,17 +20,17 @@ def get_password_hash(password: str) -> str:
 ## security
 # Read access token from bearer header and cookie (bearer priority)
 access_token_security = JwtAccessBearer(
-    secret_key=settings.jwt_secret,
+    secret_key=settings.JWT_SECRET,
     auto_error=True  # automatically raise HTTPException: HTTP_401_UNAUTHORIZED
 )
 
 # Read refresh token from bearer header only
 refresh_token_security = JwtRefreshBearer(
-    secret_key=settings.jwt_secret,
+    secret_key=settings.JWT_SECRET,
     auto_error=True  # automatically raise HTTPException: HTTP_401_UNAUTHORIZED
 )
 
 # reset token for emails
 reset_token = JwtAccess(
-    secret_key=settings.jwt_secret,
+    secret_key=settings.JWT_SECRET,
 )

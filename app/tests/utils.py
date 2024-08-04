@@ -16,8 +16,8 @@ def random_email() -> str:
 
 async def get_superuser_token_headers(client: TestClient) -> dict[str, str]:
     login_data = {
-        "username": settings.superuser_email,
-        "password": settings.superuser_password,
+        "username": settings.SUPERUSER_EMAIL,
+        "password": settings.SUPERUSER_PASSWORD,
     }
     r = await client.post(f"/login/access-token", data=login_data)
     tokens = r.json()

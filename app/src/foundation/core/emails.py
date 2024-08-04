@@ -111,8 +111,8 @@ def generate_password_reset_token(email: str) -> str:
 
 def verify_password_reset_token(token: str) -> str | None:
     try:
-        reset_token.jwt_backend.decode(token, settings.jwt_secret)
-        decoded_token = reset_token.jwt_backend.decode(token, settings.jwt_secret)
+        reset_token.jwt_backend.decode(token, settings.JWT_SECRET)
+        decoded_token = reset_token.jwt_backend.decode(token, settings.JWT_SECRET)
 
         subject: ResetTokenSubject = decoded_token["subject"]
         return subject.get("email")

@@ -29,7 +29,7 @@ def get_jwt_strategy() -> JWTStrategy:
     :return: The JWTStrategy object.
     :rtype: JWTStrategy
     """
-    return JWTStrategy(secret=config.settings.jwt_secret, lifetime_seconds=3600)
+    return JWTStrategy(secret=config.settings.JWT_SECRET, lifetime_seconds=3600)
 
 
 jwt_backend = AuthenticationBackend(

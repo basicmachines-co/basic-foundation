@@ -13,7 +13,7 @@ from fastapi_users import (
 from foundation.core import config
 from foundation.fastapi_users.models import User
 
-SECRET = config.settings.jwt_secret
+SECRET = config.settings.JWT_SECRET
 
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
