@@ -8,22 +8,23 @@ from sqlalchemy.orm import declarative_base
 
 
 class Repository[T: (declarative_base())]:
-    def __init__(self, session: AsyncSession, model: Type[T]):
+    def __init__(self, session: AsyncSession, Model: Type[T]):
         """
         Repository is supposed to work with your entity objects.
         :param session: SQLAlchemy session
-        :param model: SQLAlchemy model class
+        :param Model: SQLAlchemy model class
         """
         self.session = session
-        self.model = model
-        self.primary_key = inspect(self.model).mapper.primary_key[0]
+        self.Model = Model
+        self.primary_key = inspect(self.Model).mapper.primary_key[0]
+        self.valid_columns = [column.key for column in inspect(self.Model).columns]
 
     async def find_all(self, skip: int = 0, limit: int = 100) -> Sequence[T]:
         """
         Finds entities that match given options.
         """
         result = await self.session.execute(
-            select(self.model).offset(skip).limit(limit)
+            select(self.Model).offset(skip).limit(limit)
         )
         return result.scalars().all()
 
@@ -34,7 +35,7 @@ class Repository[T: (declarative_base())]:
         """
         try:
             result = await self.session.execute(
-                select(self.model).filter(self.primary_key == entity_id)
+                select(self.Model).filter(self.primary_key == entity_id)
             )
             return result.scalars().one()
         except NoResultFound:
@@ -44,7 +45,10 @@ class Repository[T: (declarative_base())]:
         """
         Creates a new entity instance and adds it to the database.
         """
-        entity = self.model(**entity_data)
+
+        # filter out extra columns not in model
+        model_data = {k: v for k, v in entity_data.items() if k in self.valid_columns}
+        entity = self.Model(**model_data)
         self.session.add(entity)
         await self.session.commit()
         await self.session.refresh(entity)
@@ -56,7 +60,7 @@ class Repository[T: (declarative_base())]:
         """
         try:
             result = await self.session.execute(
-                select(self.model).filter(self.model.id == entity_id)
+                select(self.Model).filter(self.Model.id == entity_id)
             )
             entity = result.scalars().one()
             for key, value in entity_data.items():
@@ -73,7 +77,7 @@ class Repository[T: (declarative_base())]:
         """
         try:
             result = await self.session.execute(
-                select(self.model).filter(entity_id == self.primary_key)
+                select(self.Model).filter(entity_id == self.primary_key)
             )
             entity = result.scalars().one()
             await self.session.delete(entity)
@@ -86,7 +90,7 @@ class Repository[T: (declarative_base())]:
         """
         Return the count of entities in the database.
         """
-        count_stmt = select(func.count()).select_from(self.model)
+        count_stmt = select(func.count()).select_from(self.Model)
         result = await self.session.execute(count_stmt)
         return result.scalar()
 

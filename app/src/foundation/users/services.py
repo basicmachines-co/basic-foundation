@@ -1,7 +1,10 @@
+from loguru import logger
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 
+from foundation.api.routes.schemas import UserCreate
 from foundation.core.repository import Repository
-from foundation.core.security import verify_password
+from foundation.core.security import verify_password, get_password_hash
 from foundation.users.models import User
 
 
@@ -18,3 +21,13 @@ async def authenticate(*, repository: Repository[User], email: str, password: st
     if not verify_password(password, user.hashed_password):
         return None
     return user
+
+
+async def create_user(*, repository: Repository[User], user_create: UserCreate) -> User:
+    user_data = user_create.model_dump()
+    user_data.update({"hashed_password": get_password_hash(user_create.password)})
+    try:
+        return await repository.create(user_data)
+    except IntegrityError as e:
+        logger.info(f"error creating user: {e}")
+        return None

@@ -53,6 +53,7 @@ class Settings(BaseSettings):
     SUPERUSER_EMAIL: str
     SUPERUSER_PASSWORD: str
 
+    EMAIL_ENABLED: bool = True
     EMAIL_SMTP_TLS: bool = True
     EMAIL_SMTP_SSL: bool = False
     EMAIL_SMTP_PORT: int = 587

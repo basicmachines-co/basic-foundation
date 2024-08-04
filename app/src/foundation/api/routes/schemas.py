@@ -14,7 +14,7 @@ class AuthTokenPayload(BaseModel):
 
 class UserBase(BaseModel):
     email: EmailStr
-    is_active: bool = True
+    is_active: bool = False
     is_superuser: bool = False
     full_name: str | None
 

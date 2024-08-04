@@ -1,23 +1,9 @@
 import uuid
 
 import pytest
-import pytest_asyncio
 from sqlalchemy import select
 
 from foundation.users.models import User
-
-
-@pytest_asyncio.fixture
-async def sample_user(session):
-    user = User(
-        full_name="John Doe",
-        email="johndoe@sample.test",
-        hashed_password="hash",
-    )
-    session.add(user)
-    await session.commit()
-    await session.refresh(user)
-    return user
 
 
 @pytest.mark.asyncio
@@ -84,6 +70,13 @@ async def test_find_one(user_repository, sample_user, session):
     assert found_user is not None
     assert found_user.id == sample_user.id
     assert found_user.full_name == sample_user.full_name
+
+
+@pytest.mark.asyncio
+async def test_find_one_not_found(user_repository, sample_user, session):
+    stmt = select(User).where(sample_user.email == "bad@email.com")
+    found_user = await user_repository.find_one(stmt)
+    assert found_user is None
 
 
 @pytest.mark.asyncio

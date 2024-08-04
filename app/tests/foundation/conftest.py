@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
 
 from foundation.app import app
+from foundation.core import security
 from foundation.core.db import engine
 from foundation.core.deps import get_user_repository
 from foundation.core.repository import Repository
@@ -114,3 +115,21 @@ async def client(user_repository: Repository[User]) -> Generator[AsyncClient, No
 @pytest_asyncio.fixture
 async def superuser_token_headers(client: AsyncClient) -> dict[str, str]:
     return await get_superuser_token_headers(client)
+
+
+@pytest_asyncio.fixture
+async def sample_user_password() -> str:
+    return "password"
+
+
+@pytest_asyncio.fixture
+async def sample_user(session, sample_user_password: str):
+    user = User(
+        full_name="John Doe",
+        email="johndoe@test.com",
+        hashed_password=security.get_password_hash(sample_user_password),
+    )
+    session.add(user)
+    await session.commit()
+    await session.refresh(user)
+    return user
