@@ -1,9 +1,10 @@
 from typing import Any
+from uuid import UUID
 
 from fastapi import Response, APIRouter, Depends, HTTPException, status
 
 from foundation.api.deps import JwtAuthorizationCredentialsDep, get_current_active_superuser
-from foundation.api.routes.schemas import UsersPublic, UserPublic, UserCreate
+from foundation.api.routes.schemas import UsersPublic, UserPublic, UserCreate, UserUpdate
 from foundation.core.config import settings
 from foundation.core.deps import UserRepositoryDep
 from foundation.core.emails import generate_new_account_email, send_email
@@ -42,9 +43,9 @@ def read_current_user(
     dependencies=[Depends(get_current_active_superuser)],
     response_model=UsersPublic,
 )
-async def read_users(user_repository: UserRepositoryDep, skip: int = 0, limit: int = 100) -> Any:
+async def get_users(user_repository: UserRepositoryDep, skip: int = 0, limit: int = 100) -> Any:
     """
-    Retrieve users.
+    Get all users.
     """
 
     count = await user_repository.count()
@@ -60,8 +61,8 @@ async def create_user(*, user_repository: UserRepositoryDep, user_in: UserCreate
     """
     Create new user.
     """
-    user = await user_service.create_user(repository=user_repository, user_create=user_in)
-    if not user:
+    user_created = await user_service.create_user(repository=user_repository, user_create=user_in)
+    if not user_created:
         raise HTTPException(
             status_code=400,
             detail=f"unable to create user {user_in}",
@@ -76,4 +77,30 @@ async def create_user(*, user_repository: UserRepositoryDep, user_in: UserCreate
             subject=email_data.subject,
             html_content=email_data.html_content,
         )
-    return user
+    return user_created
+
+
+@router.patch(
+    "/{user_id}",
+    dependencies=[Depends(get_current_active_superuser)],
+    response_model=UserPublic,
+)
+async def update_user(*, user_repository: UserRepositoryDep, user_id: UUID, user_in: UserUpdate) -> Any:
+    """
+    Update a user.
+    """
+
+    user = await user_repository.find_by_id(user_id)
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="The user with this id does not exist in the system",
+        )
+
+    user_updated = await user_service.update_user(repository=user_repository, user_id=user_id, user_update=user_in)
+    if not user_updated:
+        raise HTTPException(
+            status_code=400,
+            detail=f"unable to update user with id {user_id}",
+        )
+    return user_updated
