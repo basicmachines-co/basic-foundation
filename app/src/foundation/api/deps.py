@@ -3,10 +3,9 @@ from typing import Annotated
 from fastapi import Depends, HTTPException
 from fastapi import Security
 from fastapi_jwt import JwtAuthorizationCredentials, JwtAccessBearer, JwtRefreshBearer
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from foundation.core.config import settings
-from foundation.core.deps import get_async_session
+from foundation.core.deps import UserRepositoryDep
 from foundation.users.models import User
 
 # Read access token from bearer header and cookie (bearer priority)
@@ -21,15 +20,21 @@ refresh_token_security = JwtRefreshBearer(
     auto_error=True  # automatically raise HTTPException: HTTP_401_UNAUTHORIZED
 )
 
-SessionDep = Annotated[AsyncSession, Depends(get_async_session)]
-
 JwtAuthorizationCredentialsDep = Annotated[JwtAuthorizationCredentials, Security(access_token_security)]
 
 
-async def get_current_user(session: SessionDep, credentials: JwtAuthorizationCredentialsDep) -> User:
-    # the "subject" (sub) field of the jwt contains the id PK for the user
+async def get_current_user(user_repository: UserRepositoryDep, credentials: JwtAuthorizationCredentialsDep) -> User:
+    # Notes
+    # the jwt contains the id PK for the user in a dict format,
+    # e.g. {"id": "<primary-key-uuid>"}
+    # the subject (sub) field of the jwt is called "subject"
     # https://github.com/k4black/fastapi-jwt/issues/13
-    user: User | None = await session.get(User, credentials.subject)
+    subject = credentials.subject
+    user_id = subject.get("id")
+    if not user_id:
+        raise HTTPException(status_code=401, detail="No id found in authorization token")
+
+    user: User | None = await user_repository.find_by_id(user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     if not user.is_active:
@@ -40,9 +45,13 @@ async def get_current_user(session: SessionDep, credentials: JwtAuthorizationCre
 CurrentUser = Annotated[User, Depends(get_current_user)]
 
 
-async def get_current_active_superuser(current_user: CurrentUser) -> User:
-    if not current_user.is_superuser:
+async def get_current_superuser(current_user: CurrentUser) -> User:
+    return validate_is_superuser(current_user)
+
+
+def validate_is_superuser(user):
+    if not user.is_superuser:
         raise HTTPException(
-            status_code=403, detail="The user doesn't have enough privileges"
+            status_code=403, detail=f"The user {user.id} doesn't have enough privileges"
         )
-    return current_user
+    return user

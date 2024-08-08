@@ -7,8 +7,6 @@ from foundation.users.models import User
 from utils import random_email, random_lower_string
 
 
-# TODO add failure cases
-
 @pytest.mark.asyncio
 async def test_get_user_by_email(user_repository, sample_user: User):
     user = await user_service.get_user_by_email(repository=user_repository, email=sample_user.email)

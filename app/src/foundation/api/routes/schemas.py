@@ -55,3 +55,8 @@ class UsersPublic(BaseModel):
     count: int
 
     model_config = ConfigDict(from_attributes=True)
+
+
+# Generic message
+class Message(BaseModel):
+    message: str

@@ -1,46 +1,21 @@
 from typing import Any
 from uuid import UUID
 
-from fastapi import Response, APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
-from foundation.api.deps import JwtAuthorizationCredentialsDep, get_current_active_superuser
-from foundation.api.routes.schemas import UsersPublic, UserPublic, UserCreate, UserUpdate
+from foundation.api.deps import get_current_superuser, validate_is_superuser, CurrentUser
+from foundation.api.routes.schemas import UsersPublic, UserPublic, UserCreate, UserUpdate, Message
 from foundation.core.config import settings
 from foundation.core.deps import UserRepositoryDep
 from foundation.core.emails import generate_new_account_email, send_email
-from foundation.core.security import access_token_security
 from foundation.users import services as user_service
 
 router = APIRouter()
 
 
-## sample rountes
-@router.post("/auth")
-def auth():
-    subject = {"username": "username", "role": "user"}
-    return {"access_token": access_token_security.create_access_token(subject=subject)}
-
-
-@router.post("/auth_cookie")
-def auth(response: Response):
-    subject = {"username": "username", "role": "user"}
-    access_token = access_token_security.create_access_token(subject=subject)
-    access_token_security.set_access_cookie(response, access_token)
-    return {"access_token": access_token}
-
-
-@router.get("/users/me")
-def read_current_user(
-        credentials: JwtAuthorizationCredentialsDep,
-):
-    return {"username": credentials["username"], "role": credentials["role"]}
-
-
-## end sample routes
-
 @router.get(
     "/",
-    dependencies=[Depends(get_current_active_superuser)],
+    dependencies=[Depends(get_current_superuser)],
     response_model=UsersPublic,
 )
 async def get_users(user_repository: UserRepositoryDep, skip: int = 0, limit: int = 100) -> Any:
@@ -53,8 +28,26 @@ async def get_users(user_repository: UserRepositoryDep, skip: int = 0, limit: in
     return UsersPublic(data=users, count=count)
 
 
+@router.get(
+    "/{user_id}",
+    response_model=UserPublic,
+)
+async def get_user(user_repository: UserRepositoryDep, user_id: UUID, current_user: CurrentUser) -> Any:
+    """
+    Get a user.
+    If the current_user is a non-superuser, they can only get their own user.
+    Superusers can get any user.
+    """
+
+    if current_user.id != user_id:
+        validate_is_superuser(current_user)
+
+    user = await user_repository.find_by_id(user_id)
+    return user
+
+
 @router.post(
-    "/", dependencies=[Depends(get_current_active_superuser)], response_model=UserPublic,
+    "/", dependencies=[Depends(get_current_superuser)], response_model=UserPublic,
     status_code=status.HTTP_201_CREATED
 )
 async def create_user(*, user_repository: UserRepositoryDep, user_in: UserCreate) -> Any:
@@ -82,13 +75,17 @@ async def create_user(*, user_repository: UserRepositoryDep, user_in: UserCreate
 
 @router.patch(
     "/{user_id}",
-    dependencies=[Depends(get_current_active_superuser)],
     response_model=UserPublic,
 )
-async def update_user(*, user_repository: UserRepositoryDep, user_id: UUID, user_in: UserUpdate) -> Any:
+async def update_user(*, user_repository: UserRepositoryDep, user_id: UUID, user_in: UserUpdate,
+                      current_user: CurrentUser) -> UserPublic:
     """
     Update a user.
+    If the current_user is a non-super user, they can only update their own user.
+    Superusers can update any user.
     """
+    if current_user.id != user_id:
+        validate_is_superuser(current_user)
 
     user = await user_repository.find_by_id(user_id)
     if not user:
@@ -104,3 +101,25 @@ async def update_user(*, user_repository: UserRepositoryDep, user_id: UUID, user
             detail=f"unable to update user with id {user_id}",
         )
     return user_updated
+
+
+@router.delete(
+    "/{user_id}",
+)
+async def delete_user(*, user_repository: UserRepositoryDep, user_id: UUID, current_user: CurrentUser) -> Message:
+    """
+    Delete a user.
+    If the current_user is a non-super user, they can only delete their own user.
+    Superusers can delete any other user.
+    Superusers can not delete their own user.
+    """
+    if current_user.id != user_id:
+        validate_is_superuser(current_user)
+
+    deleted = await user_repository.delete(user_id)
+    if not deleted:
+        raise HTTPException(
+            status_code=404,
+            detail="The user with this id does not exist in the system",
+        )
+    return Message(message=f"user {user_id} deleted")

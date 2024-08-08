@@ -14,7 +14,7 @@ from foundation.core.db import engine
 from foundation.core.deps import get_user_repository
 from foundation.core.repository import Repository
 from foundation.users.models import User
-from utils import get_superuser_token_headers
+from utils import get_superuser_auth_token_headers
 
 # Create a new instance of the engine
 AsyncTestingSessionLocal = sessionmaker(
@@ -95,11 +95,6 @@ async def session(async_db_session_rollback) -> AsyncGenerator[AsyncSession, Non
 
 
 @pytest_asyncio.fixture
-async def db(session) -> AsyncGenerator[AsyncSession, None]:
-    yield session
-
-
-@pytest_asyncio.fixture
 async def user_repository(session) -> Repository[User]:
     return Repository[User](session, User)
 
@@ -113,8 +108,8 @@ async def client(user_repository: Repository[User]) -> Generator[AsyncClient, No
 
 
 @pytest_asyncio.fixture
-async def superuser_token_headers(client: AsyncClient) -> dict[str, str]:
-    return await get_superuser_token_headers(client)
+async def superuser_auth_token_headers(client: AsyncClient) -> dict[str, str]:
+    return await get_superuser_auth_token_headers(client)
 
 
 @pytest_asyncio.fixture
@@ -123,13 +118,15 @@ async def sample_user_password() -> str:
 
 
 @pytest_asyncio.fixture
-async def sample_user(session, sample_user_password: str):
+async def sample_user(user_repository: Repository[User], sample_user_password: str):
     user = User(
         full_name="John Doe",
         email="johndoe@test.com",
         hashed_password=security.get_password_hash(sample_user_password),
+        is_active=True
     )
-    session.add(user)
-    await session.commit()
-    await session.refresh(user)
-    return user
+    sample_user = await user_repository.create({"full_name": "John Doe",
+                                                "email": "johndoe@test.com",
+                                                "hashed_password": security.get_password_hash(sample_user_password),
+                                                "is_active": True})
+    return sample_user
