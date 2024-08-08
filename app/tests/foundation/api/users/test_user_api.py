@@ -9,8 +9,8 @@ from foundation.core.repository import Repository
 from foundation.users.models import User
 from utils import random_email, random_lower_string, get_auth_token_headers
 
+pytestmark = pytest.mark.asyncio
 
-# TODO assert 403
 
 @pytest_asyncio.fixture
 async def sample_user_auth_token_headers(
@@ -23,7 +23,6 @@ async def sample_user_auth_token_headers(
     return await get_auth_token_headers(client, login_data)
 
 
-@pytest.mark.asyncio
 async def test_get_user(
         client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
 ) -> None:
@@ -43,14 +42,12 @@ async def test_get_user(
     assert user.email == user_in.email
 
 
-@pytest.mark.asyncio
 async def test_get_user_404(client: AsyncClient) -> None:
     r = await client.get(f"users/{uuid.uuid4()}", headers=None)
     assert r.is_error
     assert r.status_code == 401
 
 
-@pytest.mark.asyncio
 async def test_get_user_current_user(client: AsyncClient, sample_user: User, sample_user_auth_token_headers) -> None:
     r = await client.get(f"users/{sample_user.id}", headers=sample_user_auth_token_headers)
     assert r.status_code == 200
@@ -60,7 +57,6 @@ async def test_get_user_current_user(client: AsyncClient, sample_user: User, sam
     assert user.email == sample_user.email
 
 
-@pytest.mark.asyncio
 async def test_get_users(
         client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
 ) -> None:
@@ -86,21 +82,18 @@ async def test_get_users(
     assert new_user_found
 
 
-@pytest.mark.asyncio
 async def test_get_users_401(client: AsyncClient) -> None:
     r = await client.get(f"users/", headers=None)
     assert r.is_error
     assert r.status_code == 401
 
 
-@pytest.mark.asyncio
 async def test_get_users_403(client: AsyncClient, sample_user_auth_token_headers: dict[str, str]) -> None:
     r = await client.get(f"users/", headers=sample_user_auth_token_headers)
     assert r.is_error
     assert r.status_code == 403
 
 
-@pytest.mark.asyncio
 async def test_create_user(
         client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
 ) -> None:
@@ -118,7 +111,6 @@ async def test_create_user(
     assert user_create.email == user_created.email
 
 
-@pytest.mark.asyncio
 async def test_create_user_400(
         client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
 ) -> None:
@@ -141,7 +133,6 @@ async def test_create_user_400(
     assert r.status_code == 400
 
 
-@pytest.mark.asyncio
 async def test_create_user_401(client: AsyncClient) -> None:
     user_create = UserCreate.model_validate({
         "full_name": "John Doe",
@@ -153,7 +144,6 @@ async def test_create_user_401(client: AsyncClient) -> None:
     assert r.status_code == 401
 
 
-@pytest.mark.asyncio
 async def test_create_user_403(client: AsyncClient, sample_user_auth_token_headers: dict[str, str]) -> None:
     user_create = UserCreate.model_validate({
         "full_name": "John Doe",
@@ -165,7 +155,6 @@ async def test_create_user_403(client: AsyncClient, sample_user_auth_token_heade
     assert r.status_code == 403
 
 
-@pytest.mark.asyncio
 async def test_update_user(
         client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
 ) -> None:
@@ -191,7 +180,6 @@ async def test_update_user(
     assert user.email == user_updated.get("email")
 
 
-@pytest.mark.asyncio
 async def test_update_user_404(
         client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
 ) -> None:
@@ -212,7 +200,6 @@ async def test_update_user_404(
     assert r.status_code == 404
 
 
-@pytest.mark.asyncio
 async def test_update_user_400(
         client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
 ) -> None:
@@ -243,7 +230,6 @@ async def test_update_user_400(
     assert r.status_code == 400
 
 
-@pytest.mark.asyncio
 async def test_update_user_401(
         client: AsyncClient, user_repository: Repository[User]
 ) -> None:
@@ -266,7 +252,6 @@ async def test_update_user_401(
     assert r.status_code == 401
 
 
-@pytest.mark.asyncio
 async def test_update_user_403(
         client: AsyncClient, sample_user_auth_token_headers: dict[str, str], user_repository: Repository[User]
 ) -> None:
@@ -290,7 +275,6 @@ async def test_update_user_403(
     assert r.status_code == 403
 
 
-@pytest.mark.asyncio
 async def test_update_user_current_user(
         client: AsyncClient, sample_user: User, sample_user_auth_token_headers: dict[str, str],
         user_repository: Repository[User]
@@ -311,7 +295,6 @@ async def test_update_user_current_user(
     assert user_updated.email == user_update.email
 
 
-@pytest.mark.asyncio
 async def test_delete_user(
         client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
 ) -> None:
@@ -328,7 +311,6 @@ async def test_delete_user(
     assert data.get("message") is not None
 
 
-@pytest.mark.asyncio
 async def test_delete_user_404(
         client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
 ) -> None:
@@ -336,7 +318,6 @@ async def test_delete_user_404(
     assert r.status_code == 404
 
 
-@pytest.mark.asyncio
 async def test_delete_user_401(
         client: AsyncClient, user_repository: Repository[User]
 ) -> None:
@@ -344,7 +325,6 @@ async def test_delete_user_401(
     assert r.status_code == 401
 
 
-@pytest.mark.asyncio
 async def test_delete_user_403(
         client: AsyncClient, sample_user_auth_token_headers: dict[str, str], user_repository: Repository[User]
 ) -> None:
@@ -359,7 +339,6 @@ async def test_delete_user_403(
     assert r.status_code == 403
 
 
-@pytest.mark.asyncio
 async def test_delete_user_current_user(
         client: AsyncClient, sample_user: User, sample_user_auth_token_headers: dict[str, str],
         user_repository: Repository[User]
@@ -370,7 +349,6 @@ async def test_delete_user_current_user(
     assert data.get("message") is not None
 
 
-@pytest.mark.asyncio
 async def test_superuser_cannot_delete_self(
         client: AsyncClient,
         superuser_auth_token_headers,
