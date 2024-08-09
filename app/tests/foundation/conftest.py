@@ -14,7 +14,24 @@ from foundation.core.db import engine
 from foundation.core.deps import get_user_repository
 from foundation.core.repository import Repository
 from foundation.users.models import User
-from utils import get_superuser_auth_token_headers
+from utils import get_superuser_auth_token_headers, random_lower_string
+
+
+@pytest.fixture
+def unstub_mocks():
+    """
+    Fixture for unstubbing mocked methods
+
+    To use, add the following to a pytest file:
+
+    pytestmark = pytest.mark.usefixtures("unstub_mocks")
+
+    :return:
+    """
+    from mockito import unstub
+    yield
+    unstub()
+
 
 # Create a new instance of the engine
 AsyncTestingSessionLocal = sessionmaker(
@@ -119,14 +136,17 @@ async def sample_user_password() -> str:
 
 @pytest_asyncio.fixture
 async def sample_user(user_repository: Repository[User], sample_user_password: str):
-    user = User(
-        full_name="John Doe",
-        email="johndoe@test.com",
-        hashed_password=security.get_password_hash(sample_user_password),
-        is_active=True
-    )
     sample_user = await user_repository.create({"full_name": "John Doe",
                                                 "email": "johndoe@test.com",
                                                 "hashed_password": security.get_password_hash(sample_user_password),
                                                 "is_active": True})
+    return sample_user
+
+
+@pytest_asyncio.fixture
+async def inactive_user(user_repository: Repository[User]):
+    sample_user = await user_repository.create({"full_name": "Lazy John Doe",
+                                                "email": "johndoe-lazy@test.com",
+                                                "hashed_password": security.get_password_hash(random_lower_string()),
+                                                "is_active": False})
     return sample_user

@@ -1,29 +1,11 @@
-import emails
-import pytest
-from emails.backend.response import SMTPResponse
-from mockito import when, mock
-
 from foundation.core.emails import generate_test_email, send_email, generate_reset_password_email, \
-    generate_new_account_email, \
-    generate_password_reset_token, verify_password_reset_token
+    generate_new_account_email
+from foundation.core.security import generate_password_reset_token, verify_password_reset_token
+from utils import mock_emails_send
 
 
-@pytest.fixture
-def unstub():
-    from mockito import unstub
-    yield
-    unstub()
-
-
-pytestmark = pytest.mark.usefixtures("unstub")
-
-
-def test_send_test_email():
-    response = mock({
-        'status_code': 250,
-        '_finished': True
-    }, spec=SMTPResponse)
-    when(emails.Message).send(...).thenReturn(response)
+def test_send_test_email(unstub_mocks):
+    mock_emails_send()
 
     email_response = send_email(email_to="to", subject="subject", html_content="<html/>")
     assert email_response.status_code is 250

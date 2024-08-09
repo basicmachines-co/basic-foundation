@@ -1,8 +1,12 @@
 import random
 import string
 
+import emails
+from emails.backend.response import SMTPResponse
 from httpx import AsyncClient
+from mockito import when, mock
 
+from foundation.api.routes.schemas import AuthToken
 from foundation.core.config import settings
 
 
@@ -22,10 +26,21 @@ async def get_superuser_auth_token_headers(client: AsyncClient) -> dict[str, str
     return await get_auth_token_headers(client, login_data)
 
 
-async def get_auth_token_headers(client: AsyncClient, login_data: dict[str, str]) -> dict[str, str]:
+async def get_auth_token(client: AsyncClient, login_data: dict[str, str]) -> AuthToken:
     r = await client.post(f"/login/access-token", data=login_data)
-    tokens = r.json()
     assert r.status_code == 200
-    a_token = tokens["access_token"]
-    headers = {"Authorization": f"Bearer {a_token}"}
+    return AuthToken.model_validate(r.json())
+
+
+async def get_auth_token_headers(client: AsyncClient, login_data: dict[str, str]) -> dict[str, str]:
+    auth_token = await get_auth_token(client, login_data)
+    headers = {"Authorization": f"Bearer {auth_token.access_token}"}
     return headers
+
+
+def mock_emails_send():
+    response = mock({
+        'status_code': 250,
+        '_finished': True
+    }, spec=SMTPResponse)
+    when(emails.Message).send(...).thenReturn(response)

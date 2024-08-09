@@ -1,16 +1,13 @@
 from dataclasses import dataclass
-from datetime import timedelta
-from typing import Any, TypedDict
+from typing import Any
 
 import emails  # type: ignore
 from emails.backend.response import SMTPResponse
 from jinja2 import Template
-from jwt.exceptions import InvalidTokenError
 from loguru import logger
 
 from foundation.core.config import BASE_DIR
 from foundation.core.config import settings
-from foundation.core.security import reset_token
 
 
 @dataclass
@@ -97,24 +94,3 @@ def generate_new_account_email(
         },
     )
     return EmailData(html_content=html_content, subject=subject)
-
-
-class ResetTokenSubject(TypedDict):
-    email: str
-
-
-def generate_password_reset_token(email: str) -> str:
-    delta = timedelta(hours=settings.EMAIL_RESET_TOKEN_EXPIRE_HOURS)
-    subject: ResetTokenSubject = {"email": email}
-    return reset_token.create_access_token(subject=subject, expires_delta=delta)
-
-
-def verify_password_reset_token(token: str) -> str | None:
-    try:
-        reset_token.jwt_backend.decode(token, settings.JWT_SECRET)
-        decoded_token = reset_token.jwt_backend.decode(token, settings.JWT_SECRET)
-
-        subject: ResetTokenSubject = decoded_token["subject"]
-        return subject.get("email")
-    except InvalidTokenError:
-        return None

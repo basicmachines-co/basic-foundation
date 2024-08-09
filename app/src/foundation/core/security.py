@@ -1,5 +1,9 @@
+from datetime import timedelta
+from typing import TypedDict
+
 from fastapi_jwt import JwtAccessBearer, JwtRefreshBearer
 from fastapi_jwt.jwt import JwtAccess
+from jwt import InvalidTokenError
 from passlib.context import CryptContext
 
 from foundation.core.config import settings
@@ -34,3 +38,23 @@ refresh_token_security = JwtRefreshBearer(
 reset_token = JwtAccess(
     secret_key=settings.JWT_SECRET,
 )
+
+
+class ResetTokenSubject(TypedDict):
+    email: str
+
+
+def generate_password_reset_token(email: str) -> str:
+    delta = timedelta(hours=settings.EMAIL_RESET_TOKEN_EXPIRE_HOURS)
+    subject: ResetTokenSubject = {"email": email}
+    return reset_token.create_access_token(subject=subject, expires_delta=delta)
+
+
+def verify_password_reset_token(token: str) -> str | None:
+    try:
+        decoded_token = reset_token.jwt_backend.decode(token, settings.JWT_SECRET)
+
+        subject: ResetTokenSubject = decoded_token["subject"]
+        return subject.get("email")
+    except InvalidTokenError:
+        return None

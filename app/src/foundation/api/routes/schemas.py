@@ -57,6 +57,11 @@ class UsersPublic(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+class NewPassword(BaseModel):
+    token: str
+    new_password: str
+
+
 # Generic message
 class Message(BaseModel):
     message: str
