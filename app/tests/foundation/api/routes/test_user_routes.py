@@ -42,10 +42,16 @@ async def test_get_user(
     assert user.email == user_in.email
 
 
-async def test_get_user_404(client: AsyncClient) -> None:
+async def test_get_user_unauthorized_401(client: AsyncClient) -> None:
     r = await client.get(f"users/{uuid.uuid4()}", headers=None)
     assert r.is_error
     assert r.status_code == 401
+
+
+async def test_get_user_not_found_404(client: AsyncClient, superuser_auth_token_headers) -> None:
+    r = await client.get(f"users/{uuid.uuid4()}", headers=superuser_auth_token_headers)
+    assert r.is_error
+    assert r.status_code == 404
 
 
 async def test_get_user_current_user(client: AsyncClient, sample_user: User, sample_user_auth_token_headers) -> None:

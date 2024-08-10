@@ -1,19 +1,40 @@
+import uuid
+
 import pytest
 
 from foundation.api.routes.schemas import UserCreate, UserUpdate
 from foundation.core.security import verify_password
 from foundation.users import services as user_service
 from foundation.users.models import User
+from foundation.users.services import UserNotFoundError
 from utils import random_email, random_lower_string
 
+pytestmark = pytest.mark.asyncio
 
-@pytest.mark.asyncio
+
+async def test_get_user_by_id(user_repository, sample_user: User):
+    user = await user_service.get_user_by_id(repository=user_repository, user_id=sample_user.id)
+    assert user == sample_user
+
+
+async def test_get_user_by_id_not_found(user_repository):
+    user_id = uuid.uuid4()
+    with pytest.raises(UserNotFoundError, match=f"user {user_id} does not exist"):
+        await user_service.get_user_by_id(repository=user_repository, user_id=user_id)
+
+
 async def test_get_user_by_email(user_repository, sample_user: User):
     user = await user_service.get_user_by_email(repository=user_repository, email=sample_user.email)
+    assert user.id == sample_user.id
     assert user.full_name == sample_user.full_name
 
 
-@pytest.mark.asyncio
+async def test_get_user_by_email_not_found(user_repository, sample_user: User):
+    email = random_email()
+    with pytest.raises(UserNotFoundError, match=f"user {email} does not exist"):
+        await user_service.get_user_by_email(repository=user_repository, email=email)
+
+
 async def test_authenticate(user_repository, sample_user: User, sample_user_password: str):
     authenticated_user = await user_service.authenticate(repository=user_repository, email=sample_user.email,
                                                          password=sample_user_password)
@@ -21,14 +42,12 @@ async def test_authenticate(user_repository, sample_user: User, sample_user_pass
     assert authenticated_user.email == sample_user.email
 
 
-@pytest.mark.asyncio
 async def test_authenticate_fails(user_repository, sample_user: User, sample_user_password: str):
     authenticated_user = await user_service.authenticate(repository=user_repository, email=sample_user.email,
                                                          password="bad pass")
     assert authenticated_user is None
 
 
-@pytest.mark.asyncio
 async def test_create_user(user_repository):
     user_create = UserCreate.model_validate({
         "full_name": "John Doe",
@@ -45,7 +64,6 @@ async def test_create_user(user_repository):
     assert verify_password(user_create.password, created_user.hashed_password)
 
 
-@pytest.mark.asyncio
 async def test_create_user_fails(user_repository, sample_user: User):
     user_create = UserCreate.model_validate({
         "full_name": "John Doe",
@@ -56,7 +74,6 @@ async def test_create_user_fails(user_repository, sample_user: User):
     assert created_user is None
 
 
-@pytest.mark.asyncio
 async def test_update_user(user_repository, sample_user: User):
     user_update = UserUpdate.model_validate({
         "full_name": "New name",
@@ -76,7 +93,6 @@ async def test_update_user(user_repository, sample_user: User):
     assert verify_password(user_update.password, updated_user.hashed_password)
 
 
-@pytest.mark.asyncio
 async def test_update_user_fails(user_repository, sample_user: User):
     user_create = UserCreate.model_validate({
         "full_name": "John Doe",

@@ -12,7 +12,7 @@ from foundation.core.deps import UserRepositoryDep
 from foundation.core.emails import generate_reset_password_email, send_email
 from foundation.core.security import generate_password_reset_token, verify_password_reset_token, get_password_hash
 from foundation.users import services as user_service
-from foundation.users.services import authenticate
+from foundation.users.services import authenticate, UserNotFoundError
 
 router = APIRouter()
 
@@ -53,12 +53,13 @@ async def recover_password(user_repository: UserRepositoryDep, email: str) -> Me
 
     Sends an email with a password reset token to the address provided if a user is found.
     """
-    user = await user_service.get_user_by_email(repository=user_repository, email=email)
 
-    if not user:
+    try:
+        user = await user_service.get_user_by_email(repository=user_repository, email=email)
+    except UserNotFoundError as e:
         raise HTTPException(
             status_code=404,
-            detail="The user with this email does not exist in the system.",
+            detail=e.args,
         )
     password_reset_token = generate_password_reset_token(email=email)
     email_data = generate_reset_password_email(
@@ -80,11 +81,13 @@ async def reset_password(user_repository: UserRepositoryDep, body: NewPassword) 
     email = verify_password_reset_token(token=body.token)
     if not email:
         raise HTTPException(status_code=400, detail="Invalid token")
-    user = await user_service.get_user_by_email(repository=user_repository, email=email)
-    if not user:
+
+    try:
+        user = await user_service.get_user_by_email(repository=user_repository, email=email)
+    except UserNotFoundError as e:
         raise HTTPException(
             status_code=404,
-            detail="The user with this email does not exist in the system.",
+            detail=e.args,
         )
     if not user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")

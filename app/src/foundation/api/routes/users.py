@@ -42,7 +42,14 @@ async def get_user(user_repository: UserRepositoryDep, user_id: UUID, current_us
     if current_user.id != user_id:
         validate_is_superuser(current_user)
 
-    user = await user_repository.find_by_id(user_id)
+    from foundation.users.services import UserNotFoundError
+    try:
+        user = await user_service.get_user_by_id(repository=user_repository, user_id=user_id)
+    except UserNotFoundError as e:
+        raise HTTPException(
+            status_code=404,
+            detail=e.args,
+        )
     return user
 
 
