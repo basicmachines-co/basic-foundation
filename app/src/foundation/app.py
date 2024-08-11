@@ -4,11 +4,10 @@ from fastapi import FastAPI
 from loguru import logger
 from starlette.staticfiles import StaticFiles
 
-from foundation.api.routes.auth import router as login_api_router
-from foundation.api.routes.users import router as user_api_router
+from foundation.api.routes.auth import router as api_auth_router
+from foundation.api.routes.users import router as api_user_router
 from foundation.core import config
 from foundation.core.config import BASE_DIR
-from foundation.fastapi_users.routes import auth_router, user_router
 from foundation.web.routes import html_router
 
 # delete all existing default loggers
@@ -19,10 +18,8 @@ app = FastAPI()
 
 app.mount("/static", StaticFiles(directory=f"{BASE_DIR}/static"), name="static")
 
-app.include_router(login_api_router, prefix="")
-app.include_router(user_api_router, prefix="/users")
-app.include_router(auth_router, prefix="/api")
-app.include_router(user_router, prefix="/api")
+app.include_router(api_auth_router, prefix="/api/auth", tags=["auth"])
+app.include_router(api_user_router, prefix="/api/users", tags=["users"])
 app.include_router(html_router, tags=["html"])
 
 
