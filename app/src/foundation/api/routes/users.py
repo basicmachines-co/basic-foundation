@@ -5,10 +5,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from foundation.api.deps import get_current_superuser, validate_is_superuser, CurrentUser
 from foundation.api.routes.schemas import UsersPublic, UserPublic, UserCreate, UserUpdate, Message
-from foundation.core.config import settings
-from foundation.core.emails import generate_new_account_email, send_email
 from foundation.users.deps import UserServiceDep
-from foundation.users.services import UserNotFoundError, UserValueError
+from foundation.users.services import UserNotFoundError, UserValueError, UserCreateError
 
 router = APIRouter()
 
@@ -59,21 +57,12 @@ async def create_user(*, user_service: UserServiceDep, user_in: UserCreate) -> A
     """
     Create new user.
     """
-    user_created = await user_service.create_user(create_dict=user_in.model_dump())
-    if not user_created:
+    try:
+        user_created = await user_service.create_user(create_dict=user_in.model_dump())
+    except UserCreateError as e:
         raise HTTPException(
             status_code=400,
-            detail=f"unable to create user {user_in}",
-        )
-
-    if settings.EMAIL_ENABLED and user_in.email:
-        email_data = generate_new_account_email(
-            email_to=user_in.email, username=user_in.email, password=user_in.password
-        )
-        send_email(
-            email_to=user_in.email,
-            subject=email_data.subject,
-            html_content=email_data.html_content,
+            detail=e.args
         )
     return user_created
 

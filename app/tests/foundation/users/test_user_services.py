@@ -5,14 +5,16 @@ import pytest_asyncio
 
 from foundation.core.security import verify_password
 from foundation.users.models import User
-from foundation.users.services import UserNotFoundError, UserValueError, UserService
-from utils import random_email, random_lower_string
+from foundation.users.services import UserNotFoundError, UserValueError, UserService, UserCreateError
+from utils import random_email, random_lower_string, mock_emails_send
 
 pytestmark = pytest.mark.asyncio
 
 
 @pytest_asyncio.fixture
-async def user_service(user_repository) -> UserService:
+async def user_service(user_repository, unstub_mocks) -> UserService:
+    mock_emails_send()
+
     return UserService(user_repository)
 
 
@@ -80,8 +82,8 @@ async def test_create_user_fails(user_service, sample_user: User):
         "email": sample_user.email,
         "password": random_lower_string(),
     }
-    created_user = await user_service.create_user(create_dict=user_create)
-    assert created_user is None
+    with pytest.raises(UserCreateError, match=f"user {user_create.get("email")} can not be created"):
+        await user_service.create_user(create_dict=user_create)
 
 
 async def test_update_user(user_service, sample_user: User):

@@ -8,8 +8,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from foundation.api.deps import access_token_security, CurrentUser
 from foundation.api.routes.schemas import AuthToken, AuthTokenPayload, Message, UserPublic, NewPassword
 from foundation.core.config import settings
-from foundation.core.emails import generate_reset_password_email, send_email
-from foundation.core.security import generate_password_reset_token, verify_password_reset_token
+from foundation.core.security import verify_password_reset_token
 from foundation.users.deps import UserServiceDep
 from foundation.users.services import UserNotFoundError
 
@@ -54,21 +53,12 @@ async def recover_password(user_service: UserServiceDep, email: str) -> Message:
     """
 
     try:
-        user = await user_service.get_user_by_email(email=email)
+        await user_service.recover_password(email=email)
     except UserNotFoundError as e:
         raise HTTPException(
             status_code=404,
             detail=e.args,
         )
-    password_reset_token = generate_password_reset_token(email=email)
-    email_data = generate_reset_password_email(
-        email_to=user.email, email=email, token=password_reset_token
-    )
-    send_email(
-        email_to=user.email,
-        subject=email_data.subject,
-        html_content=email_data.html_content,
-    )
     return Message(message="Password recovery email sent")
 
 
