@@ -2,11 +2,10 @@ import uuid
 
 import pytest
 
-from foundation.api.routes.schemas import UserCreate, UserUpdate
 from foundation.core.security import verify_password
 from foundation.users import services as user_service
 from foundation.users.models import User
-from foundation.users.services import UserNotFoundError
+from foundation.users.services import UserNotFoundError, UserValueError
 from utils import random_email, random_lower_string
 
 pytestmark = pytest.mark.asyncio
@@ -49,67 +48,80 @@ async def test_authenticate_fails(user_repository, sample_user: User, sample_use
 
 
 async def test_create_user(user_repository):
-    user_create = UserCreate.model_validate({
+    user_create = {
         "full_name": "John Doe",
         "email": random_email(),
         "password": random_lower_string(),
-    })
-    created_user = await user_service.create_user(repository=user_repository, user_create=user_create)
+    }
+    created_user = await user_service.create_user(repository=user_repository, create_dict=user_create)
 
     assert created_user.id is not None
-    assert created_user.full_name == user_create.full_name
-    assert created_user.email == user_create.email
+    assert created_user.full_name == user_create.get("full_name")
+    assert created_user.email == user_create.get("email")
     assert created_user.is_active is False
     assert created_user.is_superuser is False
-    assert verify_password(user_create.password, created_user.hashed_password)
+    assert verify_password(user_create.get("password"), created_user.hashed_password)
 
 
 async def test_create_user_fails(user_repository, sample_user: User):
-    user_create = UserCreate.model_validate({
+    user_create = {
         "full_name": "John Doe",
         "email": sample_user.email,
         "password": random_lower_string(),
-    })
-    created_user = await user_service.create_user(repository=user_repository, user_create=user_create)
+    }
+    created_user = await user_service.create_user(repository=user_repository, create_dict=user_create)
     assert created_user is None
 
 
 async def test_update_user(user_repository, sample_user: User):
-    user_update = UserUpdate.model_validate({
+    user_update = {
         "full_name": "New name",
         "email": random_email(),
         "password": random_lower_string(),
         "is_active": True,
         "is_superuser": True
-    })
+    }
     updated_user = await user_service.update_user(repository=user_repository, user_id=sample_user.id,
-                                                  user_update=user_update)
+                                                  update_dict=user_update)
 
     assert updated_user.id == sample_user.id
-    assert updated_user.full_name == user_update.full_name
-    assert updated_user.email == user_update.email
-    assert updated_user.is_active == user_update.is_active
-    assert updated_user.is_superuser == user_update.is_superuser
-    assert verify_password(user_update.password, updated_user.hashed_password)
+    assert updated_user.full_name == user_update.get("full_name")
+    assert updated_user.email == user_update.get("email")
+    assert updated_user.is_active == user_update.get("is_active")
+    assert updated_user.is_superuser == user_update.get("is_superuser")
+    assert verify_password(user_update.get("password"), updated_user.hashed_password)
 
 
 async def test_update_user_fails(user_repository, sample_user: User):
-    user_create = UserCreate.model_validate({
+    user_create = {
         "full_name": "John Doe",
         "email": random_email(),
         "password": random_lower_string(),
-    })
-    created_user = await user_service.create_user(repository=user_repository, user_create=user_create)
+    }
+    created_user = await user_service.create_user(repository=user_repository, create_dict=user_create)
     assert created_user.id is not None
 
     # update the new user to have a conflicting email
-    user_update = UserUpdate.model_validate({
+    user_update = {
         "full_name": "New name",
         "email": sample_user.email,
         "password": random_lower_string(),
         "is_active": True,
         "is_superuser": True
-    })
-    updated_user = await user_service.update_user(repository=user_repository, user_id=created_user.id,
-                                                  user_update=user_update)
-    assert updated_user is None
+    }
+    with pytest.raises(UserValueError, match=f"user {created_user.id} can not be updated"):
+        await user_service.update_user(repository=user_repository, user_id=created_user.id,
+                                       update_dict=user_update)
+
+
+async def test_delete_user(user_repository, sample_user: User):
+    await user_service.delete_user(repository=user_repository, user_id=sample_user.id)
+
+    with pytest.raises(UserNotFoundError, match=f"user {sample_user.id} does not exist"):
+        assert await user_service.get_user_by_id(repository=user_repository, user_id=sample_user.id)
+
+
+async def test_delete_user_not_found(user_repository):
+    user_id = uuid.uuid4()
+    with pytest.raises(UserNotFoundError, match=f"user {user_id} does not exist"):
+        assert await user_service.delete_user(repository=user_repository, user_id=user_id)

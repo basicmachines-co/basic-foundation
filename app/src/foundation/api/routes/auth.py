@@ -10,7 +10,7 @@ from foundation.api.routes.schemas import AuthToken, AuthTokenPayload, Message, 
 from foundation.core.config import settings
 from foundation.core.deps import UserRepositoryDep
 from foundation.core.emails import generate_reset_password_email, send_email
-from foundation.core.security import generate_password_reset_token, verify_password_reset_token, get_password_hash
+from foundation.core.security import generate_password_reset_token, verify_password_reset_token
 from foundation.users import services as user_service
 from foundation.users.services import authenticate, UserNotFoundError
 
@@ -92,9 +92,8 @@ async def reset_password(user_repository: UserRepositoryDep, body: NewPassword) 
     if not user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
 
-    hashed_password = {
-        "hashed_password": get_password_hash(body.new_password),
-    }
-    updated_user = await user_repository.update(user.id, hashed_password)
+    updated_user = await user_service.update_user(repository=user_repository, user_id=user.id, update_dict={
+        "password": body.new_password,
+    })
 
     return Message(message=f"Password updated successfully for user {updated_user.email}")

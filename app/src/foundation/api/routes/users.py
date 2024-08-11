@@ -9,6 +9,7 @@ from foundation.core.config import settings
 from foundation.core.deps import UserRepositoryDep
 from foundation.core.emails import generate_new_account_email, send_email
 from foundation.users import services as user_service
+from foundation.users.services import UserNotFoundError, UserValueError
 
 router = APIRouter()
 
@@ -42,7 +43,6 @@ async def get_user(user_repository: UserRepositoryDep, user_id: UUID, current_us
     if current_user.id != user_id:
         validate_is_superuser(current_user)
 
-    from foundation.users.services import UserNotFoundError
     try:
         user = await user_service.get_user_by_id(repository=user_repository, user_id=user_id)
     except UserNotFoundError as e:
@@ -61,7 +61,7 @@ async def create_user(*, user_repository: UserRepositoryDep, user_in: UserCreate
     """
     Create new user.
     """
-    user_created = await user_service.create_user(repository=user_repository, user_create=user_in)
+    user_created = await user_service.create_user(repository=user_repository, create_dict=user_in.model_dump())
     if not user_created:
         raise HTTPException(
             status_code=400,
@@ -85,7 +85,7 @@ async def create_user(*, user_repository: UserRepositoryDep, user_in: UserCreate
     response_model=UserPublic,
 )
 async def update_user(*, user_repository: UserRepositoryDep, user_id: UUID, user_in: UserUpdate,
-                      current_user: CurrentUser) -> UserPublic:
+                      current_user: CurrentUser) -> Any:
     """
     Update a user.
     If the current_user is a non-super user, they can only update their own user.
@@ -94,15 +94,18 @@ async def update_user(*, user_repository: UserRepositoryDep, user_id: UUID, user
     if current_user.id != user_id:
         validate_is_superuser(current_user)
 
-    user = await user_repository.find_by_id(user_id)
-    if not user:
+    try:
+        await user_service.get_user_by_id(repository=user_repository, user_id=user_id)
+    except UserNotFoundError as e:
         raise HTTPException(
             status_code=404,
-            detail="The user with this id does not exist in the system",
+            detail=e.args,
         )
 
-    user_updated = await user_service.update_user(repository=user_repository, user_id=user_id, user_update=user_in)
-    if not user_updated:
+    try:
+        user_updated = await user_service.update_user(repository=user_repository, user_id=user_id,
+                                                      update_dict=user_in.model_dump())
+    except UserValueError as e:
         raise HTTPException(
             status_code=400,
             detail=f"unable to update user with id {user_id}",
@@ -123,10 +126,12 @@ async def delete_user(*, user_repository: UserRepositoryDep, user_id: UUID, curr
     if current_user.id != user_id:
         validate_is_superuser(current_user)
 
-    deleted = await user_repository.delete(user_id)
-    if not deleted:
+    from foundation.users.services import UserNotFoundError
+    try:
+        await user_service.delete_user(repository=user_repository, user_id=user_id)
+    except UserNotFoundError as e:
         raise HTTPException(
             status_code=404,
-            detail="The user with this id does not exist in the system",
+            detail=e.args,
         )
     return Message(message=f"user {user_id} deleted")
