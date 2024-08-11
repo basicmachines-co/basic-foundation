@@ -6,9 +6,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from foundation.api.deps import get_current_superuser, validate_is_superuser, CurrentUser
 from foundation.api.routes.schemas import UsersPublic, UserPublic, UserCreate, UserUpdate, Message
 from foundation.core.config import settings
-from foundation.core.deps import UserRepositoryDep
 from foundation.core.emails import generate_new_account_email, send_email
-from foundation.users import services as user_service
+from foundation.users.deps import UserServiceDep
 from foundation.users.services import UserNotFoundError, UserValueError
 
 router = APIRouter()
@@ -19,13 +18,12 @@ router = APIRouter()
     dependencies=[Depends(get_current_superuser)],
     response_model=UsersPublic,
 )
-async def get_users(user_repository: UserRepositoryDep, skip: int = 0, limit: int = 100) -> Any:
+async def get_users(user_service: UserServiceDep, skip: int = 0, limit: int = 100) -> Any:
     """
     Get all users.
     """
 
-    count = await user_repository.count()
-    users = await user_repository.find_all(skip, limit)
+    count, users = await user_service.get_users(skip=skip, limit=limit)
     return UsersPublic(data=users, count=count)
 
 
@@ -33,7 +31,7 @@ async def get_users(user_repository: UserRepositoryDep, skip: int = 0, limit: in
     "/{user_id}",
     response_model=UserPublic,
 )
-async def get_user(user_repository: UserRepositoryDep, user_id: UUID, current_user: CurrentUser) -> Any:
+async def get_user(user_service: UserServiceDep, user_id: UUID, current_user: CurrentUser) -> Any:
     """
     Get a user.
     If the current_user is a non-superuser, they can only get their own user.
@@ -44,7 +42,7 @@ async def get_user(user_repository: UserRepositoryDep, user_id: UUID, current_us
         validate_is_superuser(current_user)
 
     try:
-        user = await user_service.get_user_by_id(repository=user_repository, user_id=user_id)
+        user = await user_service.get_user_by_id(user_id=user_id)
     except UserNotFoundError as e:
         raise HTTPException(
             status_code=404,
@@ -57,11 +55,11 @@ async def get_user(user_repository: UserRepositoryDep, user_id: UUID, current_us
     "/", dependencies=[Depends(get_current_superuser)], response_model=UserPublic,
     status_code=status.HTTP_201_CREATED
 )
-async def create_user(*, user_repository: UserRepositoryDep, user_in: UserCreate) -> Any:
+async def create_user(*, user_service: UserServiceDep, user_in: UserCreate) -> Any:
     """
     Create new user.
     """
-    user_created = await user_service.create_user(repository=user_repository, create_dict=user_in.model_dump())
+    user_created = await user_service.create_user(create_dict=user_in.model_dump())
     if not user_created:
         raise HTTPException(
             status_code=400,
@@ -84,7 +82,7 @@ async def create_user(*, user_repository: UserRepositoryDep, user_in: UserCreate
     "/{user_id}",
     response_model=UserPublic,
 )
-async def update_user(*, user_repository: UserRepositoryDep, user_id: UUID, user_in: UserUpdate,
+async def update_user(*, user_service: UserServiceDep, user_id: UUID, user_in: UserUpdate,
                       current_user: CurrentUser) -> Any:
     """
     Update a user.
@@ -95,7 +93,7 @@ async def update_user(*, user_repository: UserRepositoryDep, user_id: UUID, user
         validate_is_superuser(current_user)
 
     try:
-        await user_service.get_user_by_id(repository=user_repository, user_id=user_id)
+        await user_service.get_user_by_id(user_id=user_id)
     except UserNotFoundError as e:
         raise HTTPException(
             status_code=404,
@@ -103,7 +101,7 @@ async def update_user(*, user_repository: UserRepositoryDep, user_id: UUID, user
         )
 
     try:
-        user_updated = await user_service.update_user(repository=user_repository, user_id=user_id,
+        user_updated = await user_service.update_user(user_id=user_id,
                                                       update_dict=user_in.model_dump())
     except UserValueError as e:
         raise HTTPException(
@@ -116,7 +114,7 @@ async def update_user(*, user_repository: UserRepositoryDep, user_id: UUID, user
 @router.delete(
     "/{user_id}",
 )
-async def delete_user(*, user_repository: UserRepositoryDep, user_id: UUID, current_user: CurrentUser) -> Message:
+async def delete_user(*, user_service: UserServiceDep, user_id: UUID, current_user: CurrentUser) -> Message:
     """
     Delete a user.
     If the current_user is a non-super user, they can only delete their own user.
@@ -128,7 +126,7 @@ async def delete_user(*, user_repository: UserRepositoryDep, user_id: UUID, curr
 
     from foundation.users.services import UserNotFoundError
     try:
-        await user_service.delete_user(repository=user_repository, user_id=user_id)
+        await user_service.delete_user(user_id=user_id)
     except UserNotFoundError as e:
         raise HTTPException(
             status_code=404,

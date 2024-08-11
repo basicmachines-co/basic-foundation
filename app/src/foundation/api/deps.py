@@ -5,8 +5,9 @@ from fastapi import Security
 from fastapi_jwt import JwtAuthorizationCredentials, JwtAccessBearer, JwtRefreshBearer
 
 from foundation.core.config import settings
-from foundation.core.deps import UserRepositoryDep
+from foundation.users.deps import UserServiceDep
 from foundation.users.models import User
+from foundation.users.services import UserNotFoundError
 
 # Read access token from bearer header and cookie (bearer priority)
 access_token_security = JwtAccessBearer(
@@ -23,7 +24,7 @@ refresh_token_security = JwtRefreshBearer(
 JwtAuthorizationCredentialsDep = Annotated[JwtAuthorizationCredentials, Security(access_token_security)]
 
 
-async def get_current_user(user_repository: UserRepositoryDep, credentials: JwtAuthorizationCredentialsDep) -> User:
+async def get_current_user(user_service: UserServiceDep, credentials: JwtAuthorizationCredentialsDep) -> User:
     # Notes
     # the jwt contains the id PK for the user in a dict format,
     # e.g. {"id": "<primary-key-uuid>"}
@@ -34,8 +35,9 @@ async def get_current_user(user_repository: UserRepositoryDep, credentials: JwtA
     if not user_id:
         raise HTTPException(status_code=401, detail="No id found in authorization token")
 
-    user: User | None = await user_repository.find_by_id(user_id)
-    if not user:
+    try:
+        user: User | None = await user_service.get_user_by_id(user_id=user_id)
+    except UserNotFoundError:
         raise HTTPException(status_code=404, detail="User not found")
     if not user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")

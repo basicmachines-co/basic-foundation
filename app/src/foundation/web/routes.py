@@ -12,7 +12,6 @@ from pydantic import ValidationError
 from starlette.responses import RedirectResponse, HTMLResponse
 
 from foundation.core.config import BASE_DIR
-from foundation.core.deps import get_user_repository
 from foundation.core.repository import Repository
 from foundation.fastapi_users.deps import (
     get_cookie_backend,
@@ -23,6 +22,7 @@ from foundation.fastapi_users.deps import (
 from foundation.fastapi_users.managers import UserManager
 from foundation.fastapi_users.models import User
 from foundation.fastapi_users.schemas import UserCreate, UserUpdate
+from foundation.users.deps import get_user_repository
 
 
 def logged_in(user: User = Depends(current_optional_user)):
