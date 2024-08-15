@@ -1,37 +1,21 @@
-import uuid
+from datetime import timedelta
 from uuid import UUID
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, status
 from fastapi import Request, Form, Response, APIRouter
+from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordRequestForm
-from fastapi_users import exceptions
-from fastapi_users.authentication import AuthenticationBackend, Strategy
 from jinja2.ext import DebugExtension
 from jinja2_fragments.fastapi import Jinja2Blocks
 from pydantic import ValidationError
 from starlette.responses import RedirectResponse, HTMLResponse
 
-from foundation.core.config import BASE_DIR
-from foundation.core.repository import Repository
-from foundation.fastapi_users.deps import (
-    get_cookie_backend,
-    fastapi_users,
-    get_user_manager,
-    current_optional_user,
-)
-from foundation.fastapi_users.managers import UserManager
-from foundation.fastapi_users.models import User
-from foundation.fastapi_users.schemas import UserCreate, UserUpdate
-from foundation.users.deps import get_user_repository
-
-
-def logged_in(user: User = Depends(current_optional_user)):
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_307_TEMPORARY_REDIRECT,
-            headers={'Location': html_router.url_path_for("login")})
-    return user
-
+from foundation.api.routes.schemas import AuthTokenPayload, UserUpdate, UserCreate
+from foundation.core.config import BASE_DIR, settings
+from foundation.users.deps import UserServiceDep
+from foundation.users.models import User
+from foundation.users.services import UserCreateError
+from foundation.web.deps import get_current_user, CurrentUserDep, access_token_security
 
 html_router = APIRouter(include_in_schema=False, default_response_class=HTMLResponse)
 
@@ -42,7 +26,7 @@ templates.env.add_extension(DebugExtension)
 
 
 @html_router.get("/dashboard")
-async def dashboard(request: Request, current_user=Depends(logged_in)):
+async def dashboard(request: Request, current_user=Depends(get_current_user)):
     return templates.TemplateResponse(
         "pages/dashboard.html",
         {"request": request, "current_user": current_user},
@@ -52,10 +36,10 @@ async def dashboard(request: Request, current_user=Depends(logged_in)):
 @html_router.get("/users")
 async def users(
         request: Request,
-        current_user=Depends(logged_in),
-        user_repo: Repository[User] = Depends(get_user_repository),
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
 ):
-    users = await user_repo.find_all()
+    count, users = await user_service.get_users(skip=0, limit=100)
     return templates.TemplateResponse(
         "pages/user_list.html",
         {"request": request, "current_user": current_user, "users": users},
@@ -66,10 +50,10 @@ async def users(
 async def user(
         request: Request,
         user_id: UUID,
-        current_user=Depends(logged_in),
-        user_repo: Repository[User] = Depends(get_user_repository),
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
 ):
-    view_user = await user_repo.find_by_id(user_id)
+    view_user = await user_service.find_by_id(user_id)
     return templates.TemplateResponse(
         "pages/user_view.html",
         {"request": request, "current_user": current_user, "user": view_user},
@@ -80,10 +64,10 @@ async def user(
 async def user_edit(
         request: Request,
         user_id: UUID,
-        current_user=Depends(logged_in),
-        user_repo: Repository[User] = Depends(get_user_repository),
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
 ):
-    edit_user = await user_repo.find_by_id(user_id)
+    edit_user = await user_service.find_by_id(user_id)
     return templates.TemplateResponse(
         "pages/user_edit.html",
         {"request": request, "current_user": current_user, "user": edit_user},
@@ -95,31 +79,27 @@ async def user_edit(
 async def user_edit_post(
         request: Request,
         user_id: UUID,
-        current_user=Depends(logged_in),
-        first_name: str = Form(),
-        last_name: str = Form(),
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
+        full_name: str = Form(),
         email: str = Form(),
-        is_active: str = Form(False),
-        is_verified: str = Form(False),
-        is_superuser: str = Form(False),
-        user_repo: Repository[User] = Depends(get_user_repository),
+        is_active: bool = Form(False),
+        is_superuser: bool = Form(False),
 ):
-    user = await user_repo.find_by_id(user_id)
-    # todo handle 404
+    user = await user_service.find_by_id(user_id)
+    # todo handle 404 and user
     error = None
     try:
         update_form = UserUpdate(
-            first_name=first_name,
-            last_name=last_name,
+            full_name=full_name,
             email=email,
             is_active=is_active,
-            is_verified=is_verified,
             is_superuser=is_superuser,
         )
     except ValidationError:
         error = "Validation Error"
 
-    updated_user = await user_repo.update(user.id, update_form.dict())
+    updated_user = await user_service.update(user.id, update_form.model_dump())
 
     return templates.TemplateResponse(
         "pages/user_view.html",
@@ -129,7 +109,7 @@ async def user_edit_post(
 
 
 @html_router.get("/")
-async def index(request: Request, current_user=Depends(logged_in)):
+async def index(request: Request, current_user: CurrentUserDep):
     return templates.TemplateResponse(
         "pages/index.html",
         {"request": request, "current_user": current_user},
@@ -146,29 +126,24 @@ async def register(request: Request):
 @html_router.post("/register")
 async def register_post(
         request: Request,
-        first_name: str = Form(),
-        last_name: str = Form(),
+        user_service: UserServiceDep,
+        full_name: str = Form(),
         email: str = Form(),
         password: str = Form(),
-        user_manager: UserManager = Depends(get_user_manager),
-        auth_backend: AuthenticationBackend = Depends(get_cookie_backend),
 ):
     register_form = None
     try:
         register_form = UserCreate(
-            first_name=first_name,
-            last_name=last_name,
+            full_name=full_name,
             email=email,
             password=password,
         )
-        user = await user_manager.create(register_form, safe=True, request=request)
-        return await login_user(request, user, user_manager, auth_backend)
+        user = await user_service.create(register_form, safe=True, request=request)
+        return await login_user(user)
     except ValidationError:
         error = "Validation Error"
-    except exceptions.UserAlreadyExists:
+    except UserCreateError:
         error = "User already exists"
-    except exceptions.InvalidPasswordException as e:
-        error = e.reason
 
     return templates.TemplateResponse(
         "pages/register.html",
@@ -185,11 +160,12 @@ async def login(request: Request):
 @html_router.post("/login")
 async def login_post(
         request: Request,
+        user_service: UserServiceDep,
         form_data: OAuth2PasswordRequestForm = Depends(),
-        user_manager: UserManager = Depends(get_user_manager),
-        auth_backend: AuthenticationBackend = Depends(get_cookie_backend),
 ):
-    user = await user_manager.authenticate(form_data)
+    user = await user_service.authenticate(
+        email=form_data.username, password=form_data.password
+    )
 
     if user is None or not user.is_active:
         return templates.TemplateResponse(
@@ -203,35 +179,24 @@ async def login_post(
             block_name="login_form",
         )
 
-    return await login_user(request, user, user_manager, auth_backend)
+    return await login_user(user)
 
 
-async def login_user(request, user, user_manager, auth_backend):
-    strategy: Strategy[User, uuid.UUID] = auth_backend.get_strategy()
-    login_response = await auth_backend.login(strategy, user)
-    await user_manager.on_after_login(user, request, login_response)
+async def login_user(user: User):
+    response = Response(status_code=status.HTTP_204_NO_CONTENT)
 
+    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    token = access_token_security.create_access_token(subject=jsonable_encoder(AuthTokenPayload(id=user.id)),
+                                                      expires_delta=access_token_expires)
+    access_token_security.set_access_cookie(response, token, access_token_expires)
     # redirect user to the dashboard
-    login_response.headers["HX-Redirect"] = html_router.url_path_for("dashboard")
-    return Response(headers=login_response.headers)
+    response.headers["HX-Redirect"] = html_router.url_path_for("dashboard")
+    return Response(headers=response.headers)
 
 
 @html_router.get("/logout")
-async def logout(
-        request: Request,
-        user_token=Depends(fastapi_users.authenticator.current_user_token(optional=True)),
-        auth_backend: AuthenticationBackend = Depends(get_cookie_backend),
-):
-    # if the user is not logged in, redirect to index
-    user, token = user_token
-    if not user:
-        response = RedirectResponse(url=html_router.url_path_for("index"))
-        return response
-
+async def logout():
     # clear cookie
-    logout_response = await auth_backend.logout(
-        auth_backend.get_strategy(), user, token
-    )
-    return RedirectResponse(
-        url=html_router.url_path_for("index"), headers=logout_response.headers
-    )
+    response = RedirectResponse(url=html_router.url_path_for("index"))
+    access_token_security.set_access_cookie(response, "", timedelta(seconds=0))
+    return response

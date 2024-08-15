@@ -38,9 +38,6 @@
                                 class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell">Is Active
                         </th>
                         <th scope="col"
-                                class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Is Verified
-                        </th>
-                        <th scope="col"
                                 class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Is Admin
                         </th>
                     </tr>
@@ -49,13 +46,12 @@
                     {% for user in users %}
                         <tr>
                             <td class="relative py-4 pr-3 text-sm font-medium text-gray-900">
-                                <a href="/users/{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</a>
+                                <a href="/users/{{ user.id }}">{{ user.full_name }}</a>
                                 <div class="absolute bottom-0 right-full h-px w-screen bg-gray-100"></div>
                                 <div class="absolute bottom-0 left-0 h-px w-screen bg-gray-100"></div>
                             </td>
                             <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">{{ user.email }}</td>
                             <td class="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">{{ user.is_active }}</td>
-                            <td class="px-3 py-4 text-sm text-gray-500">{{ user.is_verified }}</td>
                             <td class="px-3 py-4 text-sm text-gray-500">{{ user.is_superuser }}</td>
                         </tr>
                     {% endfor %}

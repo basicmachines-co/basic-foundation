@@ -1,3 +1,4 @@
+import logging
 import sys
 
 from fastapi import FastAPI
@@ -30,5 +31,7 @@ async def on_startup():
 
     :return: None
     """
-    # Not needed if you set up a migration system like Alembic
     logger.info(f"Welcome to {config.settings.app_name}")
+
+    # silence bcrypt noise
+    logging.getLogger('passlib').setLevel(logging.ERROR)

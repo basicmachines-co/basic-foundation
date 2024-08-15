@@ -700,47 +700,6 @@ python-jose = ["python-jose[cryptography] (>=3.3.0)"]
 test = ["Authlib (>=1.3.0)", "black (==24.4.2)", "flake8 (>=6.0.0,<8.0.0)", "httpx (>=0.23.0,<1.0.0)", "isort (>=5.11.0,<6.0.0)", "mypy (>=1.0.0,<2.0.0)", "pytest (>=7.0.0,<9.0.0)", "pytest-cov (>=4.0.0,<6.0.0)", "pytest-mock (>=3.0.0,<4.0.0)", "python-jose[cryptography] (>=3.3.0)", "requests (>=2.28.0,<3.0.0)", "ruff (>=0.1.0,<1.0.0)", "types-python-jose (==3.3.4.8)"]
 
 [[package]]
-name = "fastapi-users"
-version = "12.1.3"
-description = "Ready-to-use and customizable users management for FastAPI"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "fastapi_users-12.1.3-py3-none-any.whl", hash = "sha256:9faff9fc072df12a9e60595a620f44e0028cc7ecc7130d6048d448befec39a1e"},
-    {file = "fastapi_users-12.1.3.tar.gz", hash = "sha256:81236f802228e25d1fe4c3006bc5e9d1d651d83147747d6ab19edd81401d09d4"},
-]
-
-[package.dependencies]
-email-validator = ">=1.1.0,<2.2"
-fastapi = ">=0.65.2"
-fastapi-users-db-sqlalchemy = {version = ">=6.0.0", optional = true, markers = "extra == \"sqlalchemy\""}
-makefun = ">=1.11.2,<2.0.0"
-passlib = {version = "1.7.4", extras = ["bcrypt"]}
-pyjwt = {version = "2.8.0", extras = ["crypto"]}
-python-multipart = "0.0.7"
-
-[package.extras]
-beanie = ["fastapi-users-db-beanie (>=3.0.0)"]
-oauth = ["httpx-oauth (>=0.13)"]
-redis = ["redis (>=4.3.3,<6.0.0)"]
-sqlalchemy = ["fastapi-users-db-sqlalchemy (>=6.0.0)"]
-
-[[package]]
-name = "fastapi-users-db-sqlalchemy"
-version = "6.0.1"
-description = "FastAPI Users database adapter for SQLAlchemy"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "fastapi_users_db_sqlalchemy-6.0.1-py3-none-any.whl", hash = "sha256:d1050ec31eb75e8c4fa9abafa4addaf0baf5c97afeea2f0f910ea55e2451fcad"},
-    {file = "fastapi_users_db_sqlalchemy-6.0.1.tar.gz", hash = "sha256:f0ef9fe3250453712d25c13170700c80fa205867ce7add7ef391c384ec27cbe1"},
-]
-
-[package.dependencies]
-fastapi-users = ">=10.0.0"
-sqlalchemy = {version = ">=2.0.0,<2.1.0", extras = ["asyncio"]}
-
-[[package]]
 name = "greenlet"
 version = "3.0.3"
 description = "Lightweight in-process concurrent programming"
@@ -1163,17 +1122,6 @@ htmlsoup = ["BeautifulSoup4"]
 source = ["Cython (>=3.0.10)"]
 
 [[package]]
-name = "makefun"
-version = "1.15.2"
-description = "Small library to dynamically create python functions."
-optional = false
-python-versions = "*"
-files = [
-    {file = "makefun-1.15.2-py2.py3-none-any.whl", hash = "sha256:1c83abfaefb6c3c7c83ed4a993b4a310af80adf6db15625b184b1f0f7545a041"},
-    {file = "makefun-1.15.2.tar.gz", hash = "sha256:16f2a2b34d9ee0c2b578c960a1808c974e2822cf79f6e9b9c455aace10882d45"},
-]
-
-[[package]]
 name = "markdown-it-py"
 version = "3.0.0"
 description = "Python port of markdown-it. Markdown parsing, done right!"
@@ -1582,22 +1530,19 @@ windows-terminal = ["colorama (>=0.4.6)"]
 
 [[package]]
 name = "pyjwt"
-version = "2.8.0"
+version = "2.9.0"
 description = "JSON Web Token implementation in Python"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "PyJWT-2.8.0-py3-none-any.whl", hash = "sha256:59127c392cc44c2da5bb3192169a91f429924e17aff6534d70fdc02ab3e04320"},
-    {file = "PyJWT-2.8.0.tar.gz", hash = "sha256:57e28d156e3d5c10088e0c68abb90bfac3df82b40a71bd0daa20c65ccd5c23de"},
+    {file = "PyJWT-2.9.0-py3-none-any.whl", hash = "sha256:3b02fb0f44517787776cf48f2ae25d8e14f300e6d7545a4315cee571a415e850"},
+    {file = "pyjwt-2.9.0.tar.gz", hash = "sha256:7e1e5b56cc735432a7369cbfa0efe50fa113ebecdc04ae6922deba8b84582d0c"},
 ]
-
-[package.dependencies]
-cryptography = {version = ">=3.4.0", optional = true, markers = "extra == \"crypto\""}
 
 [package.extras]
 crypto = ["cryptography (>=3.4.0)"]
-dev = ["coverage[toml] (==5.0.4)", "cryptography (>=3.4.0)", "pre-commit", "pytest (>=6.0.0,<7.0.0)", "sphinx (>=4.5.0,<5.0.0)", "sphinx-rtd-theme", "zope.interface"]
-docs = ["sphinx (>=4.5.0,<5.0.0)", "sphinx-rtd-theme", "zope.interface"]
+dev = ["coverage[toml] (==5.0.4)", "cryptography (>=3.4.0)", "pre-commit", "pytest (>=6.0.0,<7.0.0)", "sphinx", "sphinx-rtd-theme", "zope.interface"]
+docs = ["sphinx", "sphinx-rtd-theme", "zope.interface"]
 tests = ["coverage[toml] (==5.0.4)", "pytest (>=6.0.0,<7.0.0)"]
 
 [[package]]
@@ -2351,4 +2296,4 @@ dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.12.1"
-content-hash = "73d207cc7101372a0a83e4a403220e70e8cea6d67b5b7c411a364a640678a683"
+content-hash = "cc5168f0dc4a4f03466cb24dd6d1582752b1712cb45b5cca8394bf7f835a8ebc"
