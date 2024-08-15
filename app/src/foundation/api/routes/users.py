@@ -4,8 +4,8 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from foundation.api.deps import get_current_superuser, validate_is_superuser, CurrentUser
-from foundation.api.routes.schemas import UsersPublic, UserPublic, UserCreate, UserUpdate, Message
 from foundation.users.deps import UserServiceDep
+from foundation.users.schemas import UsersPublic, UserPublic, UserCreate, UserUpdate, Message
 from foundation.users.services import UserNotFoundError, UserValueError, UserCreateError
 
 router = APIRouter()

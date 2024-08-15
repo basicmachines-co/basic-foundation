@@ -6,10 +6,10 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordRequestForm
 
 from foundation.api.deps import access_token_security, CurrentUser
-from foundation.api.routes.schemas import AuthToken, AuthTokenPayload, Message, UserPublic, NewPassword
 from foundation.core.config import settings
 from foundation.core.security import verify_password_reset_token
 from foundation.users.deps import UserServiceDep
+from foundation.users.schemas import AuthToken, AuthTokenPayload, Message, UserPublic, NewPassword
 from foundation.users.services import UserNotFoundError
 
 router = APIRouter()

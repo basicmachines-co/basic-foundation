@@ -6,8 +6,8 @@ from emails.backend.response import SMTPResponse
 from httpx import AsyncClient
 from mockito import when, mock
 
-from foundation.api.routes.schemas import AuthToken
 from foundation.core.config import settings
+from foundation.users.schemas import AuthToken
 
 
 def random_lower_string() -> str:

@@ -10,12 +10,12 @@ from jinja2_fragments.fastapi import Jinja2Blocks
 from pydantic import ValidationError
 from starlette.responses import RedirectResponse, HTMLResponse
 
-from foundation.api.routes.schemas import AuthTokenPayload, UserUpdate, UserCreate
 from foundation.core.config import BASE_DIR, settings
 from foundation.users.deps import UserServiceDep
 from foundation.users.models import User
+from foundation.users.schemas import AuthTokenPayload, UserUpdate, UserCreate
 from foundation.users.services import UserCreateError
-from foundation.web.deps import get_current_user, CurrentUserDep, access_token_security
+from foundation.web.deps import CurrentUserDep, access_token_security
 
 html_router = APIRouter(include_in_schema=False, default_response_class=HTMLResponse)
 
@@ -26,7 +26,7 @@ templates.env.add_extension(DebugExtension)
 
 
 @html_router.get("/dashboard")
-async def dashboard(request: Request, current_user=Depends(get_current_user)):
+async def dashboard(request: Request, current_user: CurrentUserDep):
     return templates.TemplateResponse(
         "pages/dashboard.html",
         {"request": request, "current_user": current_user},
@@ -198,5 +198,5 @@ async def login_user(user: User):
 async def logout():
     # clear cookie
     response = RedirectResponse(url=html_router.url_path_for("index"))
-    access_token_security.set_access_cookie(response, "", timedelta(seconds=0))
+    access_token_security.unset_access_cookie(response)
     return response

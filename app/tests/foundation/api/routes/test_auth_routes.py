@@ -1,9 +1,9 @@
 import pytest
 from httpx import AsyncClient
 
-from foundation.api.routes.schemas import UserPublic, Message, NewPassword
 from foundation.core.security import generate_password_reset_token
 from foundation.users.models import User
+from foundation.users.schemas import UserPublic, Message, NewPassword
 from utils import get_auth_token, mock_emails_send, random_lower_string
 
 pytestmark = pytest.mark.asyncio
