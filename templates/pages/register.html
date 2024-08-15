@@ -18,30 +18,16 @@
                             {{ error }}
                         </div>
                     {% endif %}
-                    <!-- first_name -->
+                    <!-- full_name -->
                     <div>
-                        <label for="first_name"
-                                class="block text-sm font-medium leading-6 text-gray-900">First Name</label>
+                        <label for="full_name"
+                                class="block text-sm font-medium leading-6 text-gray-900">Full Name</label>
                         <div class="mt-2">
-                            <input id="first_name"
-                                    name="first_name"
+                            <input id="full_name"
+                                    name="full_name"
                                     type="text"
-                                    placeholder="First Name"
-                                    value="{{ first_name|d('') }}"
-                                    required
-                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                        </div>
-                    </div>
-                    <!-- last_name -->
-                    <div>
-                        <label for="last_name"
-                                class="block text-sm font-medium leading-6 text-gray-900">Last Name</label>
-                        <div class="mt-2">
-                            <input id="last_name"
-                                    name="last_name"
-                                    type="text"
-                                    placeholder="Last Name"
-                                    value="{{ last_name|d('') }}"
+                                    placeholder="Full Name"
+                                    value="{{ full_name|d('') }}"
                                     required
                                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>

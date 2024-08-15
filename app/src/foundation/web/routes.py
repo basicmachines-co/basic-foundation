@@ -13,8 +13,8 @@ from starlette.responses import RedirectResponse, HTMLResponse
 from foundation.core.config import BASE_DIR, settings
 from foundation.users.deps import UserServiceDep
 from foundation.users.models import User
-from foundation.users.schemas import AuthTokenPayload, UserUpdate, UserCreate
-from foundation.users.services import UserCreateError
+from foundation.users.schemas import AuthTokenPayload, UserCreate
+from foundation.users.services import UserCreateError, UserValueError
 from foundation.web.deps import CurrentUserDep, access_token_security
 
 html_router = APIRouter(include_in_schema=False, default_response_class=HTMLResponse)
@@ -46,6 +46,53 @@ async def users(
     )
 
 
+@html_router.get("/users/create")
+async def user_create(
+        request: Request,
+        current_user: CurrentUserDep,
+):
+    return templates.TemplateResponse(
+        "pages/user_create.html",
+        {"request": request, "current_user": current_user, "user": None},
+    )
+
+
+@html_router.post("/users/create")
+async def user_create_post(
+        request: Request,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
+        full_name: str = Form(),
+        email: str = Form(),
+        password: str = Form(),
+        is_active: bool = Form(False),
+        is_superuser: bool = Form(False),
+):
+    error = None
+    try:
+        created_user = await user_service.create_user(create_dict={"full_name": full_name,
+                                                                   "email": email,
+                                                                   "password": password,
+                                                                   "is_active": is_active,
+                                                                   "is_superuser": is_superuser})
+    except UserValueError as e:
+        error = e.args
+        return templates.TemplateResponse(
+            "pages/user_create.html",
+            {"request": request, "error": error, "user": {"full_name": full_name,
+                                                          "email": email,
+                                                          "is_active": is_active,
+                                                          "is_superuser": is_superuser}},
+            block_name="content",
+        )
+
+    return templates.TemplateResponse(
+        "pages/user_view.html",
+        {"request": request, "error": error, "user": created_user},
+        block_name="content",
+    )
+
+
 @html_router.get("/users/{user_id}")
 async def user(
         request: Request,
@@ -53,7 +100,7 @@ async def user(
         user_service: UserServiceDep,
         current_user: CurrentUserDep,
 ):
-    view_user = await user_service.find_by_id(user_id)
+    view_user = await user_service.get_user_by_id(user_id=user_id)
     return templates.TemplateResponse(
         "pages/user_view.html",
         {"request": request, "current_user": current_user, "user": view_user},
@@ -67,7 +114,7 @@ async def user_edit(
         user_service: UserServiceDep,
         current_user: CurrentUserDep,
 ):
-    edit_user = await user_service.find_by_id(user_id)
+    edit_user = await user_service.get_user_by_id(user_id=user_id)
     return templates.TemplateResponse(
         "pages/user_edit.html",
         {"request": request, "current_user": current_user, "user": edit_user},
@@ -86,20 +133,22 @@ async def user_edit_post(
         is_active: bool = Form(False),
         is_superuser: bool = Form(False),
 ):
-    user = await user_service.find_by_id(user_id)
-    # todo handle 404 and user
     error = None
     try:
-        update_form = UserUpdate(
-            full_name=full_name,
-            email=email,
-            is_active=is_active,
-            is_superuser=is_superuser,
+        updated_user = await user_service.update_user(user_id=user_id, update_dict={"full_name": full_name,
+                                                                                    "email": email,
+                                                                                    "is_active": is_active,
+                                                                                    "is_superuser": is_superuser})
+    except UserValueError as e:
+        error = e.args
+        return templates.TemplateResponse(
+            "pages/user_edit.html",
+            {"request": request, "error": error, "user": {"full_name": full_name,
+                                                          "email": email,
+                                                          "is_active": is_active,
+                                                          "is_superuser": is_superuser}},
+            block_name="content",
         )
-    except ValidationError:
-        error = "Validation Error"
-
-    updated_user = await user_service.update(user.id, update_form.model_dump())
 
     return templates.TemplateResponse(
         "pages/user_view.html",
@@ -137,8 +186,9 @@ async def register_post(
             full_name=full_name,
             email=email,
             password=password,
+            is_active=True
         )
-        user = await user_service.create(register_form, safe=True, request=request)
+        user = await user_service.create_user(create_dict=register_form.model_dump())
         return await login_user(user)
     except ValidationError:
         error = "Validation Error"
@@ -147,7 +197,7 @@ async def register_post(
 
     return templates.TemplateResponse(
         "pages/register.html",
-        {"request": request, "error": error, **register_form.dict()},
+        {"request": request, "error": error, **register_form.model_dump()},
         block_name="register_form",
     )
 
