@@ -159,6 +159,9 @@ async def user_edit_post(
 
 @html_router.get("/")
 async def index(request: Request, current_user: CurrentUserDep):
+    if not current_user:
+        return RedirectResponse(url=html_router.url_path_for("login"))
+
     return templates.TemplateResponse(
         "pages/index.html",
         {"request": request, "current_user": current_user},

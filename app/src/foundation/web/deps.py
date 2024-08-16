@@ -11,18 +11,18 @@ from foundation.users.services import UserNotFoundError
 
 access_token_security = JwtAccessCookie(
     secret_key=settings.JWT_SECRET,
-    auto_error=True  # TODO what does False do?
+    auto_error=False
 )
 
 JwtAuthorizationCredentialsDep = Annotated[JwtAuthorizationCredentials, Security(access_token_security)]
 
 
 async def get_current_user(user_service: UserServiceDep, credentials: JwtAuthorizationCredentialsDep) -> User:
-    # Notes
-    # the jwt contains the id PK for the user in a dict format,
-    # e.g. {"id": "<primary-key-uuid>"}
-    # the subject (sub) field of the jwt is called "subject"
-    # https://github.com/k4black/fastapi-jwt/issues/13
+    if not credentials:
+        raise HTTPException(
+            status_code=307,
+            headers={'Location': "/login"})
+
     subject = credentials.subject
     user_id = subject.get("id")
     if not user_id:
