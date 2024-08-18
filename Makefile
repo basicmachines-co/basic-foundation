@@ -9,6 +9,9 @@ install:
 test:
 	poetry run pytest
 
+test-playrwight:  # assumes app is running on localhost:8000
+	poetry run pytest ./app/tests/playwright
+
 clean:
 	find . -type f -name '*.pyc' -delete
 	find . -type d -name '__pycache__' -exec rm -r {} +
@@ -63,5 +66,5 @@ migrate-reset:
 init_data:
 	poetry run python app/src/tools/init_data.py
 
-run-render:
+run:
 	poetry run fastapi run app/src/foundation/app.py  --port 10000
