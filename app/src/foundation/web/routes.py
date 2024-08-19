@@ -11,10 +11,11 @@ from pydantic import ValidationError
 from starlette.responses import RedirectResponse, HTMLResponse
 
 from foundation.core.config import BASE_DIR, settings
+from foundation.core.security import verify_password_reset_token
 from foundation.users.deps import UserServiceDep
 from foundation.users.models import User
 from foundation.users.schemas import AuthTokenPayload, UserCreate
-from foundation.users.services import UserCreateError, UserValueError
+from foundation.users.services import UserCreateError, UserValueError, UserNotFoundError
 from foundation.web.deps import CurrentUserDep, access_token_security
 
 html_router = APIRouter(include_in_schema=False, default_response_class=HTMLResponse)
@@ -253,3 +254,71 @@ async def logout():
     response = RedirectResponse(url=html_router.url_path_for("index"))
     access_token_security.unset_access_cookie(response)
     return response
+
+
+@html_router.get("/forgot-password")
+async def forgot_password(request: Request):
+    return templates.TemplateResponse("pages/forgot_password.html", {"request": request})
+
+
+@html_router.post("/forgot-password")
+async def forgot_password_post(request: Request, user_service: UserServiceDep, email: str = Form()):
+    error = None
+    success = None
+    try:
+        await user_service.recover_password(email=email)
+        success = f"An email was sent to {email}"
+    except UserNotFoundError as e:
+        error = e.args[0]
+    return templates.TemplateResponse("pages/forgot_password.html",
+                                      {"request": request, "error": error,
+                                       "success": success},
+                                      block_name="forgot_password_form")
+
+
+@html_router.get("/reset-password")
+async def reset_password(request: Request, token: str):
+    context = {"request": request}
+    email = verify_password_reset_token(token=token)
+    if not email:
+        context["error"] = "Invalid token"
+
+    context["token"] = token
+    return templates.TemplateResponse("pages/reset_password.html", context)
+
+
+@html_router.post("/reset-password")
+async def reset_password_post(request: Request, user_service: UserServiceDep, token: str = Form(),
+                              new_password: str = Form()):
+    context = {"request": request}
+    email = verify_password_reset_token(token=token)
+    if not email:
+        context["error"] = "Invalid token"
+
+    try:
+        user = await user_service.get_user_by_email(email=email)
+        updated_user = await user_service.update_user(user_id=user.id, update_dict={
+            "password": new_password,
+        })
+        context["success"] = "Your password has been updated!"
+    except UserNotFoundError as e:
+        context["error"] = e.args[0]
+
+    if not user.is_active:
+        context["error"] = "Your account is not active, please check your email"
+
+    context["token"] = token
+    return templates.TemplateResponse("pages/reset_password.html", context, block_name="password_reset_form")
+
+
+@html_router.get("/profile")
+async def profile(
+        request: Request,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
+):
+    view_user = await user_service.get_user_by_id(user_id=current_user.id)
+    return templates.TemplateResponse(
+        "pages/user_view.html",
+        {"request": request, "current_user": current_user, "user": view_user},
+    )

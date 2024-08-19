@@ -75,6 +75,7 @@ def generate_reset_password_email(email_to: str, email: str, token: str) -> Emai
             "link": link,
         },
     )
+    logger.debug(f"Password reset link: {link}")
     return EmailData(html_content=html_content, subject=subject)
 
 

@@ -3,6 +3,7 @@ from typing import TypedDict
 
 from fastapi_jwt import JwtAccessBearer, JwtRefreshBearer
 from fastapi_jwt.jwt import JwtAccess
+from fastapi_jwt.jwt_backends.abstract_backend import BackendException
 from jwt import InvalidTokenError
 from passlib.context import CryptContext
 
@@ -56,5 +57,5 @@ def verify_password_reset_token(token: str) -> str | None:
 
         subject: ResetTokenSubject = decoded_token["subject"]
         return subject.get("email")
-    except InvalidTokenError:
+    except (InvalidTokenError, BackendException):
         return None

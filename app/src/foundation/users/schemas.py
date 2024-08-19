@@ -57,6 +57,10 @@ class UsersPublic(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+class ForgotPassword(BaseModel):
+    email: EmailStr
+
+
 class NewPassword(BaseModel):
     token: str
     new_password: str
