@@ -7,7 +7,7 @@ license = "Apache-2.0"
 readme = "README.md"
 
 packages = [
-    { include = "app", from = "app/src" },
+    { include = "foundation", from = "app/src" },
 ]
 
 [tool.poetry.dependencies]
