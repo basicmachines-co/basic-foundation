@@ -4,7 +4,7 @@ services:
     env: python
     plan: starter
     buildCommand: make install && make tailwind && make migrate-up
-    startCommand: make run-render
+    startCommand: make run
     envVars:
       - key: POETRY_VERSION
         value: 1.7.1
