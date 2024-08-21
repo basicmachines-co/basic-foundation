@@ -65,9 +65,6 @@ pythonpath = [
     ".", "./app/src",
     ".", "./app/tests",
 ]
-markers = [
-    "fastapi_users",
-]
 filterwarnings = [
     "ignore::DeprecationWarning:",
 ]

@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: basic-api
+    name: basic-foundation
     env: python
     plan: starter
     buildCommand: make install && make tailwind && make migrate-up
