@@ -53,7 +53,7 @@ async def users(
         page_size: int = 10,
 ):
     query = select(User)
-    pagination = user_pagination.paginate(query, page_size=page_size)
+    pagination = user_pagination.paginate(request, query, page_size=page_size)
     page = await pagination.page(page=page)
 
     return templates.TemplateResponse(

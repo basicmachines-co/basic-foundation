@@ -1,23 +1,23 @@
 import pytest
 from sqlalchemy import select
 
-from foundation.core.pagination import Pagination
 from foundation.core.repository import Repository
 from foundation.users.models import User
+from foundation.web.pagination import Paginator
 
 pytestmark = pytest.mark.asyncio
 
 
 async def test_total(user_repository: Repository):
     user_count = await user_repository.count()
-    pagination = Pagination(user_repository, query=select(User))
+    pagination = Paginator(user_repository, query=select(User))
 
     total = await pagination.total
     assert total == user_count
 
 
 async def test_page_less_than_one(user_repository: Repository):
-    pagination = Pagination(user_repository, query=select(User))
+    pagination = Paginator(user_repository, query=select(User))
 
     page = await pagination.page(0)
 
@@ -28,7 +28,7 @@ async def test_page_less_than_one(user_repository: Repository):
 
 
 async def test_page_size_less_than_one(user_repository: Repository):
-    pagination = Pagination(user_repository, query=select(User), page_size=-1)
+    pagination = Paginator(user_repository, query=select(User), page_size=-1)
 
     page = await pagination.page(1)
 
@@ -40,7 +40,7 @@ async def test_page_size_less_than_one(user_repository: Repository):
 
 async def test_page(user_repository: Repository):
     users = await user_repository.find_all(limit=10)
-    pagination = Pagination(user_repository, query=select(User), page_size=1)
+    pagination = Paginator(user_repository, query=select(User), page_size=1)
 
     page_1 = await pagination.page(1)
 
@@ -70,7 +70,7 @@ async def test_page_query(user_repository: Repository):
     users = query_result.scalars().all()
     assert len(users) >= 2
 
-    pagination = Pagination(user_repository, query=query, page_size=1)
+    pagination = Paginator(user_repository, query=query, page_size=1)
 
     page_1 = await pagination.page(1)
 

@@ -5,13 +5,14 @@ from loguru import logger
 from sqlalchemy import select, func
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Query
+from starlette.requests import Request
 
 from foundation.core.config import settings
 from foundation.core.emails import generate_new_account_email, send_email, generate_reset_password_email
-from foundation.core.pagination import Pagination
 from foundation.core.repository import Repository
 from foundation.core.security import verify_password, get_password_hash, generate_password_reset_token
 from foundation.users.models import User
+from foundation.web.pagination import Paginator
 
 
 class UserNotFoundError(Exception):
@@ -151,5 +152,5 @@ class UserPagination:
     def __init__(self, repository: Repository[User]):
         self.repository = repository
 
-    def paginate(self, query: Query = None, page_size: int = 10):
-        return Pagination(self.repository, query, page_size)
+    def paginate(self, request: Request, query: Query = None, page_size: int = 10):
+        return Paginator(request, self.repository, query, page_size)

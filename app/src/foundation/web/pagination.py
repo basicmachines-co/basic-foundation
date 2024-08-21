@@ -3,13 +3,16 @@ from typing import Type, Any, List
 
 from sqlalchemy import select, func
 from sqlalchemy.orm import Query
+from starlette.datastructures import URL
+from starlette.requests import Request
 
 from foundation.core.repository import Repository
 
 
 @dataclass
 class Page:
-    def __init__(self, items: List[Type[Any]], page: int, page_size: int, total: int):
+    def __init__(self, url: URL, items: List[Type[Any]], page: int, page_size: int, total: int):
+        self.url = url
         self.items = items
         self.page = page
         self.page_size = page_size
@@ -37,16 +40,19 @@ class Page:
         return self.page < self.pages
 
     @property
-    def previous_page(self) -> int:
-        return self.page - 1 if self.has_previous else 1
+    def previous_page(self) -> URL:
+        page_num = self.page - 1 if self.has_previous else 1
+        return self.url.include_query_params(page=page_num, page_size=self.page_size)
 
     @property
-    def next_page(self) -> int:
-        return self.page + 1 if self.has_next else self.pages
+    def next_page(self) -> URL:
+        page_num = self.page + 1 if self.has_next else self.pages
+        return self.url.include_query_params(page=page_num, page_size=self.page_size)
 
 
-class Pagination:
-    def __init__(self, repository: Repository, query: Query = None, page_size: int = 10):
+class Paginator:
+    def __init__(self, request: Request, repository: Repository, query: Query = None, page_size: int = 10):
+        self.request = request
         self.repository = repository
         self.query = query
         self.page_size = page_size
@@ -68,6 +74,7 @@ class Pagination:
             items = result.scalars().all()
 
         return Page(
+            url=self.request.url,
             items=items,
             page=page,
             page_size=self.page_size,
