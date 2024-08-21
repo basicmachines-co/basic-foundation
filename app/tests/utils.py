@@ -27,8 +27,8 @@ async def get_superuser_auth_token_headers(client: AsyncClient) -> dict[str, str
 
 
 async def get_auth_token(client: AsyncClient, login_data: dict[str, str]) -> AuthToken:
-    r = await client.post(f"/login/access-token", data=login_data)
-    assert r.status_code == 200
+    r = await client.post(f"/api/auth/login/access-token", data=login_data)
+    assert r.status_code == 200, r.text
     return AuthToken.model_validate(r.json())
 
 

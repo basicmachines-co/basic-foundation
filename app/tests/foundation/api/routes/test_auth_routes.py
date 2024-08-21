@@ -18,7 +18,7 @@ async def test_login_access_token(
     auth_token = await get_auth_token(client, login_data)
 
     assert auth_token.access_token is not None
-    r = await client.post("/login/test-token", headers={"Authorization": f"Bearer {auth_token.access_token}"})
+    r = await client.post(f"/api/auth/login/test-token", headers={"Authorization": f"Bearer {auth_token.access_token}"})
 
     assert r.status_code == 200
     user = UserPublic.model_validate(r.json())
@@ -31,7 +31,7 @@ async def test_login_access_token_invalid_email(
         "username": "bademail@test.com",
         "password": sample_user_password,
     }
-    r = await client.post(f"/login/access-token", data=login_data)
+    r = await client.post(f"/api/auth/login/access-token", data=login_data)
     assert r.status_code == 400
 
 
@@ -41,14 +41,14 @@ async def test_login_access_token_invalid_password(
         "username": sample_user.email,
         "password": "bad-password",
     }
-    r = await client.post(f"/login/access-token", data=login_data)
+    r = await client.post(f"/api/auth/login/access-token", data=login_data)
     assert r.status_code == 400
 
 
 async def test_recover_password(client: AsyncClient, sample_user: User, sample_user_password: str, unstub_mocks):
     # mock sending an email
     mock_emails_send()
-    r = await client.post(f"/password-recovery/{sample_user.email}")
+    r = await client.post(f"/api/auth/password-recovery/{sample_user.email}")
     assert r.status_code == 200
 
     message = Message.model_validate(r.json())
@@ -56,7 +56,7 @@ async def test_recover_password(client: AsyncClient, sample_user: User, sample_u
 
 
 async def test_recover_password_invalid_email_404(client: AsyncClient, sample_user: User):
-    r = await client.post("/password-recovery/invalid@email.com")
+    r = await client.post("/api/auth/password-recovery/invalid@email.com")
     assert r.status_code == 404
 
 
@@ -65,7 +65,7 @@ async def test_reset_password(client: AsyncClient, sample_user: User, sample_use
         "token": generate_password_reset_token(email=sample_user.email),
         "new_password": random_lower_string()
     })
-    r = await client.post("/password-reset/", json=new_password.model_dump())
+    r = await client.post("/api/auth/password-reset/", json=new_password.model_dump())
     assert r.status_code == 200
 
     message = Message.model_validate(r.json())
@@ -77,7 +77,7 @@ async def test_reset_password_invalid_email_404(client: AsyncClient):
         "token": generate_password_reset_token(email="invalid-email@test.com"),
         "new_password": random_lower_string()
     })
-    r = await client.post("/password-reset/", json=new_password.model_dump())
+    r = await client.post("/api/auth/password-reset/", json=new_password.model_dump())
     assert r.status_code == 404
 
 
@@ -86,5 +86,5 @@ async def test_reset_password_inactive_user_400(client: AsyncClient, inactive_us
         "token": generate_password_reset_token(email=inactive_user.email),
         "new_password": random_lower_string()
     })
-    r = await client.post("/password-reset/", json=new_password.model_dump())
+    r = await client.post("/api/auth/password-reset/", json=new_password.model_dump())
     assert r.status_code == 400

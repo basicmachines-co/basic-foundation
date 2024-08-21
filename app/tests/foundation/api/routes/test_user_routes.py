@@ -34,7 +34,7 @@ async def test_get_user(
         }
     )
 
-    r = await client.get(f"users/{user_in.id}", headers=superuser_auth_token_headers)
+    r = await client.get(f"/api/users/{user_in.id}", headers=superuser_auth_token_headers)
     assert r.status_code == 200
     user = UserPublic.model_validate(r.json())
     assert user.id is not None
@@ -43,19 +43,19 @@ async def test_get_user(
 
 
 async def test_get_user_unauthorized_401(client: AsyncClient) -> None:
-    r = await client.get(f"users/{uuid.uuid4()}", headers=None)
+    r = await client.get(f"/api/users/{uuid.uuid4()}", headers=None)
     assert r.is_error
     assert r.status_code == 401
 
 
 async def test_get_user_not_found_404(client: AsyncClient, superuser_auth_token_headers) -> None:
-    r = await client.get(f"users/{uuid.uuid4()}", headers=superuser_auth_token_headers)
+    r = await client.get(f"/api/users/{uuid.uuid4()}", headers=superuser_auth_token_headers)
     assert r.is_error
     assert r.status_code == 404
 
 
 async def test_get_user_current_user(client: AsyncClient, sample_user: User, sample_user_auth_token_headers) -> None:
-    r = await client.get(f"users/{sample_user.id}", headers=sample_user_auth_token_headers)
+    r = await client.get(f"/api/users/{sample_user.id}", headers=sample_user_auth_token_headers)
     assert r.status_code == 200
     user = UserPublic.model_validate(r.json())
     assert user.id == sample_user.id
@@ -74,7 +74,7 @@ async def test_get_users(
         }
     )
 
-    r = await client.get(f"users/", headers=superuser_auth_token_headers)
+    r = await client.get(f"/api/users/", headers=superuser_auth_token_headers)
     all_users = r.json()
 
     assert len(all_users["data"]) > 1
@@ -89,13 +89,13 @@ async def test_get_users(
 
 
 async def test_get_users_401(client: AsyncClient) -> None:
-    r = await client.get(f"users/", headers=None)
+    r = await client.get(f"/api/users/", headers=None)
     assert r.is_error
     assert r.status_code == 401
 
 
 async def test_get_users_403(client: AsyncClient, sample_user_auth_token_headers: dict[str, str]) -> None:
-    r = await client.get(f"users/", headers=sample_user_auth_token_headers)
+    r = await client.get(f"/api/users/", headers=sample_user_auth_token_headers)
     assert r.is_error
     assert r.status_code == 403
 
@@ -108,7 +108,7 @@ async def test_create_user(
         "email": random_email(),
         "password": random_lower_string(),
     })
-    r = await client.post(f"users/", headers=superuser_auth_token_headers, json=user_create.model_dump())
+    r = await client.post(f"/api/users/", headers=superuser_auth_token_headers, json=user_create.model_dump())
     assert r.status_code == 201
     user_created = UserPublic.model_validate(r.json())
 
@@ -134,7 +134,7 @@ async def test_create_user_400(
         "password": user_in.hashed_password,
     })
 
-    r = await client.post(f"users/", headers=superuser_auth_token_headers, json=user_create.model_dump())
+    r = await client.post(f"/api/users/", headers=superuser_auth_token_headers, json=user_create.model_dump())
     assert r.is_error
     assert r.status_code == 400
 
@@ -145,7 +145,7 @@ async def test_create_user_401(client: AsyncClient) -> None:
         "email": random_email(),
         "password": random_lower_string(),
     })
-    r = await client.post(f"users/", headers=None, json=user_create.model_dump())
+    r = await client.post(f"/api/users/", headers=None, json=user_create.model_dump())
     assert r.is_error
     assert r.status_code == 401
 
@@ -156,7 +156,7 @@ async def test_create_user_403(client: AsyncClient, sample_user_auth_token_heade
         "email": random_email(),
         "password": random_lower_string(),
     })
-    r = await client.post(f"users/", headers=sample_user_auth_token_headers, json=user_create.model_dump())
+    r = await client.post(f"/api/users/", headers=sample_user_auth_token_headers, json=user_create.model_dump())
     assert r.is_error
     assert r.status_code == 403
 
@@ -176,7 +176,7 @@ async def test_update_user(
         "email": random_email(),
         "password": random_lower_string(),
     })
-    r = await client.patch(f"users/{user.id}", headers=superuser_auth_token_headers, json=user_update.model_dump())
+    r = await client.patch(f"/api/users/{user.id}", headers=superuser_auth_token_headers, json=user_update.model_dump())
     assert r.status_code == 200
     user_updated = r.json()
 
@@ -202,7 +202,8 @@ async def test_update_user_404(
         "password": random_lower_string(),
     })
     # use a random UUID
-    r = await client.patch(f"users/{uuid.uuid4()}", headers=superuser_auth_token_headers, json=user_update.model_dump())
+    r = await client.patch(f"/api/users/{uuid.uuid4()}", headers=superuser_auth_token_headers,
+                           json=user_update.model_dump())
     assert r.status_code == 404
 
 
@@ -232,7 +233,8 @@ async def test_update_user_400(
         "email": user1.email,
         "password": random_lower_string(),
     })
-    r = await client.patch(f"users/{user2.id}", headers=superuser_auth_token_headers, json=user_update.model_dump())
+    r = await client.patch(f"/api/users/{user2.id}", headers=superuser_auth_token_headers,
+                           json=user_update.model_dump())
     assert r.status_code == 400
 
 
@@ -254,7 +256,7 @@ async def test_update_user_401(
         "email": random_email(),
         "password": random_lower_string(),
     })
-    r = await client.patch(f"users/{user.id}", headers=None, json=user_update.model_dump())
+    r = await client.patch(f"/api/users/{user.id}", headers=None, json=user_update.model_dump())
     assert r.status_code == 401
 
 
@@ -277,7 +279,8 @@ async def test_update_user_403(
         "email": random_email(),
         "password": random_lower_string(),
     })
-    r = await client.patch(f"users/{user.id}", headers=sample_user_auth_token_headers, json=user_update.model_dump())
+    r = await client.patch(f"/api/users/{user.id}", headers=sample_user_auth_token_headers,
+                           json=user_update.model_dump())
     assert r.status_code == 403
 
 
@@ -293,7 +296,7 @@ async def test_update_user_current_user(
         "email": random_email(),
         "password": random_lower_string(),
     })
-    r = await client.patch(f"users/{sample_user.id}", headers=sample_user_auth_token_headers,
+    r = await client.patch(f"/api/users/{sample_user.id}", headers=sample_user_auth_token_headers,
                            json=user_update.model_dump())
     assert r.status_code == 200
     user_updated = UserPublic.model_validate(r.json())
@@ -311,7 +314,7 @@ async def test_delete_user(
             "hashed_password": random_lower_string(),
         }
     )
-    r = await client.delete(f"users/{user.id}", headers=superuser_auth_token_headers)
+    r = await client.delete(f"/api/users/{user.id}", headers=superuser_auth_token_headers)
     assert r.status_code == 200
     data = r.json()
     assert data.get("message") is not None
@@ -320,14 +323,14 @@ async def test_delete_user(
 async def test_delete_user_404(
         client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
 ) -> None:
-    r = await client.delete(f"users/{uuid.uuid4()}", headers=superuser_auth_token_headers)
+    r = await client.delete(f"/api/users/{uuid.uuid4()}", headers=superuser_auth_token_headers)
     assert r.status_code == 404
 
 
 async def test_delete_user_401(
         client: AsyncClient, user_repository: Repository[User]
 ) -> None:
-    r = await client.delete(f"users/{uuid.uuid4()}", headers=None)
+    r = await client.delete(f"/api/users/{uuid.uuid4()}", headers=None)
     assert r.status_code == 401
 
 
@@ -341,7 +344,7 @@ async def test_delete_user_403(
             "hashed_password": random_lower_string(),
         }
     )
-    r = await client.delete(f"users/{user.id}", headers=sample_user_auth_token_headers)
+    r = await client.delete(f"/api/users/{user.id}", headers=sample_user_auth_token_headers)
     assert r.status_code == 403
 
 
@@ -349,7 +352,7 @@ async def test_delete_user_current_user(
         client: AsyncClient, sample_user: User, sample_user_auth_token_headers: dict[str, str],
         user_repository: Repository[User]
 ) -> None:
-    r = await client.delete(f"users/{sample_user.id}", headers=sample_user_auth_token_headers)
+    r = await client.delete(f"/api/users/{sample_user.id}", headers=sample_user_auth_token_headers)
     assert r.status_code == 200
     data = r.json()
     assert data.get("message") is not None
@@ -367,7 +370,7 @@ async def test_superuser_cannot_delete_self(
         "is_active": True,
         "is_superuser": True,
     })
-    r = await client.post(f"users/", headers=superuser_auth_token_headers, json=new_superuser.model_dump())
+    r = await client.post(f"/api/users/", headers=superuser_auth_token_headers, json=new_superuser.model_dump())
     assert r.status_code == 201
     user_created = UserPublic.model_validate(r.json())
 
@@ -375,7 +378,7 @@ async def test_superuser_cannot_delete_self(
         "username": new_superuser.email,
         "password": new_superuser.password
     })
-    r = await client.delete(f"users/{user_created.id}", headers=auth_headers)
+    r = await client.delete(f"/api/users/{user_created.id}", headers=auth_headers)
     assert r.status_code == 200
     data = r.json()
     assert data.get("message") is not None

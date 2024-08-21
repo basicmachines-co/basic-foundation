@@ -18,9 +18,9 @@ logger.add(sys.stderr, colorize=True, backtrace=True, diagnose=True)
 
 
 def main():
-    logger.info(f"Creating default admin user {settings.superuser_name}")
-    user = User(full_name=settings.superuser_name, email=settings.superuser_email, is_active=True, is_superuser=True,
-                hashed_password=get_password_hash(settings.superuser_password))
+    logger.info(f"Creating default admin user {settings.SUPERUSER_NAME}")
+    user = User(full_name=settings.SUPERUSER_NAME, email=settings.SUPERUSER_EMAIL, is_active=True, is_superuser=True,
+                hashed_password=get_password_hash(settings.SUPERUSER_PASSWORD))
 
     engine = create_engine(settings.postgres_dsn_sync)
     with Session(engine) as session:
