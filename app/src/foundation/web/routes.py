@@ -8,11 +8,12 @@ from fastapi.security import OAuth2PasswordRequestForm
 from jinja2.ext import DebugExtension
 from jinja2_fragments.fastapi import Jinja2Blocks
 from pydantic import ValidationError
+from sqlalchemy import select
 from starlette.responses import RedirectResponse, HTMLResponse
 
 from foundation.core.config import BASE_DIR, settings
 from foundation.core.security import verify_password_reset_token
-from foundation.users.deps import UserServiceDep
+from foundation.users.deps import UserServiceDep, UserPaginationDep
 from foundation.users.models import User
 from foundation.users.schemas import AuthTokenPayload, UserCreate
 from foundation.users.services import UserCreateError, UserValueError, UserNotFoundError
@@ -27,23 +28,41 @@ templates.env.add_extension(DebugExtension)
 
 
 @html_router.get("/dashboard")
-async def dashboard(request: Request, current_user: CurrentUserDep):
+async def dashboard(request: Request, user_service: UserServiceDep, current_user: CurrentUserDep):
+    users_count = await user_service.get_users_count()
+    active_users_count = await user_service.get_active_users_count()
+    admin_users_count = await user_service.get_admin_users_count()
+
     return templates.TemplateResponse(
         "pages/dashboard.html",
-        {"request": request, "current_user": current_user},
+        {
+            "request": request,
+            "users_count": users_count,
+            "active_users_count": active_users_count,
+            "admin_users_count": admin_users_count,
+        },
     )
 
 
 @html_router.get("/users")
 async def users(
         request: Request,
-        user_service: UserServiceDep,
+        user_pagination: UserPaginationDep,
         current_user: CurrentUserDep,
+        page: int = 1,
+        page_size: int = 10,
 ):
-    count, users = await user_service.get_users(skip=0, limit=100)
+    query = select(User)
+    pagination = user_pagination.paginate(query, page_size=page_size)
+    page = await pagination.page(page=page)
+
     return templates.TemplateResponse(
         "pages/user_list.html",
-        {"request": request, "current_user": current_user, "users": users},
+        {
+            "request": request,
+            "page": page
+
+        },
     )
 
 

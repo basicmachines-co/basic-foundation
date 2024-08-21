@@ -2,11 +2,13 @@ from typing import Any, List
 from uuid import UUID
 
 from loguru import logger
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Query
 
 from foundation.core.config import settings
 from foundation.core.emails import generate_new_account_email, send_email, generate_reset_password_email
+from foundation.core.pagination import Pagination
 from foundation.core.repository import Repository
 from foundation.core.security import verify_password, get_password_hash, generate_password_reset_token
 from foundation.users.models import User
@@ -63,6 +65,17 @@ class UserService:
             logger.info(error)
             raise error
         return user
+
+    async def get_users_count(self) -> int:
+        return await self.repository.count()
+
+    async def get_active_users_count(self) -> int:
+        query = select(func.count()).select_from(User).filter(True == User.is_active)
+        return await self.repository.count(query)
+
+    async def get_admin_users_count(self) -> int:
+        query = select(func.count()).select_from(User).filter(True == User.is_superuser)
+        return await self.repository.count(query)
 
     async def create_user(self, *, create_dict: dict[str, Any]) -> User:
         create_dict.update({"hashed_password": get_password_hash(create_dict.get("password"))})
@@ -130,3 +143,13 @@ class UserService:
             subject=email_data.subject,
             html_content=email_data.html_content,
         )
+
+
+class UserPagination:
+    repository: Repository[User]
+
+    def __init__(self, repository: Repository[User]):
+        self.repository = repository
+
+    def paginate(self, query: Query = None, page_size: int = 10):
+        return Pagination(self.repository, query, page_size)

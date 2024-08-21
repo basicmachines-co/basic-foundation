@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from foundation.core.deps import get_async_session
 from foundation.core.repository import Repository
 from foundation.users.models import User
-from foundation.users.services import UserService
+from foundation.users.services import UserService, UserPagination
 
 
 def get_user_repository(
@@ -23,3 +23,10 @@ def get_user_service(repository: UserRepositoryDep) -> UserService:
 
 
 UserServiceDep = Annotated[UserService, Depends(get_user_service)]
+
+
+def get_user_pagination(repository: UserRepositoryDep) -> UserPagination:
+    return UserPagination(repository)
+
+
+UserPaginationDep = Annotated[UserPagination, Depends(get_user_pagination)]

@@ -86,12 +86,13 @@ class Repository[T: (declarative_base())]:
         except NoResultFound as e:
             return False
 
-    async def count(self) -> int:
+    async def count(self, query: Executable | None = None) -> int:
         """
         Return the count of entities in the database.
         """
-        count_stmt = select(func.count()).select_from(self.Model)
-        result = await self.session.execute(count_stmt)
+        if query is None:
+            query = select(func.count()).select_from(self.Model)
+        result = await self.session.execute(query)
         return result.scalar()
 
     async def execute_query(self, query: Executable) -> Result[Any]:
