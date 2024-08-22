@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from loguru import logger
 from starlette.staticfiles import StaticFiles
 
+import tools.init_data
 from foundation.api.routes.auth import router as api_auth_router
 from foundation.api.routes.users import router as api_user_router
 from foundation.core import config
@@ -35,3 +36,6 @@ async def on_startup():
 
     # silence bcrypt noise
     logging.getLogger('passlib').setLevel(logging.ERROR)
+
+    # setup admin user if not present in db
+    tools.init_data.main()

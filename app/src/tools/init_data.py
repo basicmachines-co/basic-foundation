@@ -3,7 +3,7 @@ import sys
 
 import typer
 from loguru import logger
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 
 from foundation.core.config import settings
@@ -18,20 +18,26 @@ logger.add(sys.stderr, colorize=True, backtrace=True, diagnose=True)
 
 
 def main():
-    logger.info(f"Creating default admin user {settings.SUPERUSER_NAME}")
     user = User(full_name=settings.SUPERUSER_NAME, email=settings.SUPERUSER_EMAIL, is_active=True, is_superuser=True,
                 hashed_password=get_password_hash(settings.SUPERUSER_PASSWORD))
 
     engine = create_engine(settings.postgres_dsn_sync)
     with Session(engine) as session:
 
-        try:
-            session.add(user)
-            session.commit()
-            session.refresh(user)
-            logger.info(f"successfully created default admin user with id {user.id}")
-        except Exception as e:
-            logger.error(e)
+        statement = select(User).where(settings.SUPERUSER_EMAIL == User.email)
+        admin_user = session.scalars(statement).one()
+        if admin_user is None:
+            logger.info(
+                f"Creating default admin user name: {settings.SUPERUSER_NAME}, email {settings.SUPERUSER_EMAIL}")
+            try:
+                session.add(user)
+                session.commit()
+                session.refresh(user)
+                logger.info(f"successfully created default admin user with id {user.id}")
+            except Exception as e:
+                logger.error(e)
+        else:
+            logger.info(f"Found admin user name: {settings.SUPERUSER_NAME}, email: {settings.SUPERUSER_EMAIL}")
 
 
 if __name__ == "__main__":
