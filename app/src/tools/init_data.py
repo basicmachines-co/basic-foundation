@@ -25,7 +25,7 @@ def main():
     with Session(engine) as session:
 
         statement = select(User).where(settings.SUPERUSER_EMAIL == User.email)
-        admin_user = session.scalars(statement).one()
+        admin_user = session.scalars(statement).one_or_none()
         if admin_user is None:
             logger.info(
                 f"Creating default admin user name: {settings.SUPERUSER_NAME}, email {settings.SUPERUSER_EMAIL}")
