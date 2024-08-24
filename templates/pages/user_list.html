@@ -61,7 +61,10 @@
                             <td class="px-3 py-4 text-sm text-gray-500 sm:table-cell">{{ user.email }}</td>
                             <td class="px-3 py-4 text-sm text-gray-500 md:table-cell">{{ user.is_active }}</td>
                             <td class="px-3 py-4 text-sm text-gray-500">{{ user.is_superuser }}</td>
-                            <td class="text-indigo-600 hover:text-indigo-900"><a href="/users/{{ user.id }}">View</a>
+                            <td class="text-indigo-600 hover:text-indigo-900">
+                                <a hx-get="/users/{{ user.id }}/edit"
+                                        hx-target="#user_list"
+                                        hx-push-url="true">Edit</a>
                             </td>
                         </tr>
                     {% endfor %}

@@ -24,6 +24,7 @@ aiosmtpd = "^1.4.6"
 mockito = "^1.5.0"
 fastapi = { extras = ["standard"], version = "^0.112.0" }
 pyjwt = "^2.9.0"
+itsdangerous = "^2.2.0"
 
 [tool.poetry.group.app.dependencies]
 uvicorn = "^0.25.0"
