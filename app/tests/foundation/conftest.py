@@ -14,7 +14,7 @@ from foundation.core.db import engine
 from foundation.core.repository import Repository
 from foundation.users.deps import get_user_repository
 from foundation.users.models import User
-from utils import get_superuser_auth_token_headers, random_lower_string
+from utils import get_superuser_auth_token_headers, random_lower_string, random_email
 
 
 @pytest.fixture
@@ -137,7 +137,7 @@ async def sample_user_password() -> str:
 @pytest_asyncio.fixture
 async def sample_user(user_repository: Repository[User], sample_user_password: str):
     sample_user = await user_repository.create({"full_name": "John Doe",
-                                                "email": "johndoe@test.com",
+                                                "email": random_email(),
                                                 "hashed_password": security.get_password_hash(sample_user_password),
                                                 "is_active": True})
     return sample_user
@@ -146,7 +146,7 @@ async def sample_user(user_repository: Repository[User], sample_user_password: s
 @pytest_asyncio.fixture
 async def inactive_user(user_repository: Repository[User]):
     sample_user = await user_repository.create({"full_name": "Lazy John Doe",
-                                                "email": "johndoe-lazy@test.com",
+                                                "email": random_email(),
                                                 "hashed_password": security.get_password_hash(random_lower_string()),
                                                 "is_active": False})
     return sample_user

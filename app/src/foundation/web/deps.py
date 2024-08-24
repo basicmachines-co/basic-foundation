@@ -41,3 +41,5 @@ async def get_current_user(user_service: UserServiceDep, credentials: JwtAuthori
 
 
 CurrentUserDep = Annotated[User, Depends(get_current_user)]
+
+LoginRequired = Depends(get_current_user)
