@@ -4,14 +4,6 @@
 
 {% block content %}
 
-    {% if flash_message %}
-        <section id="messages">
-            <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
-                <strong class="font-bold">Success:</strong> <span>{{ flash_message }}</span>
-            </div>
-        </section>
-    {% endif %}
-
     <!-- user list -->
     <section id="user_list">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -63,7 +55,7 @@
                             <td class="px-3 py-4 text-sm text-gray-500">{{ user.is_superuser }}</td>
                             <td class="text-indigo-600 hover:text-indigo-900">
                                 <a hx-get="/users/{{ user.id }}/edit"
-                                        hx-target="#user_list"
+                                        hx-target="#page_content"
                                         hx-push-url="true">Edit</a>
                             </td>
                         </tr>
