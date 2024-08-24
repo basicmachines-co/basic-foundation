@@ -15,7 +15,7 @@ from foundation.core.config import BASE_DIR, settings
 from foundation.core.security import verify_password_reset_token
 from foundation.users.deps import UserServiceDep, UserPaginationDep
 from foundation.users.models import User
-from foundation.users.schemas import AuthTokenPayload, UserCreate
+from foundation.users.schemas import AuthTokenPayload, UserCreate, Message
 from foundation.users.services import UserCreateError, UserValueError, UserNotFoundError
 from foundation.web.deps import CurrentUserDep, access_token_security
 
@@ -25,6 +25,11 @@ templates = Jinja2Blocks(
     directory=f"{BASE_DIR}/templates",
 )
 templates.env.add_extension(DebugExtension)
+
+
+@html_router.get("/")
+async def index(current_user: CurrentUserDep):
+    return RedirectResponse(url=html_router.url_path_for("dashboard"))
 
 
 @html_router.get("/dashboard")
@@ -175,6 +180,28 @@ async def user_edit_post(
         {"request": request, "error": error, "user": updated_user},
         block_name="content",
     )
+
+
+@html_router.delete("/users/{user_id}")
+async def delete_user(user_service: UserServiceDep, user_id: UUID, current_user: CurrentUserDep) -> Message:
+    """
+    Delete a user.
+    If the current_user is a non-super user, they can only delete their own user.
+    Superusers can delete any other user.
+    Superusers can not delete their own user.
+    """
+    if not current_user.is_superuser:
+        return Message(message="Only admins can delete users.")
+
+    try:
+        await user_service.delete_user(user_id=user_id)
+    except UserNotFoundError as e:
+        return Message(message=e.args[0])
+
+    # redirect user to the dashboard
+    response = Response(status_code=status.HTTP_307_TEMPORARY_REDIRECT)
+    response.headers["HX-Redirect"] = html_router.url_path_for("users")
+    return response
 
 
 @html_router.get("/")

@@ -113,7 +113,6 @@ async def delete_user(*, user_service: UserServiceDep, user_id: UUID, current_us
     if current_user.id != user_id:
         validate_is_superuser(current_user)
 
-    from foundation.users.services import UserNotFoundError
     try:
         await user_service.delete_user(user_id=user_id)
     except UserNotFoundError as e:
