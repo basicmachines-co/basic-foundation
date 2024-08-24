@@ -18,6 +18,7 @@ from foundation.users.models import User
 from foundation.users.schemas import AuthTokenPayload, UserCreate, Message
 from foundation.users.services import UserCreateError, UserValueError, UserNotFoundError
 from foundation.web.deps import CurrentUserDep, access_token_security
+from foundation.web.utils import get_flashed_message, flash
 
 html_router = APIRouter(include_in_schema=False, default_response_class=HTMLResponse)
 
@@ -61,12 +62,13 @@ async def users(
     pagination = user_pagination.paginate(request, query, page_size=page_size)
     page = await pagination.page(page=page)
 
+    flash_message = get_flashed_message(request)
     return templates.TemplateResponse(
         "pages/user_list.html",
         {
             "request": request,
-            "page": page
-
+            "page": page,
+            "flash_message": flash_message
         },
     )
 
@@ -183,7 +185,7 @@ async def user_edit_post(
 
 
 @html_router.delete("/users/{user_id}")
-async def delete_user(user_service: UserServiceDep, user_id: UUID, current_user: CurrentUserDep) -> Message:
+async def delete_user(request: Request, user_service: UserServiceDep, user_id: UUID, current_user: CurrentUserDep):
     """
     Delete a user.
     If the current_user is a non-super user, they can only delete their own user.
@@ -194,10 +196,12 @@ async def delete_user(user_service: UserServiceDep, user_id: UUID, current_user:
         return Message(message="Only admins can delete users.")
 
     try:
+        user = await user_service.get_user_by_id(user_id=user_id)
         await user_service.delete_user(user_id=user_id)
     except UserNotFoundError as e:
         return Message(message=e.args[0])
 
+    flash(request, f"User {user.full_name} was deleted")
     # redirect user to the dashboard
     response = Response(status_code=status.HTTP_307_TEMPORARY_REDIRECT)
     response.headers["HX-Redirect"] = html_router.url_path_for("users")

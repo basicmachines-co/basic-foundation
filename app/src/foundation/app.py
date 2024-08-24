@@ -3,13 +3,14 @@ import sys
 
 from fastapi import FastAPI
 from loguru import logger
+from starlette.middleware.sessions import SessionMiddleware
 from starlette.staticfiles import StaticFiles
 
 import tools.init_data
 from foundation.api.routes.auth import router as api_auth_router
 from foundation.api.routes.users import router as api_user_router
 from foundation.core import config
-from foundation.core.config import BASE_DIR
+from foundation.core.config import BASE_DIR, settings
 from foundation.web.routes import html_router
 
 # delete all existing default loggers
@@ -17,6 +18,9 @@ logger.remove()
 logger.add(sys.stderr, colorize=True, backtrace=True, diagnose=True)
 
 app = FastAPI()
+
+# Add the session middleware to the FastAPI app
+app.add_middleware(SessionMiddleware, secret_key=settings.JWT_SECRET)
 
 app.mount("/static", StaticFiles(directory=f"{BASE_DIR}/static"), name="static")
 
