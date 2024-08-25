@@ -1,7 +1,6 @@
 {% extends "layouts/auth.html" %}
 {% set title = "Login" %}
 
-
 {% block content %}
     <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -12,6 +11,8 @@
             {% block login_form %}
 
                 <form class="space-y-6" hx-post="/login" hx-swap="outerHTML" method="post">
+                    <!-- CSRF Token -->{{ form.csrf_token() }}
+
                     {% if error %}
                         <div id="errors" role="alert" class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50">
                             {{ error }}
@@ -26,7 +27,7 @@
                                     type="email"
                                     autocomplete="email"
                                     placeholder="your@email.com"
-                                    value="{{ username|d('') }}"
+                                    value="{{ form.username.data|default('', true) }}"
                                     required
                                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         </div>
