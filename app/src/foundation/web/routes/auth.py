@@ -1,11 +1,10 @@
 from datetime import timedelta
 
 from fastapi import Depends, status
-from fastapi import Request, Form, Response, APIRouter
+from fastapi import Request, Form, Response
 from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordRequestForm
-from pydantic import ValidationError
-from starlette.responses import HTMLResponse, RedirectResponse
+from starlette.responses import RedirectResponse
 
 from foundation.core.config import settings
 from foundation.core.security import verify_password_reset_token
@@ -15,22 +14,26 @@ from foundation.users.schemas import AuthTokenPayload, UserCreate
 from foundation.users.services import UserCreateError, UserNotFoundError
 from foundation.web.deps import access_token_security
 from foundation.web.templates import templates
+from foundation.web.utils import HTMLRouter
 
-router = APIRouter(include_in_schema=False, default_response_class=HTMLResponse)
+router = HTMLRouter()
 
 
 @router.get("/register")
 async def register(request: Request):
-    return templates.TemplateResponse("pages/register.html", {"request": request})
+    return templates.TemplateResponse(
+        "pages/register.html",
+        dict(request=request, errors={})
+    )
 
 
 @router.post("/register")
 async def register_post(
-    request: Request,
-    user_service: UserServiceDep,
-    full_name: str = Form(),
-    email: str = Form(),
-    password: str = Form(),
+        request: Request,
+        user_service: UserServiceDep,
+        full_name: str = Form(),
+        email: str = Form(),
+        password: str = Form(),
 ):
     register_form = None
     try:
@@ -39,8 +42,6 @@ async def register_post(
         )
         user = await user_service.create_user(create_dict=register_form.model_dump())
         return await login_user(request, user)
-    except ValidationError:
-        error = "Validation Error"
     except UserCreateError:
         error = "User already exists"
 
@@ -58,9 +59,9 @@ async def login(request: Request):
 
 @router.post("/login")
 async def login_post(
-    request: Request,
-    user_service: UserServiceDep,
-    form_data: OAuth2PasswordRequestForm = Depends(),
+        request: Request,
+        user_service: UserServiceDep,
+        form_data: OAuth2PasswordRequestForm = Depends(),
 ):
     user = await user_service.authenticate(
         email=form_data.username, password=form_data.password
@@ -112,7 +113,7 @@ async def forgot_password(request: Request):
 
 @router.post("/forgot-password")
 async def forgot_password_post(
-    request: Request, user_service: UserServiceDep, email: str = Form()
+        request: Request, user_service: UserServiceDep, email: str = Form()
 ):
     error = None
     success = None
@@ -141,10 +142,10 @@ async def reset_password(request: Request, token: str):
 
 @router.post("/reset-password")
 async def reset_password_post(
-    request: Request,
-    user_service: UserServiceDep,
-    token: str = Form(),
-    new_password: str = Form(),
+        request: Request,
+        user_service: UserServiceDep,
+        token: str = Form(),
+        new_password: str = Form(),
 ):
     context = {"request": request}
     email = verify_password_reset_token(token=token)

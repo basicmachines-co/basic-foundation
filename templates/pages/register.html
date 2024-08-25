@@ -1,7 +1,6 @@
 {% extends "layouts/auth.html" %}
 {% block title %}Register{% endblock %}
 
-
 {% block content %}
     <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -13,11 +12,6 @@
 
                 <!-- REGISTRATION FORM -->
                 <form class="space-y-6" hx-post="/register" hx-swap="outerHTML" method="post">
-                    {% if error %}
-                        <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" id="errors" role="alert">
-                            {{ error }}
-                        </div>
-                    {% endif %}
                     <!-- full_name -->
                     <div>
                         <label for="full_name"
@@ -30,6 +24,9 @@
                                     value="{{ full_name|d('') }}"
                                     required
                                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            {% if errors.full_name %}
+                                <p class="mt-2 text-sm text-red-600">{{ errors.full_name }}</p>
+                            {% endif %}
                         </div>
                     </div>
                     <!-- email -->
@@ -45,6 +42,9 @@
                                     value="{{ email|d('') }}"
                                     required
                                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            {% if errors.email %}
+                                <p class="mt-2 text-sm text-red-600">{{ errors.email }}</p>
+                            {% endif %}
                         </div>
                     </div>
                     <!-- password -->
@@ -58,6 +58,9 @@
                                     placeholder="••••••••"
                                     required
                                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            {% if errors.password %}
+                                <p class="mt-2 text-sm text-red-600">{{ errors.password }}</p>
+                            {% endif %}
                         </div>
                     </div>
                     <div>
@@ -68,7 +71,7 @@
                 </form>
                 <!-- /REGISTRATION FORM -->
             {% endblock register_form %}
-            
+
             <p class="mt-10 text-center text-sm text-gray-500">
                 Already have an account? <a href="/login"
                     class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Login</a>

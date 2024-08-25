@@ -89,7 +89,10 @@ class UserService:
 
     async def create_user(self, *, create_dict: dict[str, Any]) -> User:
         create_dict.update(
-            {"hashed_password": get_password_hash(create_dict.get("password"))}
+            {
+                "hashed_password": get_password_hash(create_dict.get("password")),
+                "is_active": True
+            }
         )
         try:
             user = await self.repository.create(create_dict)
