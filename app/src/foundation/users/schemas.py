@@ -20,33 +20,37 @@ class UserBase(BaseModel):
     full_name: str | None
 
 
+def validate_password(password: str) -> str:
+    # Ensure password is at least 8 characters long
+    if len(password) < 8:
+        raise ValueError('Password must be at least 8 characters long.')
+
+    # Ensure password has at least one uppercase letter
+    if not re.search(r'[A-Z]', password):
+        raise ValueError('Password must contain at least one uppercase letter.')
+
+    # Ensure password has at least one lowercase letter
+    if not re.search(r'[a-z]', password):
+        raise ValueError('Password must contain at least one lowercase letter.')
+
+    # Ensure password has at least one digit
+    if not re.search(r'\d', password):
+        raise ValueError('Password must contain at least one digit.')
+
+    # Ensure password has at least one special character
+    if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+        raise ValueError('Password must contain at least one special character.')
+
+    return password
+
+
 class UserCreate(UserBase):
     password: str
 
     @field_validator('password')
     @classmethod
     def validate_password(cls, value):
-        # Ensure password is at least 8 characters long
-        if len(value) < 8:
-            raise ValueError('Password must be at least 8 characters long.')
-
-        # Ensure password has at least one uppercase letter
-        if not re.search(r'[A-Z]', value):
-            raise ValueError('Password must contain at least one uppercase letter.')
-
-        # Ensure password has at least one lowercase letter
-        if not re.search(r'[a-z]', value):
-            raise ValueError('Password must contain at least one lowercase letter.')
-
-        # Ensure password has at least one digit
-        if not re.search(r'\d', value):
-            raise ValueError('Password must contain at least one digit.')
-
-        # Ensure password has at least one special character
-        if not re.search(r'[!@#$%^&*(),.?":{}|<>]', value):
-            raise ValueError('Password must contain at least one special character.')
-
-        return value
+        return validate_password(value)
 
 
 class UserRegister(BaseModel):

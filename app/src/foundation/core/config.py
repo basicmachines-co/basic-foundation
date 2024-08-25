@@ -42,6 +42,7 @@ class Settings(BaseSettings):
 
     app_name: str = "Basic API"
     JWT_SECRET: str
+    CSRF_SECRET: str
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str

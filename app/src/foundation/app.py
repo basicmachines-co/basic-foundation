@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from loguru import logger
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.staticfiles import StaticFiles
+from starlette_wtf import CSRFProtectMiddleware
 
 import tools.init_data
 from foundation.api.routes.auth import router as api_auth_router
@@ -23,6 +24,8 @@ app = FastAPI()
 
 # Add the session middleware to the FastAPI app
 app.add_middleware(SessionMiddleware, secret_key=settings.JWT_SECRET)
+# Add middleware for sessions and CSRF protection
+app.add_middleware(CSRFProtectMiddleware, csrf_secret=settings.CSRF_SECRET)
 
 app.mount("/static", StaticFiles(directory=f"{BASE_DIR}/static"), name="static")
 

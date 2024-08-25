@@ -1998,6 +1998,25 @@ anyio = ">=3.4.0,<5"
 full = ["httpx (>=0.22.0)", "itsdangerous", "jinja2", "python-multipart (>=0.0.7)", "pyyaml"]
 
 [[package]]
+name = "starlette-wtf"
+version = "0.4.5"
+description = "Simple integration of Starlette and WTForms."
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "Starlette-WTF-0.4.5.tar.gz", hash = "sha256:411e94c19f47302fe3b12752b3c531581c0bad4cbe603a730bbe516733a99527"},
+]
+
+[package.dependencies]
+itsdangerous = "*"
+python-multipart = "*"
+starlette = "*"
+WTForms = "*"
+
+[package.extras]
+test = ["httpx", "jinja2", "pytest", "requests"]
+
+[[package]]
 name = "text-unidecode"
 version = "1.3"
 description = "The most basic Text::Unidecode port"
@@ -2304,7 +2323,24 @@ files = [
 [package.extras]
 dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 
+[[package]]
+name = "wtforms"
+version = "3.1.2"
+description = "Form validation and rendering for Python web development."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "wtforms-3.1.2-py3-none-any.whl", hash = "sha256:bf831c042829c8cdbad74c27575098d541d039b1faa74c771545ecac916f2c07"},
+    {file = "wtforms-3.1.2.tar.gz", hash = "sha256:f8d76180d7239c94c6322f7990ae1216dae3659b7aa1cee94b6318bdffb474b9"},
+]
+
+[package.dependencies]
+markupsafe = "*"
+
+[package.extras]
+email = ["email-validator"]
+
 [metadata]
 lock-version = "2.0"
 python-versions = "3.12.1"
-content-hash = "8483d83ee12ecb2901e6aa0f34b340af2cde2662cc4dfd2120e8735559090b32"
+content-hash = "2c3913122047edc0992f036a7eec393ae23f3768b93cf4fad5753d704c14922e"

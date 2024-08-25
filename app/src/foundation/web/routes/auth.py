@@ -5,12 +5,16 @@ from fastapi import Request, Form, Response
 from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordRequestForm
 from starlette.responses import RedirectResponse
+from starlette_wtf import StarletteForm
+from wtforms import validators
+from wtforms.fields.simple import StringField, PasswordField
+from wtforms.validators import ValidationError
 
 from foundation.core.config import settings
 from foundation.core.security import verify_password_reset_token
 from foundation.users.deps import UserServiceDep
 from foundation.users.models import User
-from foundation.users.schemas import AuthTokenPayload, UserCreate
+from foundation.users.schemas import AuthTokenPayload, UserCreate, validate_password
 from foundation.users.services import UserCreateError, UserNotFoundError
 from foundation.web.deps import access_token_security
 from foundation.web.templates import templates
@@ -19,11 +23,31 @@ from foundation.web.utils import HTMLRouter
 router = HTMLRouter()
 
 
+def wtforms_password_validator(form, field):
+    try:
+        validate_password(field.data)
+    except ValueError as e:
+        raise ValidationError(str(e))
+
+
+class RegisterForm(StarletteForm):
+    full_name = StringField('Full Name', [validators.DataRequired(), validators.Length(min=2, max=100)])
+    email = StringField('Email', [validators.DataRequired(), validators.Email()])
+    password = PasswordField('Password', [
+        validators.DataRequired(),
+        wtforms_password_validator
+    ])
+
+
 @router.get("/register")
-async def register(request: Request):
+async def register_get(request: Request):
+    form = RegisterForm(request)
     return templates.TemplateResponse(
         "pages/register.html",
-        dict(request=request, errors={})
+        dict(
+            request=request,
+            form=form
+        )
     )
 
 
@@ -31,30 +55,42 @@ async def register(request: Request):
 async def register_post(
         request: Request,
         user_service: UserServiceDep,
-        full_name: str = Form(),
-        email: str = Form(),
-        password: str = Form(),
 ):
-    register_form = None
-    try:
-        register_form = UserCreate(
-            full_name=full_name, email=email, password=password, is_active=True
-        )
-        user = await user_service.create_user(create_dict=register_form.model_dump())
-        return await login_user(request, user)
-    except UserCreateError:
-        error = "User already exists"
+    form = await RegisterForm.from_formdata(request)
+    error = None
+
+    if await form.validate():
+        full_name = form.full_name.data
+        email = form.email.data
+        password = form.password.data
+
+        try:
+            register_form = UserCreate(
+                full_name=full_name, email=email, password=password, is_active=True
+            )
+            user = await user_service.create_user(create_dict=register_form.model_dump())
+            return await login_user(request, user)
+        except UserCreateError:
+            error = "User already exists"
 
     return templates.TemplateResponse(
         "pages/register.html",
-        {"request": request, "error": error, **register_form.model_dump()},
-        block_name="register_form",
-    )
+        dict(
+            request=request,
+            error=error,
+            form=form
+        ),
+        block_name="register_form")
 
 
 @router.get("/login")
 async def login(request: Request):
-    return templates.TemplateResponse("pages/login.html", {"request": request})
+    return templates.TemplateResponse(
+        "pages/login.html",
+        dict(
+            request=request
+        )
+    )
 
 
 @router.post("/login")
@@ -70,12 +106,12 @@ async def login_post(
     if user is None or not user.is_active:
         return templates.TemplateResponse(
             "pages/login.html",
-            {
-                "request": request,
-                "error": "Incorrect Username or Password",
-                "status_code": 401,
-                "username": form_data.username,
-            },
+            dict(
+                request=request,
+                error="Incorrect Username or Password",
+                status_code=401,
+                username=form_data.username,
+            ),
             block_name="login_form",
         )
 
@@ -107,7 +143,10 @@ async def logout(request: Request):
 @router.get("/forgot-password")
 async def forgot_password(request: Request):
     return templates.TemplateResponse(
-        "pages/forgot_password.html", {"request": request}
+        "pages/forgot_password.html",
+        dict(
+            request=request
+        )
     )
 
 
@@ -122,22 +161,29 @@ async def forgot_password_post(
         success = f"An email was sent to {email}"
     except UserNotFoundError as e:
         error = e.args[0]
+
     return templates.TemplateResponse(
         "pages/forgot_password.html",
-        {"request": request, "error": error, "success": success},
+        dict(
+            request=request,
+            error=error,
+            success=success
+        ),
         block_name="forgot_password_form",
     )
 
 
 @router.get("/reset-password")
 async def reset_password(request: Request, token: str):
-    context = {"request": request}
     email = verify_password_reset_token(token=token)
-    if not email:
-        context["error"] = "Invalid token"
-
-    context["token"] = token
-    return templates.TemplateResponse("pages/reset_password.html", context)
+    return templates.TemplateResponse(
+        "pages/reset_password.html",
+        dict(
+            request=request,
+            token=token,
+            error="Invalid token" if not email else None,
+        )
+    )
 
 
 @router.post("/reset-password")
@@ -147,27 +193,34 @@ async def reset_password_post(
         token: str = Form(),
         new_password: str = Form(),
 ):
-    context = {"request": request}
+    error = None
+    success = None
     email = verify_password_reset_token(token=token)
     if not email:
-        context["error"] = "Invalid token"
+        error = "Invalid token"
+    else:
+        try:
+            user = await user_service.get_user_by_email(email=email)
+            if not user.is_active:
+                error = "Your account is not active"
+            else:
+                updated_user = await user_service.update_user(
+                    user_id=user.id,
+                    update_dict={
+                        "password": new_password,
+                    },
+                )
+                success = "Your password has been updated!"
+        except UserNotFoundError as e:
+            error = e.args[0]
 
-    try:
-        user = await user_service.get_user_by_email(email=email)
-        updated_user = await user_service.update_user(
-            user_id=user.id,
-            update_dict={
-                "password": new_password,
-            },
-        )
-        context["success"] = "Your password has been updated!"
-    except UserNotFoundError as e:
-        context["error"] = e.args[0]
-
-    if not user.is_active:
-        context["error"] = "Your account is not active, please check your email"
-
-    context["token"] = token
     return templates.TemplateResponse(
-        "pages/reset_password.html", context, block_name="password_reset_form"
+        "pages/reset_password.html",
+        dict(
+            request=request,
+            token=token,
+            error=error,
+            success=success,
+        ),
+        block_name="password_reset_form"
     )

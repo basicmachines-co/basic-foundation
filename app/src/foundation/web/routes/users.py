@@ -18,11 +18,11 @@ router = APIRouter(include_in_schema=False, default_response_class=HTMLResponse)
 
 @router.get("/users")
 async def users(
-    request: Request,
-    user_pagination: UserPaginationDep,
-    current_user: CurrentUserDep,
-    page: int = 1,
-    page_size: int = 10,
+        request: Request,
+        user_pagination: UserPaginationDep,
+        current_user: CurrentUserDep,
+        page: int = 1,
+        page_size: int = 10,
 ):
     query = select(User)
     pagination = user_pagination.paginate(request, query, page_size=page_size)
@@ -39,8 +39,8 @@ async def users(
 
 @router.get("/users/create")
 async def user_create(
-    request: Request,
-    current_user: CurrentUserDep,
+        request: Request,
+        current_user: CurrentUserDep,
 ):
     return templates.TemplateResponse(
         "pages/user_create.html",
@@ -50,14 +50,14 @@ async def user_create(
 
 @router.post("/users/create")
 async def user_create_post(
-    request: Request,
-    user_service: UserServiceDep,
-    current_user: CurrentUserDep,
-    full_name: str = Form(),
-    email: str = Form(),
-    password: str = Form(),
-    is_active: bool = Form(False),
-    is_superuser: bool = Form(False),
+        request: Request,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
+        full_name: str = Form(),
+        email: str = Form(),
+        password: str = Form(),
+        is_active: bool = Form(False),
+        is_superuser: bool = Form(False),
 ):
     error = None
     try:
@@ -96,10 +96,10 @@ async def user_create_post(
 
 @router.get("/users/{user_id}")
 async def user(
-    request: Request,
-    user_id: UUID,
-    user_service: UserServiceDep,
-    current_user: CurrentUserDep,
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
 ):
     view_user = await user_service.get_user_by_id(user_id=user_id)
     return templates.TemplateResponse(
@@ -110,10 +110,10 @@ async def user(
 
 @router.get("/users/{user_id}/edit")
 async def user_edit(
-    request: Request,
-    user_id: UUID,
-    user_service: UserServiceDep,
-    current_user: CurrentUserDep,
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
 ):
     edit_user = await user_service.get_user_by_id(user_id=user_id)
     return templates.TemplateResponse(
@@ -125,14 +125,14 @@ async def user_edit(
 
 @router.post("/users/{user_id}")
 async def user_edit_post(
-    request: Request,
-    user_id: UUID,
-    user_service: UserServiceDep,
-    current_user: CurrentUserDep,
-    full_name: str = Form(),
-    email: str = Form(),
-    is_active: bool = Form(False),
-    is_superuser: bool = Form(False),
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
+        full_name: str = Form(),
+        email: str = Form(),
+        is_active: bool = Form(False),
+        is_superuser: bool = Form(False),
 ):
     error = None
     try:
@@ -171,10 +171,10 @@ async def user_edit_post(
 
 @router.delete("/users/{user_id}")
 async def delete_user(
-    request: Request,
-    user_service: UserServiceDep,
-    user_id: UUID,
-    current_user: CurrentUserDep,
+        request: Request,
+        user_service: UserServiceDep,
+        user_id: UUID,
+        current_user: CurrentUserDep,
 ):
     """
     Delete a user.
@@ -192,7 +192,6 @@ async def delete_user(
         return Message(message=e.args[0])
 
     flash(request, f"User {user.full_name} was deleted")
-    # redirect user to the dashboard
     response = Response(status_code=status.HTTP_307_TEMPORARY_REDIRECT)
     response.headers["HX-Redirect"] = router.url_path_for("users")
     return response

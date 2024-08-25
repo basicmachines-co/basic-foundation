@@ -1,6 +1,7 @@
 from datetime import timedelta
 from typing import TypedDict
 
+from authlib.jose.errors import BadSignatureError
 from fastapi_jwt import JwtAccessBearer, JwtRefreshBearer
 from fastapi_jwt.jwt import JwtAccess
 from fastapi_jwt.jwt_backends.abstract_backend import BackendException
@@ -57,5 +58,5 @@ def verify_password_reset_token(token: str) -> str | None:
 
         subject: ResetTokenSubject = decoded_token["subject"]
         return subject.get("email")
-    except (InvalidTokenError, BackendException):
+    except (InvalidTokenError, BackendException, BadSignatureError):
         return None
