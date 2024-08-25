@@ -1,5 +1,6 @@
 from starlette_wtf import StarletteForm
-from wtforms import ValidationError, StringField, validators, PasswordField
+from wtforms import StringField, BooleanField, PasswordField, validators
+from wtforms import ValidationError
 
 from foundation.users.schemas import validate_password
 
@@ -35,3 +36,18 @@ class ResetPasswordForm(StarletteForm):
         validators.DataRequired(),
         wtforms_password_validator
     ])
+
+
+class UserCreateForm(StarletteForm):
+    full_name = StringField('Full Name', [validators.DataRequired(), validators.Length(min=2, max=100)])
+    email = StringField('Email', [validators.DataRequired(), validators.Email()])
+    password = PasswordField('Password', [validators.DataRequired(), validators.Length(min=8)])
+    is_active = BooleanField('Is Active')
+    is_superuser = BooleanField('Is Superuser')
+
+
+class UserEditForm(StarletteForm):
+    full_name = StringField('Full Name', [validators.DataRequired(), validators.Length(min=2, max=100)])
+    email = StringField('Email', [validators.DataRequired(), validators.Email()])
+    is_active = BooleanField('Is Active')
+    is_superuser = BooleanField('Is Superuser')
