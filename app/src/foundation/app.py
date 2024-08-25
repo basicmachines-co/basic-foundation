@@ -46,7 +46,7 @@ async def on_startup():
     logger.info(f"Welcome to {config.settings.app_name}")
 
     # silence bcrypt noise
-    logging.getLogger('passlib').setLevel(logging.ERROR)
+    logging.getLogger("passlib").setLevel(logging.ERROR)
 
     # setup admin user if not present in db
     tools.init_data.main()

@@ -22,18 +22,21 @@ async def dashboard(request: Request, user_service: UserServiceDep):
             request=request,
             users_count=await user_service.get_users_count(),
             active_users_count=await user_service.get_active_users_count(),
-            admin_users_count=await user_service.get_admin_users_count()
-        ))
+            admin_users_count=await user_service.get_admin_users_count(),
+        ),
+    )
 
 
 @router.get("/profile", dependencies=[LoginRequired])
 async def profile(
-        request: Request,
-        user_service: UserServiceDep,
-        current_user: CurrentUserDep,
+    request: Request,
+    user_service: UserServiceDep,
+    current_user: CurrentUserDep,
 ):
     return templates.TemplateResponse(
         "pages/user_view.html",
-        dict(request=request,
-             user=await user_service.get_user_by_id(user_id=current_user.id)),
+        dict(
+            request=request,
+            user=await user_service.get_user_by_id(user_id=current_user.id),
+        ),
     )

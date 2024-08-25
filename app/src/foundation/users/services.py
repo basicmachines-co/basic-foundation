@@ -8,9 +8,17 @@ from sqlalchemy.orm import Query
 from starlette.requests import Request
 
 from foundation.core.config import settings
-from foundation.core.emails import generate_new_account_email, send_email, generate_reset_password_email
+from foundation.core.emails import (
+    generate_new_account_email,
+    send_email,
+    generate_reset_password_email,
+)
 from foundation.core.repository import Repository
-from foundation.core.security import verify_password, get_password_hash, generate_password_reset_token
+from foundation.core.security import (
+    verify_password,
+    get_password_hash,
+    generate_password_reset_token,
+)
 from foundation.users.models import User
 from foundation.web.pagination import Paginator
 
@@ -40,6 +48,7 @@ class UserService:
     """
     Service operations for Users
     """
+
     repository: Repository[User]
 
     def __init__(self, repository: Repository[User]):
@@ -79,7 +88,9 @@ class UserService:
         return await self.repository.count(query)
 
     async def create_user(self, *, create_dict: dict[str, Any]) -> User:
-        create_dict.update({"hashed_password": get_password_hash(create_dict.get("password"))})
+        create_dict.update(
+            {"hashed_password": get_password_hash(create_dict.get("password"))}
+        )
         try:
             user = await self.repository.create(create_dict)
         except IntegrityError as e:
@@ -88,7 +99,9 @@ class UserService:
 
         if settings.EMAIL_ENABLED and user.email:
             email_data = generate_new_account_email(
-                email_to=user.email, username=user.email, password=create_dict.get("password")
+                email_to=user.email,
+                username=user.email,
+                password=create_dict.get("password"),
             )
             send_email(
                 email_to=user.email,
@@ -100,7 +113,9 @@ class UserService:
 
     async def update_user(self, *, user_id: UUID, update_dict: dict[str, Any]) -> User:
         if update_dict.get("password"):
-            update_dict.update({"hashed_password": get_password_hash(update_dict.get("password"))})
+            update_dict.update(
+                {"hashed_password": get_password_hash(update_dict.get("password"))}
+            )
         try:
             return await self.repository.update(user_id, update_dict)
         except IntegrityError as e:

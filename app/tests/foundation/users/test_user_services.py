@@ -5,7 +5,12 @@ import pytest_asyncio
 
 from foundation.core.security import verify_password
 from foundation.users.models import User
-from foundation.users.services import UserNotFoundError, UserValueError, UserService, UserCreateError
+from foundation.users.services import (
+    UserNotFoundError,
+    UserValueError,
+    UserService,
+    UserCreateError,
+)
 from utils import random_email, random_lower_string, mock_emails_send
 
 pytestmark = pytest.mark.asyncio
@@ -48,15 +53,19 @@ async def test_get_user_by_email_not_found(user_service, sample_user: User):
 
 
 async def test_authenticate(user_service, sample_user: User, sample_user_password: str):
-    authenticated_user = await user_service.authenticate(email=sample_user.email,
-                                                         password=sample_user_password)
+    authenticated_user = await user_service.authenticate(
+        email=sample_user.email, password=sample_user_password
+    )
     assert authenticated_user is not None
     assert authenticated_user.email == sample_user.email
 
 
-async def test_authenticate_fails(user_service, sample_user: User, sample_user_password: str):
-    authenticated_user = await user_service.authenticate(email=sample_user.email,
-                                                         password="bad pass")
+async def test_authenticate_fails(
+    user_service, sample_user: User, sample_user_password: str
+):
+    authenticated_user = await user_service.authenticate(
+        email=sample_user.email, password="bad pass"
+    )
     assert authenticated_user is None
 
 
@@ -82,7 +91,9 @@ async def test_create_user_fails(user_service, sample_user: User):
         "email": sample_user.email,
         "password": random_lower_string(),
     }
-    with pytest.raises(UserCreateError, match=f"user {user_create.get("email")} can not be created"):
+    with pytest.raises(
+        UserCreateError, match=f"user {user_create.get("email")} can not be created"
+    ):
         await user_service.create_user(create_dict=user_create)
 
 
@@ -92,10 +103,11 @@ async def test_update_user(user_service, sample_user: User):
         "email": random_email(),
         "password": random_lower_string(),
         "is_active": True,
-        "is_superuser": True
+        "is_superuser": True,
     }
-    updated_user = await user_service.update_user(user_id=sample_user.id,
-                                                  update_dict=user_update)
+    updated_user = await user_service.update_user(
+        user_id=sample_user.id, update_dict=user_update
+    )
 
     assert updated_user.id == sample_user.id
     assert updated_user.full_name == user_update.get("full_name")
@@ -120,17 +132,20 @@ async def test_update_user_fails(user_service, sample_user: User):
         "email": sample_user.email,
         "password": random_lower_string(),
         "is_active": True,
-        "is_superuser": True
+        "is_superuser": True,
     }
-    with pytest.raises(UserValueError, match=f"user {created_user.id} can not be updated"):
-        await user_service.update_user(user_id=created_user.id,
-                                       update_dict=user_update)
+    with pytest.raises(
+        UserValueError, match=f"user {created_user.id} can not be updated"
+    ):
+        await user_service.update_user(user_id=created_user.id, update_dict=user_update)
 
 
 async def test_delete_user(user_service, sample_user: User):
     await user_service.delete_user(user_id=sample_user.id)
 
-    with pytest.raises(UserNotFoundError, match=f"user {sample_user.id} does not exist"):
+    with pytest.raises(
+        UserNotFoundError, match=f"user {sample_user.id} does not exist"
+    ):
         assert await user_service.get_user_by_id(user_id=sample_user.id)
 
 

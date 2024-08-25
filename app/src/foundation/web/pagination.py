@@ -11,7 +11,9 @@ from foundation.core.repository import Repository
 
 @dataclass
 class Page:
-    def __init__(self, url: URL, items: List[Type[Any]], page: int, page_size: int, total: int):
+    def __init__(
+        self, url: URL, items: List[Type[Any]], page: int, page_size: int, total: int
+    ):
         self.url = url
         self.items = items
         self.page = page
@@ -51,7 +53,13 @@ class Page:
 
 
 class Paginator:
-    def __init__(self, request: Request, repository: Repository, query: Query = None, page_size: int = 10):
+    def __init__(
+        self,
+        request: Request,
+        repository: Repository,
+        query: Query = None,
+        page_size: int = 10,
+    ):
         self.request = request
         self.repository = repository
         self.query = query
@@ -70,7 +78,9 @@ class Paginator:
             items = []
         else:
             offset = (page - 1) * self.page_size
-            result = await self.repository.execute_query(self.query.offset(offset).limit(self.page_size))
+            result = await self.repository.execute_query(
+                self.query.offset(offset).limit(self.page_size)
+            )
             items = result.scalars().all()
 
         return Page(
@@ -78,5 +88,5 @@ class Paginator:
             items=items,
             page=page,
             page_size=self.page_size,
-            total=await self.total
+            total=await self.total,
         )

@@ -18,17 +18,17 @@ class EmailData:
 
 def render_email_template(*, template_name: str, context: dict[str, Any]) -> str:
     template_str = (
-            BASE_DIR / "templates" / "email" / "build" / template_name
+        BASE_DIR / "templates" / "email" / "build" / template_name
     ).read_text()
     html_content = Template(template_str).render(context)
     return html_content
 
 
 def send_email(
-        *,
-        email_to: str,
-        subject: str = "",
-        html_content: str = "",
+    *,
+    email_to: str,
+    subject: str = "",
+    html_content: str = "",
 ) -> SMTPResponse:
     assert settings.emails_enabled, "no provided configuration for email variables"
     message = emails.Message(
@@ -80,7 +80,7 @@ def generate_reset_password_email(email_to: str, email: str, token: str) -> Emai
 
 
 def generate_new_account_email(
-        email_to: str, username: str, password: str
+    email_to: str, username: str, password: str
 ) -> EmailData:
     project_name = settings.app_name
     subject = f"{project_name} - New account for user {username}"

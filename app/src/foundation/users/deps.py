@@ -10,7 +10,7 @@ from foundation.users.services import UserService, UserPagination
 
 
 def get_user_repository(
-        async_session: AsyncSession = Depends(get_async_session),
+    async_session: AsyncSession = Depends(get_async_session),
 ) -> Repository[User]:
     return Repository(async_session, User)
 

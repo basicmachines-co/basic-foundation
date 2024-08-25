@@ -8,10 +8,12 @@ from foundation.core.models import Base
 
 
 class User(Base):
-    __tablename__ = 'user'
-    __table_args__ = {'schema': 'public'}
+    __tablename__ = "user"
+    __table_args__ = {"schema": "public"}
 
-    id: Mapped[UUID] = mapped_column(primary_key=True, server_default=func.gen_random_uuid())
+    id: Mapped[UUID] = mapped_column(
+        primary_key=True, server_default=func.gen_random_uuid()
+    )
     full_name: Mapped[Optional[str]]
     email: Mapped[str] = mapped_column(String())
     hashed_password: Mapped[str] = mapped_column(String())

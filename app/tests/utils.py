@@ -32,15 +32,14 @@ async def get_auth_token(client: AsyncClient, login_data: dict[str, str]) -> Aut
     return AuthToken.model_validate(r.json())
 
 
-async def get_auth_token_headers(client: AsyncClient, login_data: dict[str, str]) -> dict[str, str]:
+async def get_auth_token_headers(
+    client: AsyncClient, login_data: dict[str, str]
+) -> dict[str, str]:
     auth_token = await get_auth_token(client, login_data)
     headers = {"Authorization": f"Bearer {auth_token.access_token}"}
     return headers
 
 
 def mock_emails_send():
-    response = mock({
-        'status_code': 250,
-        '_finished': True
-    }, spec=SMTPResponse)
+    response = mock({"status_code": 250, "_finished": True}, spec=SMTPResponse)
     when(emails.Message).send(...).thenReturn(response)

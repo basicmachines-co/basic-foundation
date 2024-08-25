@@ -9,7 +9,13 @@ from foundation.api.deps import access_token_security, CurrentUser
 from foundation.core.config import settings
 from foundation.core.security import verify_password_reset_token
 from foundation.users.deps import UserServiceDep
-from foundation.users.schemas import AuthToken, AuthTokenPayload, Message, UserPublic, NewPassword
+from foundation.users.schemas import (
+    AuthToken,
+    AuthTokenPayload,
+    Message,
+    UserPublic,
+    NewPassword,
+)
 from foundation.users.services import UserNotFoundError
 
 router = APIRouter()
@@ -17,7 +23,8 @@ router = APIRouter()
 
 @router.post("/login/access-token")
 async def login_access_token(
-        user_service: UserServiceDep, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
+    user_service: UserServiceDep,
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> AuthToken:
     """
     OAuth2 compatible token login, get an access token for future requests
@@ -31,8 +38,10 @@ async def login_access_token(
         raise HTTPException(status_code=400, detail="Inactive user")
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     return AuthToken(
-        access_token=access_token_security.create_access_token(subject=jsonable_encoder(AuthTokenPayload(id=user.id)),
-                                                               expires_delta=access_token_expires)
+        access_token=access_token_security.create_access_token(
+            subject=jsonable_encoder(AuthTokenPayload(id=user.id)),
+            expires_delta=access_token_expires,
+        )
     )
 
 
@@ -81,8 +90,13 @@ async def reset_password(user_service: UserServiceDep, body: NewPassword) -> Mes
     if not user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
 
-    updated_user = await user_service.update_user(user_id=user.id, update_dict={
-        "password": body.new_password,
-    })
+    updated_user = await user_service.update_user(
+        user_id=user.id,
+        update_dict={
+            "password": body.new_password,
+        },
+    )
 
-    return Message(message=f"Password updated successfully for user {updated_user.email}")
+    return Message(
+        message=f"Password updated successfully for user {updated_user.email}"
+    )

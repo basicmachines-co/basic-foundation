@@ -12,19 +12,23 @@ from foundation.users.services import UserNotFoundError
 # Read access token from bearer header and cookie (bearer priority)
 access_token_security = JwtAccessBearer(
     secret_key=settings.JWT_SECRET,
-    auto_error=True  # automatically raise HTTPException: HTTP_401_UNAUTHORIZED
+    auto_error=True,  # automatically raise HTTPException: HTTP_401_UNAUTHORIZED
 )
 
 # Read refresh token from bearer header only
 refresh_token_security = JwtRefreshBearer(
     secret_key=settings.JWT_SECRET,
-    auto_error=True  # automatically raise HTTPException: HTTP_401_UNAUTHORIZED
+    auto_error=True,  # automatically raise HTTPException: HTTP_401_UNAUTHORIZED
 )
 
-JwtAuthorizationCredentialsDep = Annotated[JwtAuthorizationCredentials, Security(access_token_security)]
+JwtAuthorizationCredentialsDep = Annotated[
+    JwtAuthorizationCredentials, Security(access_token_security)
+]
 
 
-async def get_current_user(user_service: UserServiceDep, credentials: JwtAuthorizationCredentialsDep) -> User:
+async def get_current_user(
+    user_service: UserServiceDep, credentials: JwtAuthorizationCredentialsDep
+) -> User:
     # Notes
     # the jwt contains the id PK for the user in a dict format,
     # e.g. {"id": "<primary-key-uuid>"}
@@ -33,7 +37,9 @@ async def get_current_user(user_service: UserServiceDep, credentials: JwtAuthori
     subject = credentials.subject
     user_id = subject.get("id")
     if not user_id:
-        raise HTTPException(status_code=401, detail="No id found in authorization token")
+        raise HTTPException(
+            status_code=401, detail="No id found in authorization token"
+        )
 
     try:
         user: User | None = await user_service.get_user_by_id(user_id=user_id)

@@ -21,27 +21,21 @@ router = APIRouter(include_in_schema=False, default_response_class=HTMLResponse)
 
 @router.get("/register")
 async def register(request: Request):
-    return templates.TemplateResponse(
-        "pages/register.html",
-        {"request": request}
-    )
+    return templates.TemplateResponse("pages/register.html", {"request": request})
 
 
 @router.post("/register")
 async def register_post(
-        request: Request,
-        user_service: UserServiceDep,
-        full_name: str = Form(),
-        email: str = Form(),
-        password: str = Form(),
+    request: Request,
+    user_service: UserServiceDep,
+    full_name: str = Form(),
+    email: str = Form(),
+    password: str = Form(),
 ):
     register_form = None
     try:
         register_form = UserCreate(
-            full_name=full_name,
-            email=email,
-            password=password,
-            is_active=True
+            full_name=full_name, email=email, password=password, is_active=True
         )
         user = await user_service.create_user(create_dict=register_form.model_dump())
         return await login_user(request, user)
@@ -64,9 +58,9 @@ async def login(request: Request):
 
 @router.post("/login")
 async def login_post(
-        request: Request,
-        user_service: UserServiceDep,
-        form_data: OAuth2PasswordRequestForm = Depends(),
+    request: Request,
+    user_service: UserServiceDep,
+    form_data: OAuth2PasswordRequestForm = Depends(),
 ):
     user = await user_service.authenticate(
         email=form_data.username, password=form_data.password
@@ -91,8 +85,10 @@ async def login_user(request: Request, user: User):
     response = Response(status_code=status.HTTP_204_NO_CONTENT)
 
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    token = access_token_security.create_access_token(subject=jsonable_encoder(AuthTokenPayload(id=user.id)),
-                                                      expires_delta=access_token_expires)
+    token = access_token_security.create_access_token(
+        subject=jsonable_encoder(AuthTokenPayload(id=user.id)),
+        expires_delta=access_token_expires,
+    )
     access_token_security.set_access_cookie(response, token, access_token_expires)
     # redirect user to the dashboard
     response.headers["HX-Redirect"] = str(request.url_for("dashboard"))
@@ -109,11 +105,15 @@ async def logout(request: Request):
 
 @router.get("/forgot-password")
 async def forgot_password(request: Request):
-    return templates.TemplateResponse("pages/forgot_password.html", {"request": request})
+    return templates.TemplateResponse(
+        "pages/forgot_password.html", {"request": request}
+    )
 
 
 @router.post("/forgot-password")
-async def forgot_password_post(request: Request, user_service: UserServiceDep, email: str = Form()):
+async def forgot_password_post(
+    request: Request, user_service: UserServiceDep, email: str = Form()
+):
     error = None
     success = None
     try:
@@ -121,10 +121,11 @@ async def forgot_password_post(request: Request, user_service: UserServiceDep, e
         success = f"An email was sent to {email}"
     except UserNotFoundError as e:
         error = e.args[0]
-    return templates.TemplateResponse("pages/forgot_password.html",
-                                      {"request": request, "error": error,
-                                       "success": success},
-                                      block_name="forgot_password_form")
+    return templates.TemplateResponse(
+        "pages/forgot_password.html",
+        {"request": request, "error": error, "success": success},
+        block_name="forgot_password_form",
+    )
 
 
 @router.get("/reset-password")
@@ -139,8 +140,12 @@ async def reset_password(request: Request, token: str):
 
 
 @router.post("/reset-password")
-async def reset_password_post(request: Request, user_service: UserServiceDep, token: str = Form(),
-                              new_password: str = Form()):
+async def reset_password_post(
+    request: Request,
+    user_service: UserServiceDep,
+    token: str = Form(),
+    new_password: str = Form(),
+):
     context = {"request": request}
     email = verify_password_reset_token(token=token)
     if not email:
@@ -148,9 +153,12 @@ async def reset_password_post(request: Request, user_service: UserServiceDep, to
 
     try:
         user = await user_service.get_user_by_email(email=email)
-        updated_user = await user_service.update_user(user_id=user.id, update_dict={
-            "password": new_password,
-        })
+        updated_user = await user_service.update_user(
+            user_id=user.id,
+            update_dict={
+                "password": new_password,
+            },
+        )
         context["success"] = "Your password has been updated!"
     except UserNotFoundError as e:
         context["error"] = e.args[0]
@@ -159,4 +167,6 @@ async def reset_password_post(request: Request, user_service: UserServiceDep, to
         context["error"] = "Your account is not active, please check your email"
 
     context["token"] = token
-    return templates.TemplateResponse("pages/reset_password.html", context, block_name="password_reset_form")
+    return templates.TemplateResponse(
+        "pages/reset_password.html", context, block_name="password_reset_form"
+    )

@@ -29,6 +29,7 @@ def unstub_mocks():
     :return:
     """
     from mockito import unstub
+
     yield
     unstub()
 
@@ -117,7 +118,9 @@ async def user_repository(session) -> Repository[User]:
 
 
 @pytest_asyncio.fixture
-async def client(user_repository: Repository[User]) -> Generator[AsyncClient, None, None]:
+async def client(
+    user_repository: Repository[User],
+) -> Generator[AsyncClient, None, None]:
     print(f"tclient fixture: user_repository: {user_repository}")
     app.dependency_overrides[get_user_repository] = lambda: user_repository
     async with AsyncClient(app=app, base_url="http://test") as c:
@@ -136,17 +139,25 @@ async def sample_user_password() -> str:
 
 @pytest_asyncio.fixture
 async def sample_user(user_repository: Repository[User], sample_user_password: str):
-    sample_user = await user_repository.create({"full_name": "John Doe",
-                                                "email": random_email(),
-                                                "hashed_password": security.get_password_hash(sample_user_password),
-                                                "is_active": True})
+    sample_user = await user_repository.create(
+        {
+            "full_name": "John Doe",
+            "email": random_email(),
+            "hashed_password": security.get_password_hash(sample_user_password),
+            "is_active": True,
+        }
+    )
     return sample_user
 
 
 @pytest_asyncio.fixture
 async def inactive_user(user_repository: Repository[User]):
-    sample_user = await user_repository.create({"full_name": "Lazy John Doe",
-                                                "email": random_email(),
-                                                "hashed_password": security.get_password_hash(random_lower_string()),
-                                                "is_active": False})
+    sample_user = await user_repository.create(
+        {
+            "full_name": "Lazy John Doe",
+            "email": random_email(),
+            "hashed_password": security.get_password_hash(random_lower_string()),
+            "is_active": False,
+        }
+    )
     return sample_user

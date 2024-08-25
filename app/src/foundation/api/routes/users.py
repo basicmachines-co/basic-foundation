@@ -3,9 +3,19 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from foundation.api.deps import get_current_superuser, validate_is_superuser, CurrentUser
+from foundation.api.deps import (
+    get_current_superuser,
+    validate_is_superuser,
+    CurrentUser,
+)
 from foundation.users.deps import UserServiceDep
-from foundation.users.schemas import UsersPublic, UserPublic, UserCreate, UserUpdate, Message
+from foundation.users.schemas import (
+    UsersPublic,
+    UserPublic,
+    UserCreate,
+    UserUpdate,
+    Message,
+)
 from foundation.users.services import UserNotFoundError, UserValueError, UserCreateError
 
 router = APIRouter()
@@ -16,7 +26,9 @@ router = APIRouter()
     dependencies=[Depends(get_current_superuser)],
     response_model=UsersPublic,
 )
-async def get_users(user_service: UserServiceDep, skip: int = 0, limit: int = 100) -> Any:
+async def get_users(
+    user_service: UserServiceDep, skip: int = 0, limit: int = 100
+) -> Any:
     """
     Get all users.
     """
@@ -29,7 +41,9 @@ async def get_users(user_service: UserServiceDep, skip: int = 0, limit: int = 10
     "/{user_id}",
     response_model=UserPublic,
 )
-async def get_user(user_service: UserServiceDep, user_id: UUID, current_user: CurrentUser) -> Any:
+async def get_user(
+    user_service: UserServiceDep, user_id: UUID, current_user: CurrentUser
+) -> Any:
     """
     Get a user.
     If the current_user is a non-superuser, they can only get their own user.
@@ -50,8 +64,10 @@ async def get_user(user_service: UserServiceDep, user_id: UUID, current_user: Cu
 
 
 @router.post(
-    "/", dependencies=[Depends(get_current_superuser)], response_model=UserPublic,
-    status_code=status.HTTP_201_CREATED
+    "/",
+    dependencies=[Depends(get_current_superuser)],
+    response_model=UserPublic,
+    status_code=status.HTTP_201_CREATED,
 )
 async def create_user(*, user_service: UserServiceDep, user_in: UserCreate) -> Any:
     """
@@ -60,10 +76,7 @@ async def create_user(*, user_service: UserServiceDep, user_in: UserCreate) -> A
     try:
         user_created = await user_service.create_user(create_dict=user_in.model_dump())
     except UserCreateError as e:
-        raise HTTPException(
-            status_code=400,
-            detail=e.args
-        )
+        raise HTTPException(status_code=400, detail=e.args)
     return user_created
 
 
@@ -71,8 +84,13 @@ async def create_user(*, user_service: UserServiceDep, user_in: UserCreate) -> A
     "/{user_id}",
     response_model=UserPublic,
 )
-async def update_user(*, user_service: UserServiceDep, user_id: UUID, user_in: UserUpdate,
-                      current_user: CurrentUser) -> Any:
+async def update_user(
+    *,
+    user_service: UserServiceDep,
+    user_id: UUID,
+    user_in: UserUpdate,
+    current_user: CurrentUser,
+) -> Any:
     """
     Update a user.
     If the current_user is a non-super user, they can only update their own user.
@@ -90,8 +108,9 @@ async def update_user(*, user_service: UserServiceDep, user_id: UUID, user_in: U
         )
 
     try:
-        user_updated = await user_service.update_user(user_id=user_id,
-                                                      update_dict=user_in.model_dump())
+        user_updated = await user_service.update_user(
+            user_id=user_id, update_dict=user_in.model_dump()
+        )
     except UserValueError as e:
         raise HTTPException(
             status_code=400,
@@ -103,7 +122,9 @@ async def update_user(*, user_service: UserServiceDep, user_id: UUID, user_in: U
 @router.delete(
     "/{user_id}",
 )
-async def delete_user(*, user_service: UserServiceDep, user_id: UUID, current_user: CurrentUser) -> Message:
+async def delete_user(
+    *, user_service: UserServiceDep, user_id: UUID, current_user: CurrentUser
+) -> Message:
     """
     Delete a user.
     If the current_user is a non-super user, they can only delete their own user.
