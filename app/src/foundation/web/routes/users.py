@@ -64,7 +64,7 @@ def user_create_template(
     )
 
 
-async def user_edit_template(
+def user_edit_template(
         request: Request,
         *,
         user: User,
@@ -124,6 +124,17 @@ async def user_create_post(
     return user_create_template(request, form=form, error=error, block_name="content")
 
 
+@router.get("/users/{user_id}")
+async def user(
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
+):
+    view_user = await user_service.get_user_by_id(user_id=user_id)
+    return user_view_template(request, view_user)
+
+
 @router.get("/users/{user_id}/edit")
 async def user_edit(
         request: Request,
@@ -135,7 +146,7 @@ async def user_edit(
 
     # Generate a CSRF token and set it in a cookie
     token = csrf_token(request)
-    response = await user_edit_template(request, user=edit_user, form=form, block_name="content")
+    response = user_edit_template(request, user=edit_user, form=form, block_name="content")
     response.set_cookie("csrf_token", token)  # Set the CSRF token in the cookie
     return response
 
@@ -195,14 +206,3 @@ async def delete_user(
     response = Response(status_code=status.HTTP_307_TEMPORARY_REDIRECT)
     response.headers["HX-Redirect"] = router.url_path_for("users")
     return response
-
-
-@router.get("/users/{user_id}")
-async def user(
-        request: Request,
-        user_id: UUID,
-        user_service: UserServiceDep,
-        current_user: CurrentUserDep,
-):
-    view_user = await user_service.get_user_by_id(user_id=user_id)
-    return user_view_template(request, view_user)
