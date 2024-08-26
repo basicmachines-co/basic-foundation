@@ -1,18 +1,87 @@
 from uuid import UUID
 
-from fastapi import Request, APIRouter, Response
+from fastapi import APIRouter, Response
+from fastapi import Request, Header, HTTPException
+from fastapi import status
 from sqlalchemy import select
 from starlette.responses import HTMLResponse
+from starlette_wtf import csrf_token
 
 from foundation.users.deps import UserServiceDep, UserPaginationDep
 from foundation.users.models import User
 from foundation.users.services import UserValueError, UserNotFoundError
 from foundation.web.deps import CurrentUserDep
 from foundation.web.forms import UserCreateForm, UserEditForm
+from foundation.web.pagination import Page
 from foundation.web.templates import templates
 from foundation.web.utils import flash
 
 router = APIRouter(include_in_schema=False, default_response_class=HTMLResponse)
+
+
+# helper methods to return template responses
+
+def user_list_template(request: Request, page: Page) -> templates.TemplateResponse:
+    return templates.TemplateResponse(
+        "pages/user_list.html",
+        dict(
+            request=request,
+            page=page,
+        ),
+    )
+
+
+def user_view_template(
+        request: Request,
+        user: User,
+        *,
+        block_name=None
+) -> templates.TemplateResponse:
+    return templates.TemplateResponse(
+        "pages/user_view.html",
+        dict(
+            request=request,
+            user=user
+        ),
+        block_name=block_name
+    )
+
+
+def user_create_template(
+        request: Request,
+        *,
+        form: UserCreateForm,
+        error: str = None,
+        block_name=None
+) -> templates.TemplateResponse:
+    return templates.TemplateResponse(
+        "pages/user_create.html",
+        dict(
+            request=request,
+            form=form,
+            block_name=block_name,
+        ),
+    )
+
+
+async def user_edit_template(
+        request: Request,
+        *,
+        user: User,
+        form: UserEditForm,
+        error: str = None,
+        block_name=None
+) -> templates.TemplateResponse:
+    return templates.TemplateResponse(
+        "pages/user_edit.html",
+        dict(
+            request=request,
+            user=user,
+            form=form,
+            error=error
+        ),
+        block_name=block_name,
+    )
 
 
 @router.get("/users")
@@ -26,14 +95,7 @@ async def users(
     query = select(User)
     pagination = user_pagination.paginate(request, query, page_size=page_size)
     page = await pagination.page(page=page)
-
-    return templates.TemplateResponse(
-        "pages/user_list.html",
-        dict(
-            request=request,
-            page=page,
-        ),
-    )
+    return user_list_template(request, page)
 
 
 @router.get("/users/create")
@@ -41,13 +103,7 @@ async def user_create(
         request: Request,
 ):
     form = UserCreateForm(request)
-    return templates.TemplateResponse(
-        "pages/user_create.html",
-        dict(
-            request=request,
-            form=form
-        ),
-    )
+    return user_create_template(request, form=form)
 
 
 @router.post("/users/create")
@@ -62,39 +118,10 @@ async def user_create_post(
             created_user = await user_service.create_user(
                 create_dict=form.data
             )
-            return templates.TemplateResponse(
-                "pages/user_view.html",
-                dict(
-                    request=request,
-                    user=created_user
-                ),
-                block_name="content",
-            )
+            return user_view_template(request, created_user, block_name="content")
         except UserValueError as e:
             error = e.args
-    return templates.TemplateResponse(
-        "pages/user_create.html",
-        dict(
-            request=request,
-            error=error,
-            form=form
-        ),
-        block_name="content",
-    )
-
-
-@router.get("/users/{user_id}")
-async def user(
-        request: Request,
-        user_id: UUID,
-        user_service: UserServiceDep,
-        current_user: CurrentUserDep,
-):
-    view_user = await user_service.get_user_by_id(user_id=user_id)
-    return templates.TemplateResponse(
-        "pages/user_view.html",
-        {"request": request, "current_user": current_user, "user": view_user},
-    )
+    return user_create_template(request, form=form, error=error, block_name="content")
 
 
 @router.get("/users/{user_id}/edit")
@@ -108,15 +135,7 @@ async def user_edit(
 
     # Generate a CSRF token and set it in a cookie
     token = csrf_token(request)
-    response = templates.TemplateResponse(
-        "pages/user_edit.html",
-        dict(
-            request=request,
-            user=edit_user,
-            form=form
-        ),
-        block_name="content",
-    )
+    response = await user_edit_template(request, user=edit_user, form=form, block_name="content")
     response.set_cookie("csrf_token", token)  # Set the CSRF token in the cookie
     return response
 
@@ -138,32 +157,11 @@ async def user_edit_post(
                 user_id=user_id,
                 update_dict=form.data,
             )
-            return templates.TemplateResponse(
-                "pages/user_view.html",
-                dict(
-                    request=request,
-                    user=updated_user
-                ),
-                block_name="content",
-            )
+            return user_view_template(request, user=updated_user, block_name="content")
         except UserValueError as e:
             error = e.args
 
-    return templates.TemplateResponse(
-        "pages/user_edit.html",
-        dict(
-            request=request,
-            user=edit_user,
-            error=error,
-            form=form
-        ),
-        block_name="content",
-    )
-
-
-from fastapi import Request, Header, HTTPException
-from fastapi import status
-from starlette_wtf import csrf_token
+    return user_edit_template(request, user=edit_user, error=error, form=form, block_name="content")
 
 
 @router.delete("/users/{user_id}")
@@ -197,3 +195,14 @@ async def delete_user(
     response = Response(status_code=status.HTTP_307_TEMPORARY_REDIRECT)
     response.headers["HX-Redirect"] = router.url_path_for("users")
     return response
+
+
+@router.get("/users/{user_id}")
+async def user(
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
+):
+    view_user = await user_service.get_user_by_id(user_id=user_id)
+    return user_view_template(request, view_user)
