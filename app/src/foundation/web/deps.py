@@ -19,7 +19,7 @@ JwtAuthorizationCredentialsDep = Annotated[
 
 
 async def get_current_user(
-    user_service: UserServiceDep, credentials: JwtAuthorizationCredentialsDep
+        user_service: UserServiceDep, credentials: JwtAuthorizationCredentialsDep
 ) -> User:
     if not credentials:
         raise HTTPException(status_code=307, headers={"Location": "/login"})
@@ -41,6 +41,6 @@ async def get_current_user(
     return user
 
 
-CurrentUserDep = Annotated[User, Depends(get_current_user)]
-
 LoginRequired = Depends(get_current_user)
+
+CurrentUserDep = Annotated[User, LoginRequired]

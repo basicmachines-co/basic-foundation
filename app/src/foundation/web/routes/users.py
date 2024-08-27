@@ -1,31 +1,31 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Response
 from fastapi import Request, Header, HTTPException
+from fastapi import Response
 from fastapi import status
 from sqlalchemy import select
-from starlette.responses import HTMLResponse
 from starlette_wtf import csrf_token
 
 from foundation.users.deps import UserServiceDep, UserPaginationDep
 from foundation.users.models import User
 from foundation.users.services import UserValueError, UserNotFoundError
-from foundation.web.deps import CurrentUserDep
+from foundation.web.deps import CurrentUserDep, LoginRequired
 from foundation.web.forms import UserCreateForm, UserEditForm
 from foundation.web.pagination import Page
 from foundation.web.templates import templates
-from foundation.web.utils import flash
+from foundation.web.utils import flash, HTMLRouter
 
-router = APIRouter(include_in_schema=False, default_response_class=HTMLResponse)
+router = HTMLRouter(dependencies=[LoginRequired])
 
 
 # helper methods to return template responses
 
-def user_list_template(request: Request, page: Page) -> templates.TemplateResponse:
+def user_list_template(request: Request, *, current_user: User, page: Page) -> templates.TemplateResponse:
     return templates.TemplateResponse(
         "pages/user_list.html",
         dict(
             request=request,
+            current_user=current_user,
             page=page,
         ),
     )
@@ -59,6 +59,7 @@ def user_create_template(
         dict(
             request=request,
             form=form,
+            error=error,
             block_name=block_name,
         ),
     )
@@ -95,7 +96,7 @@ async def users(
     query = select(User)
     pagination = user_pagination.paginate(request, query, page_size=page_size)
     page = await pagination.page(page=page)
-    return user_list_template(request, page)
+    return user_list_template(request, current_user=current_user, page=page)
 
 
 @router.get("/users/create")
@@ -129,7 +130,6 @@ async def user(
         request: Request,
         user_id: UUID,
         user_service: UserServiceDep,
-        current_user: CurrentUserDep,
 ):
     view_user = await user_service.get_user_by_id(user_id=user_id)
     return user_view_template(request, view_user)
@@ -147,7 +147,7 @@ async def user_edit(
     # Generate a CSRF token and set it in a cookie
     token = csrf_token(request)
     response = user_edit_template(request, user=edit_user, form=form, block_name="content")
-    response.set_cookie("csrf_token", token)  # Set the CSRF token in the cookie
+    response.set_cookie("csrf_token", token)
     return response
 
 
@@ -156,7 +156,6 @@ async def user_edit_post(
         request: Request,
         user_id: UUID,
         user_service: UserServiceDep,
-        current_user: CurrentUserDep,
 ):
     form = await UserEditForm.from_formdata(request)
     error = None

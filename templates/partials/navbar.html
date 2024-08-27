@@ -62,7 +62,7 @@
                             class="relative flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                         <span class="sr-only">Open user menu</span>
                         <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-500">
-                            <span class="text-lg font-medium leading-none text-white">T</span>
+                            <span class="text-lg font-medium leading-none text-white">{{ current_user.full_name[:1].capitalize() }}</span>
                         </span>
                     </button>
                     <div x-show="open"
