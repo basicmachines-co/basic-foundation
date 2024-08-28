@@ -1,0 +1,13 @@
+{
+  "printWidth": 100,
+  "htmlWhitespaceSensitivity": "ignore",
+  "plugins": ["prettier-plugin-tailwindcss", "prettier-plugin-jinja-template"],
+  "overrides": [
+    {
+      "files": ["*.html"],
+      "options": {
+        "parser": "jinja-template"
+      }
+    }
+  ]
+}

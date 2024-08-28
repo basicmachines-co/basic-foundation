@@ -30,8 +30,11 @@ format-prettier:
 
 format: format-python
 
-tailwind: install
+tailwind:
 	npm run build
+
+tailwind-prod:
+	npm run build-prod
 
 # Database migrations
 

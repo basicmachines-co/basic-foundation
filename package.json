@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Saas platform api web frontend using tailwind and daisyui",
   "scripts": {
-    "build": "tailwindcss -o ./static/dist/css/output.css --minify"
+    "build": "tailwindcss -i ./static/src/input.css -o ./static/dist/css/output.css",
+    "build-prod": "tailwindcss -i ./static/src/input.css -o ./static/dist/css/output.css --minify"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",
