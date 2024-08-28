@@ -15,11 +15,16 @@ async def index():
 
 
 @router.get("/dashboard", dependencies=[LoginRequired])
-async def dashboard(request: Request, user_service: UserServiceDep):
+async def dashboard(
+        request: Request,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
+):
     return templates.TemplateResponse(
         "pages/dashboard.html",
         dict(
             request=request,
+            current_user=current_user,
             users_count=await user_service.get_users_count(),
             active_users_count=await user_service.get_active_users_count(),
             admin_users_count=await user_service.get_admin_users_count(),
@@ -29,14 +34,15 @@ async def dashboard(request: Request, user_service: UserServiceDep):
 
 @router.get("/profile", dependencies=[LoginRequired])
 async def profile(
-    request: Request,
-    user_service: UserServiceDep,
-    current_user: CurrentUserDep,
+        request: Request,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
 ):
     return templates.TemplateResponse(
         "pages/user_view.html",
         dict(
             request=request,
+            current_user=current_user,
             user=await user_service.get_user_by_id(user_id=current_user.id),
         ),
     )

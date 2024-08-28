@@ -1,12 +1,12 @@
-version: '3.1'
+version: "3.1"
 
 services:
   db:
     image: postgres:15
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}  # Use the user from the .env file
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}  # Use the password from the .env file
-      POSTGRES_DB: ${POSTGRES_DB}  # Use the database name from the .env file
+      POSTGRES_USER: ${POSTGRES_USER} # Use the user from the .env file
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} # Use the password from the .env file
+      POSTGRES_DB: ${POSTGRES_DB} # Use the database name from the .env file
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - postgres_data:/var/lib/postgresql/data

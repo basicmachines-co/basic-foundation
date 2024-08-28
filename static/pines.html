@@ -1,0 +1,965 @@
+<!doctype html>
+<html class="h-full bg-gray-50" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>A title</title>
+    <!-- Include the Alpine.js library -->
+    <script defer src="https://unpkg.com/alpinejs"></script>
+    <!-- Include the TailwindCSS library -->
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="h-full" x-data="{ sidebarOpen: false }">
+    <!-- Off-canvas menu for mobile, show/hide based on off-canvas menu state. -->
+    <div aria-modal="true" class="relative z-50 lg:hidden" role="dialog" x-show="sidebarOpen">
+      <!-- Off-canvas menu backdrop, show/hide based on off-canvas menu state. -->
+      <div
+        @click="sidebarOpen = false"
+        aria-hidden="true"
+        class="fixed inset-0 bg-gray-900/80"
+        x-show="sidebarOpen"
+        x-transition:enter="transition-opacity ease-linear duration-300"
+        x-transition:enter-end="opacity-100"
+        x-transition:enter-start="opacity-0"
+        x-transition:leave="transition-opacity ease-linear duration-300"
+        x-transition:leave-end="opacity-0"
+        x-transition:leave-start="opacity-100"
+      ></div>
+      <div
+        class="fixed inset-0 flex"
+        x-show="sidebarOpen"
+        x-transition:enter="transition ease-in-out duration-300 transform"
+        x-transition:enter-end="translate-x-0"
+        x-transition:enter-start="-translate-x-full"
+        x-transition:leave="transition ease-in-out duration-300 transform"
+        x-transition:leave-end="-translate-x-full"
+        x-transition:leave-start="translate-x-0"
+      >
+        <div class="relative mr-16 flex w-full max-w-xs flex-1">
+          <!-- Close button -->
+          <div class="absolute left-full top-0 flex w-16 justify-center pt-5">
+            <button @click="sidebarOpen = false" class="-m-2.5 p-2.5" type="button">
+              <span class="sr-only">Close sidebar</span>
+              <svg
+                aria-hidden="true"
+                class="h-6 w-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                viewBox="0 0 24 24"
+              >
+                <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
+          <!-- Sidebar content -->
+          <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-2">
+            <div class="flex h-16 shrink-0 items-center">
+              <img
+                alt="Your Company"
+                class="h-8 w-auto"
+                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+              />
+            </div>
+            <nav class="flex flex-1 flex-col">
+              <ul class="flex flex-1 flex-col gap-y-7" role="list">
+                <!-- Navigation links -->
+                <li>
+                  <ul class="-mx-2 space-y-1" role="list">
+                    <li>
+                      <a
+                        class="group flex gap-x-3 rounded-md bg-gray-50 p-2 text-sm font-semibold leading-6 text-slate-600"
+                        href="#"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="h-6 w-6 shrink-0 text-slate-600"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                        Dashboard
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        class="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-slate-600"
+                        href="#"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-slate-600"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                        Users
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Static sidebar for desktop -->
+    <div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+      <div
+        class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6"
+      >
+        <div class="flex h-16 shrink-0 items-center">
+          <img
+            alt="Your Company"
+            class="h-8 w-auto"
+            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+          />
+        </div>
+        <nav class="flex flex-1 flex-col">
+          <ul class="flex flex-1 flex-col gap-y-7" role="list">
+            <!-- Navigation links -->
+            <li>
+              <ul class="-mx-2 space-y-1" role="list">
+                <li>
+                  <a
+                    class="group flex gap-x-3 rounded-md bg-gray-50 p-2 text-sm font-semibold leading-6 text-slate-600"
+                    href="#"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="h-6 w-6 shrink-0 text-slate-600"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                    Dashboard
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-slate-600"
+                    href="#"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-slate-600"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                    Users
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <!-- Profile section -->
+            <li class="-mx-6 mt-auto">
+              <a
+                class="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50"
+                href="#"
+              >
+                <img
+                  alt="Your profile"
+                  class="h-8 w-8 rounded-full bg-gray-50"
+                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                />
+                <span class="sr-only">Your profile</span>
+                <span aria-hidden="true">Tom Cook</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <!-- Mobile header -->
+    <div
+      class="sticky top-0 z-40 flex items-center gap-x-6 bg-white px-4 py-4 shadow-sm sm:px-6 lg:hidden"
+    >
+      <button
+        @click="sidebarOpen = true"
+        class="-m-2.5 p-2.5 text-gray-700 lg:hidden"
+        type="button"
+      >
+        <span class="sr-only">Open sidebar</span>
+        <svg
+          aria-hidden="true"
+          class="h-6 w-6"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+      <div class="flex-1 text-sm font-semibold leading-6 text-gray-900">Dashboard</div>
+      <a href="#">
+        <span class="sr-only">Your profile</span>
+        <img
+          alt=""
+          class="h-8 w-8 rounded-full bg-gray-50"
+          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+        />
+      </a>
+    </div>
+    <!-- Main content -->
+    <main class="py-10 lg:pl-72">
+      <div class="px-4">
+        <!-- Your content goes here -->
+        <div class="relative">
+          <div aria-hidden="true" class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300"></div>
+          </div>
+          <div class="relative flex justify-center">
+            <span class="bg-white px-3 text-base font-semibold leading-6 text-gray-900">dash</span>
+          </div>
+        </div>
+        <!-- stats -->
+        <div>
+          <h3 class="text-base font-semibold leading-6 text-gray-900">Last 30 days</h3>
+          <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+              <dt class="truncate text-sm font-medium text-gray-500">Total Subscribers</dt>
+              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">71,897</dd>
+            </div>
+            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+              <dt class="truncate text-sm font-medium text-gray-500">Avg. Open Rate</dt>
+              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">58.16%</dd>
+            </div>
+            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+              <dt class="truncate text-sm font-medium text-gray-500">Avg. Click Rate</dt>
+              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">24.57%</dd>
+            </div>
+          </dl>
+        </div>
+        <!-- /stats-->
+        <!-- /card -->
+        <div class="relative">
+          <div aria-hidden="true" class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300"></div>
+          </div>
+          <div class="relative flex justify-center">
+            <span class="bg-white px-3 text-base font-semibold leading-6 text-gray-900">list</span>
+          </div>
+        </div>
+        <!-- card -->
+        <div class="border-b border-gray-200 bg-white py-5">
+          <!-- users list -->
+          <div>
+            <div class="px-4 py-3 sm:flex sm:items-center sm:px-6">
+              <div class="sm:flex-auto">
+                <h1 class="text-base font-semibold leading-6 text-gray-900">Users</h1>
+                <p class="mt-2 text-sm text-gray-700">
+                  A list of all the users in your account including their name, title, email and
+                  role.
+                </p>
+              </div>
+              <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+                <button
+                  class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  type="button"
+                >
+                  Add user
+                </button>
+              </div>
+            </div>
+            <div class="mt-8 flow-root px-4 py-3 sm:px-6">
+              <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                  <table class="min-w-full divide-y divide-gray-300">
+                    <thead>
+                      <tr>
+                        <th
+                          class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
+                          scope="col"
+                        >
+                          Name
+                        </th>
+                        <th
+                          class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                          scope="col"
+                        >
+                          Title
+                        </th>
+                        <th
+                          class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                          scope="col"
+                        >
+                          Email
+                        </th>
+                        <th
+                          class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                          scope="col"
+                        >
+                          Role
+                        </th>
+                        <th class="relative py-3.5 pl-3 pr-4 sm:pr-0" scope="col">
+                          <span class="sr-only">Edit</span>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                      <tr>
+                        <td
+                          class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0"
+                        >
+                          Lindsay Walton
+                        </td>
+                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          Front-end Developer
+                        </td>
+                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          lindsay.walton@example.com
+                        </td>
+                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">Member</td>
+                        <td
+                          class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0"
+                        >
+                          <a class="text-indigo-600 hover:text-indigo-900" href="#">
+                            Edit
+                            <span class="sr-only">, Lindsay Walton</span>
+                          </a>
+                        </td>
+                      </tr>
+                      <!-- More people... -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="px-4 py-3 sm:px-6">
+              <nav
+                aria-label="Pagination"
+                class="flex items-center justify-between border-t border-gray-200 bg-white py-3"
+              >
+                <div class="hidden sm:block">
+                  <p class="text-sm text-gray-700">
+                    Showing
+                    <span class="font-medium">1</span>
+                    to
+                    <span class="font-medium">10</span>
+                    of
+                    <span class="font-medium">20</span>
+                    results
+                  </p>
+                </div>
+                <div class="flex flex-1 justify-between sm:justify-end">
+                  <a
+                    class="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0"
+                    href="#"
+                  >
+                    Previous
+                  </a>
+                  <a
+                    class="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0"
+                    href="#"
+                  >
+                    Next
+                  </a>
+                </div>
+              </nav>
+            </div>
+          </div>
+          <!-- /users list -->
+        </div>
+        <!-- /card -->
+        <div class="relative">
+          <div aria-hidden="true" class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300"></div>
+          </div>
+          <div class="relative flex justify-center">
+            <span class="bg-white px-3 text-base font-semibold leading-6 text-gray-900">
+              detail
+            </span>
+          </div>
+        </div>
+        <!-- user detail -->
+        <div class="overflow-hidden bg-white shadow sm:rounded-lg">
+          <div class="px-4 py-6 sm:px-6">
+            <h3 class="text-base font-semibold leading-7 text-gray-900">Applicant Information</h3>
+            <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
+              Personal details and application.
+            </p>
+          </div>
+          <div class="border-t border-gray-100">
+            <dl class="divide-y divide-gray-100">
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-900">Full name</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  Margot Foster
+                </dd>
+              </div>
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-900">Application for</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  Backend Developer
+                </dd>
+              </div>
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-900">Email address</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  margotfoster@example.com
+                </dd>
+              </div>
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-900">Salary expectation</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">$120,000</dd>
+              </div>
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-900">About</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum
+                  culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla
+                  mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad
+                  adipisicing reprehenderit deserunt qui eu.
+                </dd>
+              </div>
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium leading-6 text-gray-900">Attachments</dt>
+                <dd class="mt-2 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                  <ul
+                    class="divide-y divide-gray-100 rounded-md border border-gray-200"
+                    role="list"
+                  >
+                    <li class="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
+                      <div class="flex w-0 flex-1 items-center">
+                        <svg
+                          aria-hidden="true"
+                          class="h-5 w-5 flex-shrink-0 text-gray-400"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            clip-rule="evenodd"
+                            d="M15.621 4.379a3 3 0 00-4.242 0l-7 7a3 3 0 004.241 4.243h.001l.497-.5a.75.75 0 011.064 1.057l-.498.501-.002.002a4.5 4.5 0 01-6.364-6.364l7-7a4.5 4.5 0 016.368 6.36l-3.455 3.553A2.625 2.625 0 119.52 9.52l3.45-3.451a.75.75 0 111.061 1.06l-3.45 3.451a1.125 1.125 0 001.587 1.595l3.454-3.553a3 3 0 000-4.242z"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                        <div class="ml-4 flex min-w-0 flex-1 gap-2">
+                          <span class="truncate font-medium">resume_back_end_developer.pdf</span>
+                          <span class="flex-shrink-0 text-gray-400">2.4mb</span>
+                        </div>
+                      </div>
+                      <div class="ml-4 flex-shrink-0">
+                        <a class="font-medium text-indigo-600 hover:text-indigo-500" href="#">
+                          Download
+                        </a>
+                      </div>
+                    </li>
+                    <li class="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
+                      <div class="flex w-0 flex-1 items-center">
+                        <svg
+                          aria-hidden="true"
+                          class="h-5 w-5 flex-shrink-0 text-gray-400"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            clip-rule="evenodd"
+                            d="M15.621 4.379a3 3 0 00-4.242 0l-7 7a3 3 0 004.241 4.243h.001l.497-.5a.75.75 0 011.064 1.057l-.498.501-.002.002a4.5 4.5 0 01-6.364-6.364l7-7a4.5 4.5 0 016.368 6.36l-3.455 3.553A2.625 2.625 0 119.52 9.52l3.45-3.451a.75.75 0 111.061 1.06l-3.45 3.451a1.125 1.125 0 001.587 1.595l3.454-3.553a3 3 0 000-4.242z"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                        <div class="ml-4 flex min-w-0 flex-1 gap-2">
+                          <span class="truncate font-medium">
+                            coverletter_back_end_developer.pdf
+                          </span>
+                          <span class="flex-shrink-0 text-gray-400">4.5mb</span>
+                        </div>
+                      </div>
+                      <div class="ml-4 flex-shrink-0">
+                        <a class="font-medium text-indigo-600 hover:text-indigo-500" href="#">
+                          Download
+                        </a>
+                      </div>
+                    </li>
+                  </ul>
+                </dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+        <!-- /user detail -->
+        <!-- edit form -->
+        <div class="overflow-hidden bg-white shadow sm:rounded-lg">
+          <!--
+  This example requires some changes to your config:
+  
+  ```
+  // tailwind.config.js
+  module.exports = {
+    // ...
+    plugins: [
+      // ...
+      require('@tailwindcss/forms'),
+    ],
+  }
+  ```
+-->
+          <form>
+            <div class="space-y-12 sm:space-y-16">
+              <div class="px-4 py-6 sm:px-6">
+                <h2 class="text-base font-semibold leading-7 text-gray-900">Profile</h2>
+                <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-600">
+                  This information will be displayed publicly so be careful what you share.
+                </p>
+                <div
+                  class="mt-10 space-y-8 border-b border-gray-900/10 pb-12 sm:space-y-0 sm:divide-y sm:divide-gray-900/10 sm:border-t sm:pb-0"
+                >
+                  <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
+                    <label
+                      class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
+                      for="username"
+                    >
+                      Username
+                    </label>
+                    <div class="mt-2 sm:col-span-2 sm:mt-0">
+                      <div
+                        class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
+                      >
+                        <span class="flex select-none items-center pl-3 text-gray-500 sm:text-sm">
+                          workcation.com/
+                        </span>
+                        <input
+                          autocomplete="username"
+                          class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                          id="username"
+                          name="username"
+                          placeholder="janesmith"
+                          type="text"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
+                    <label
+                      class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
+                      for="about"
+                    >
+                      About
+                    </label>
+                    <div class="mt-2 sm:col-span-2 sm:mt-0">
+                      <textarea
+                        class="block w-full max-w-2xl rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        id="about"
+                        name="about"
+                        rows="3"
+                      ></textarea>
+                      <p class="mt-3 text-sm leading-6 text-gray-600">
+                        Write a few sentences about yourself.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="sm:grid sm:grid-cols-3 sm:items-center sm:gap-4 sm:py-6">
+                    <label class="block text-sm font-medium leading-6 text-gray-900" for="photo">
+                      Photo
+                    </label>
+                    <div class="mt-2 sm:col-span-2 sm:mt-0">
+                      <div class="flex items-center gap-x-3">
+                        <svg
+                          aria-hidden="true"
+                          class="h-12 w-12 text-gray-300"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            clip-rule="evenodd"
+                            d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                        <button
+                          class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                          type="button"
+                        >
+                          Change
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
+                    <label
+                      class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
+                      for="cover-photo"
+                    >
+                      Cover photo
+                    </label>
+                    <div class="mt-2 sm:col-span-2 sm:mt-0">
+                      <div
+                        class="flex max-w-2xl justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10"
+                      >
+                        <div class="text-center">
+                          <svg
+                            aria-hidden="true"
+                            class="mx-auto h-12 w-12 text-gray-300"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              clip-rule="evenodd"
+                              d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                          <div class="mt-4 flex text-sm leading-6 text-gray-600">
+                            <label
+                              class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+                              for="file-upload"
+                            >
+                              <span>Upload a file</span>
+                              <input
+                                class="sr-only"
+                                id="file-upload"
+                                name="file-upload"
+                                type="file"
+                              />
+                            </label>
+                            <p class="pl-1">or drag and drop</p>
+                          </div>
+                          <p class="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="px-4 py-6 sm:px-6">
+                <h2 class="text-base font-semibold leading-7 text-gray-900">
+                  Personal Information
+                </h2>
+                <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-600">
+                  Use a permanent address where you can receive mail.
+                </p>
+                <div
+                  class="mt-10 space-y-8 border-b border-gray-900/10 pb-12 sm:space-y-0 sm:divide-y sm:divide-gray-900/10 sm:border-t sm:pb-0"
+                >
+                  <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
+                    <label
+                      class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
+                      for="first-name"
+                    >
+                      First name
+                    </label>
+                    <div class="mt-2 sm:col-span-2 sm:mt-0">
+                      <input
+                        autocomplete="given-name"
+                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                        id="first-name"
+                        name="first-name"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                  <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
+                    <label
+                      class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
+                      for="last-name"
+                    >
+                      Last name
+                    </label>
+                    <div class="mt-2 sm:col-span-2 sm:mt-0">
+                      <input
+                        autocomplete="family-name"
+                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                        id="last-name"
+                        name="last-name"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                  <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
+                    <label
+                      class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
+                      for="email"
+                    >
+                      Email address
+                    </label>
+                    <div class="mt-2 sm:col-span-2 sm:mt-0">
+                      <input
+                        autocomplete="email"
+                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-md sm:text-sm sm:leading-6"
+                        id="email"
+                        name="email"
+                        type="email"
+                      />
+                    </div>
+                  </div>
+                  <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
+                    <label
+                      class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
+                      for="country"
+                    >
+                      Country
+                    </label>
+                    <div class="mt-2 sm:col-span-2 sm:mt-0">
+                      <select
+                        autocomplete="country-name"
+                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                        id="country"
+                        name="country"
+                      >
+                        <option>United States</option>
+                        <option>Canada</option>
+                        <option>Mexico</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
+                    <label
+                      class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
+                      for="street-address"
+                    >
+                      Street address
+                    </label>
+                    <div class="mt-2 sm:col-span-2 sm:mt-0">
+                      <input
+                        autocomplete="street-address"
+                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xl sm:text-sm sm:leading-6"
+                        id="street-address"
+                        name="street-address"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                  <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
+                    <label
+                      class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
+                      for="city"
+                    >
+                      City
+                    </label>
+                    <div class="mt-2 sm:col-span-2 sm:mt-0">
+                      <input
+                        autocomplete="address-level2"
+                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                        id="city"
+                        name="city"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                  <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
+                    <label
+                      class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
+                      for="region"
+                    >
+                      State / Province
+                    </label>
+                    <div class="mt-2 sm:col-span-2 sm:mt-0">
+                      <input
+                        autocomplete="address-level1"
+                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                        id="region"
+                        name="region"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                  <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
+                    <label
+                      class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
+                      for="postal-code"
+                    >
+                      ZIP / Postal code
+                    </label>
+                    <div class="mt-2 sm:col-span-2 sm:mt-0">
+                      <input
+                        autocomplete="postal-code"
+                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                        id="postal-code"
+                        name="postal-code"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="px-4 py-6 sm:px-6">
+                <h2 class="text-base font-semibold leading-7 text-gray-900">Notifications</h2>
+                <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-600">
+                  We'll always let you know about important changes, but you pick what else you want
+                  to hear about.
+                </p>
+                <div
+                  class="mt-10 space-y-10 border-b border-gray-900/10 pb-12 sm:space-y-0 sm:divide-y sm:divide-gray-900/10 sm:border-t sm:pb-0"
+                >
+                  <fieldset>
+                    <legend class="sr-only">By Email</legend>
+                    <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:py-6">
+                      <div aria-hidden="true" class="text-sm font-semibold leading-6 text-gray-900">
+                        By Email
+                      </div>
+                      <div class="mt-4 sm:col-span-2 sm:mt-0">
+                        <div class="max-w-lg space-y-6">
+                          <div class="relative flex gap-x-3">
+                            <div class="flex h-6 items-center">
+                              <input
+                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                id="comments"
+                                name="comments"
+                                type="checkbox"
+                              />
+                            </div>
+                            <div class="text-sm leading-6">
+                              <label class="font-medium text-gray-900" for="comments">
+                                Comments
+                              </label>
+                              <p class="mt-1 text-gray-600">
+                                Get notified when someones posts a comment on a posting.
+                              </p>
+                            </div>
+                          </div>
+                          <div class="relative flex gap-x-3">
+                            <div class="flex h-6 items-center">
+                              <input
+                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                id="candidates"
+                                name="candidates"
+                                type="checkbox"
+                              />
+                            </div>
+                            <div class="text-sm leading-6">
+                              <label class="font-medium text-gray-900" for="candidates">
+                                Candidates
+                              </label>
+                              <p class="mt-1 text-gray-600">
+                                Get notified when a candidate applies for a job.
+                              </p>
+                            </div>
+                          </div>
+                          <div class="relative flex gap-x-3">
+                            <div class="flex h-6 items-center">
+                              <input
+                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                id="offers"
+                                name="offers"
+                                type="checkbox"
+                              />
+                            </div>
+                            <div class="text-sm leading-6">
+                              <label class="font-medium text-gray-900" for="offers">Offers</label>
+                              <p class="mt-1 text-gray-600">
+                                Get notified when a candidate accepts or rejects an offer.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </fieldset>
+                  <fieldset>
+                    <legend class="sr-only">Push Notifications</legend>
+                    <div class="sm:grid sm:grid-cols-3 sm:items-baseline sm:gap-4 sm:py-6">
+                      <div aria-hidden="true" class="text-sm font-semibold leading-6 text-gray-900">
+                        Push Notifications
+                      </div>
+                      <div class="mt-1 sm:col-span-2 sm:mt-0">
+                        <div class="max-w-lg">
+                          <p class="text-sm leading-6 text-gray-600">
+                            These are delivered via SMS to your mobile phone.
+                          </p>
+                          <div class="mt-6 space-y-6">
+                            <div class="flex items-center gap-x-3">
+                              <input
+                                class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                id="push-everything"
+                                name="push-notifications"
+                                type="radio"
+                              />
+                              <label
+                                class="block text-sm font-medium leading-6 text-gray-900"
+                                for="push-everything"
+                              >
+                                Everything
+                              </label>
+                            </div>
+                            <div class="flex items-center gap-x-3">
+                              <input
+                                class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                id="push-email"
+                                name="push-notifications"
+                                type="radio"
+                              />
+                              <label
+                                class="block text-sm font-medium leading-6 text-gray-900"
+                                for="push-email"
+                              >
+                                Same as email
+                              </label>
+                            </div>
+                            <div class="flex items-center gap-x-3">
+                              <input
+                                class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                id="push-nothing"
+                                name="push-notifications"
+                                type="radio"
+                              />
+                              <label
+                                class="block text-sm font-medium leading-6 text-gray-900"
+                                for="push-nothing"
+                              >
+                                No push notifications
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+            </div>
+            <div class="px-4 py-6 sm:px-6">
+              <div class="mt-6 flex items-center justify-end gap-x-6">
+                <button class="text-sm font-semibold leading-6 text-gray-900" type="button">
+                  Cancel
+                </button>
+                <button
+                  class="inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  type="submit"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <!-- /edit form -->
+      </div>
+    </main>
+  </body>
+</html>

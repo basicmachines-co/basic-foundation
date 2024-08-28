@@ -1,28 +1,23 @@
-{% extends "layouts/base.html" %}
-{% set title = "Dashboard" %}
-
+{% extends "layouts/base.html" %} {% set title = "Dashboard" %}
 {% block layout_content %}
+  {% include "partials/navbar.html" %}
 
-    {% include "partials/navbar.html" %}
-
-    <main>
-        <!-- Full-width on mobile, constrained with padded content above -->
-        <div class="mx-auto max-w-7xl p-8 sm:px-6 lg:px-8">
-            <section id="page_content">
-                {% set flash_message = get_flashed_message() %}
-                <!-- display any flash notifications to the user -->
-                {% if flash_message %}
-                    <section id="messages">
-                        <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
-                            <span>{{ flash_message }}</span>
-                        </div>
-                    </section>
-                {% endif %}
-
-                {% block content %}
-                {% endblock content %}
-            </section>
-        </div>
-    </main>
-
+  <main>
+    <!-- Full-width on mobile, constrained with padded content above -->
+    <div class="mx-auto max-w-7xl p-8 sm:px-6 lg:px-8">
+      <section id="page_content">
+        {% set flash_message = get_flashed_message() %}
+        <!-- display any flash notifications to the user -->
+        {% if flash_message %}
+          <section id="messages">
+            <div class="mb-4 rounded border border-green-400 bg-green-100 p-4 text-green-700">
+              <span>{{ flash_message }}</span>
+            </div>
+          </section>
+        {% endif %}
+        {% block content %}
+        {% endblock content %}
+      </section>
+    </div>
+  </main>
 {% endblock layout_content %}

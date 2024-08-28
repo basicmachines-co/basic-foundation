@@ -22,11 +22,16 @@ lint:
 lint-fix:
 	poetry run ruff check --fix --unsafe-fixes .
 
-format:
+format-python:
 	poetry run ruff format .
 
+format-prettier:
+	npx prettier templates --write
+
+format: format-python
+
 tailwind: install
-	npx tailwindcss -i ./static/src/input.css -o ./static/dist/css/output.css
+	npm run build
 
 # Database migrations
 

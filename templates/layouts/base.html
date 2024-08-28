@@ -1,23 +1,19 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="{{ html_class }}">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Basic Machines</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Responsive Dashboard Layout</title>
-    <!-- local tailwind -->{#    <link href="/static/dist/css/output.css" rel="stylesheet"/>#}
-    <!-- tailwind cdn -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <link href="/static/dist/css/output.css" rel="stylesheet" />
     <!-- albine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <!-- tailwind inter font -->
-    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     <!-- htmx -->
     <script src="https://unpkg.com/htmx.org@1.7.0"></script>
-</head>
-<body class="{{ body_class }}">
-{% block layout_content %}
-
-{% endblock layout_content %}
-</body>
+  </head>
+  <body class="{{ body_class }}">
+    {% block layout_content %}{% endblock layout_content %}
+  </body>
 </html>

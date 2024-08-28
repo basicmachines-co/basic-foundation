@@ -1,115 +1,136 @@
 {% extends "layouts/dashboard.html" %}
-
 {% block content %}
+  <section id="user_edit">
+    <!-- USER EDIT FORM -->
+    <form class="space-y-6" hx-post="/users/{{ user.id }}" hx-swap="outerHTML" method="post">
+      <!-- CSRF Token -->
+      {{ form.csrf_token() }}
+      {% if error %}
+        <div class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-800" id="errors" role="alert">
+          {{ error }}
+        </div>
+      {% endif %}
 
-    <section id="user_edit">
-        <!-- USER EDIT FORM -->
-        <form class="space-y-6" hx-post="/users/{{ user.id }}" hx-swap="outerHTML" method="post">
-            <!-- CSRF Token -->{{ form.csrf_token() }}
-
-
-            {% if error %}
-                <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" id="errors" role="alert">
-                    {{ error }}
-                </div>
-            {% endif %}
-
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="sm:flex sm:items-center">
-                    <div class="sm:flex-auto">
-                        <h1 class="text-xl font-semibold leading-6 text-gray-900">{{ user.full_name }}</h1>
-                    </div>
-                    <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                        <button type="submit"
-                                class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save
-                        </button>
-                        <button hx-delete="/users/{{ user.id }}"
-                                hx-headers='{"X-CSRFToken": "{{ form.csrf_token.current_token }}"}'
-                                type="button"
-                                hx-confirm="Are you sure you wish to delete this user?"
-                                class="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">Delete
-                        </button>
-                        <a href="/users/{{ user.id }}">
-                            <button type="button"
-                                    class="rounded-md bg-gray-400 px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Cancel
-                            </button>
-                        </a>
-                    </div>
-                </div>
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="sm:flex sm:items-center">
+          <div class="sm:flex-auto">
+            <h1 class="text-xl font-semibold leading-6 text-gray-900">{{ user.full_name }}</h1>
+          </div>
+          <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+            <button
+              type="submit"
+              class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Save
+            </button>
+            <button
+              hx-delete="/users/{{ user.id }}"
+              hx-headers='{"X-CSRFToken": "{{ form.csrf_token.current_token }}"}'
+              type="button"
+              hx-confirm="Are you sure you wish to delete this user?"
+              class="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+            >
+              Delete
+            </button>
+            <a href="/users/{{ user.id }}">
+              <button
+                type="button"
+                class="rounded-md bg-gray-400 px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Cancel
+              </button>
+            </a>
+          </div>
+        </div>
+      </div>
+      <!-- user detail -->
+      <div class="mx-auto mt-8 max-w-7xl border border-gray-200 px-4 pb-12 sm:px-6 lg:px-8">
+        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div class="sm:col-span-4">
+            <label for="full_name" class="block text-sm font-medium leading-6 text-gray-900">
+              Full name
+            </label>
+            <div class="mt-2">
+              <input
+                type="text"
+                name="full_name"
+                id="full_name"
+                value="{{ form.full_name.data|default(user.full_name, true) }}"
+                autocomplete="full-name"
+                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+              {% if form.full_name.errors %}
+                <p class="mt-2 text-sm text-red-600">{{ form.full_name.errors[0] }}</p>
+              {% endif %}
             </div>
-            <!-- user detail -->
-            <div class="mt-8 mx-auto max-w-7xl px-4 sm:px-6 border border-gray-200 lg:px-8 pb-12">
-                <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                    <div class="sm:col-span-4">
-                        <label for="full_name"
-                                class="block text-sm font-medium leading-6 text-gray-900">Full name</label>
-                        <div class="mt-2">
-                            <input type="text"
-                                    name="full_name"
-                                    id="full_name"
-                                    value="{{ form.full_name.data|default(user.full_name, true) }}"
-                                    autocomplete="full-name"
-                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                            {% if form.full_name.errors %}
-                                <p class="mt-2 text-sm text-red-600">{{ form.full_name.errors[0] }}</p>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="sm:col-span-4">
-                        <label for="email"
-                                class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
-                        <div class="mt-2">
-                            <input id="email"
-                                    name="email"
-                                    type="email"
-                                    value="{{ form.email.data|default(user.email, true) }}"
-                                    autocomplete="email"
-                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                            {% if form.email.errors %}
-                                <p class="mt-2 text-sm text-red-600">{{ form.email.errors[0] }}</p>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="mt-4 sm:col-span-full">
-                        <fieldset>
-                            <legend class="text-sm font-semibold leading-6 text-gray-900">Info</legend>
-                            <div class="mt-6 space-y-6">
-                                <div class="relative flex gap-x-3">
-                                    <div class="flex h-6 items-center">
-                                        <input id="is_active"
-                                                name="is_active"
-                                                type="checkbox"
-                                                {% if form.is_active.data|default(user.is_active) %}
-                                                    checked
-                                                {% endif %}
-                                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
-                                    </div>
-                                    <div class="text-sm leading-6">
-                                        <label for="is_active" class="font-medium text-gray-900">Active</label>
-                                        <p class="text-gray-500">The user is active.</p>
-                                    </div>
-                                </div>
-                                <div class="relative flex gap-x-3">
-                                    <div class="flex h-6 items-center">
-                                        <input id="is_superuser"
-                                                name="is_superuser"
-                                                type="checkbox"
-                                                {% if form.is_superuser.data|default(user.is_superuser) %}
-                                                    checked
-                                                {% endif %}
-                                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
-                                    </div>
-                                    <div class="text-sm leading-6">
-                                        <label for="is_superuser" class="font-medium text-gray-900">Admin</label>
-                                        <p class="text-gray-500">The user has admin privileges.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-                </div>
+          </div>
+          <div class="sm:col-span-4">
+            <label for="email" class="block text-sm font-medium leading-6 text-gray-900">
+              Email address
+            </label>
+            <div class="mt-2">
+              <input
+                id="email"
+                name="email"
+                type="email"
+                value="{{ form.email.data|default(user.email, true) }}"
+                autocomplete="email"
+                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+              {% if form.email.errors %}
+                <p class="mt-2 text-sm text-red-600">{{ form.email.errors[0] }}</p>
+              {% endif %}
             </div>
-        </form>
-    </section>
-
+          </div>
+          <div class="mt-4 sm:col-span-full">
+            <fieldset>
+              <legend class="text-sm font-semibold leading-6 text-gray-900">Info</legend>
+              <div class="mt-6 space-y-6">
+                <div class="relative flex gap-x-3">
+                  <div class="flex h-6 items-center">
+                    <input
+                      id="is_active"
+                      name="is_active"
+                      type="checkbox"
+                      {%
+                        if
+                        form.is_active.data|default(user.is_active)
+                      %}
+                        checked
+                      {% endif %}
+                      class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                    />
+                  </div>
+                  <div class="text-sm leading-6">
+                    <label for="is_active" class="font-medium text-gray-900">Active</label>
+                    <p class="text-gray-500">The user is active.</p>
+                  </div>
+                </div>
+                <div class="relative flex gap-x-3">
+                  <div class="flex h-6 items-center">
+                    <input
+                      id="is_superuser"
+                      name="is_superuser"
+                      type="checkbox"
+                      {%
+                        if
+                        form.is_superuser.data|default(user.is_superuser)
+                      %}
+                        checked
+                      {% endif %}
+                      class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                    />
+                  </div>
+                  <div class="text-sm leading-6">
+                    <label for="is_superuser" class="font-medium text-gray-900">Admin</label>
+                    <p class="text-gray-500">The user has admin privileges.</p>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </form>
+  </section>
 {% endblock content %}

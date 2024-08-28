@@ -1,24 +1,24 @@
-{% extends "layouts/dashboard.html" %}
-{% block title %}Index{% endblock %}
-
+{% extends "layouts/dashboard.html" %} {% block title %}Index{% endblock %}
 {% block content %}
-
-    <div>
-        <h3 class="text-base font-semibold leading-6 text-gray-900">Users</h3>
-        <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-                <dt class="truncate text-sm font-medium text-gray-500">Total Users</dt>
-                <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{ users_count }}</dd>
-            </div>
-            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-                <dt class="truncate text-sm font-medium text-gray-500">Active Users</dt>
-                <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{ active_users_count }}</dd>
-            </div>
-            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-                <dt class="truncate text-sm font-medium text-gray-500">Admin Users</dt>
-                <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{ admin_users_count }}</dd>
-            </div>
-        </dl>
-    </div>
-
+  <div>
+    <h3 class="text-base font-semibold leading-6 text-gray-900">Users</h3>
+    <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+      <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+        <dt class="truncate text-sm font-medium text-gray-500">Total Users</dt>
+        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{ users_count }}</dd>
+      </div>
+      <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+        <dt class="truncate text-sm font-medium text-gray-500">Active Users</dt>
+        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+          {{ active_users_count }}
+        </dd>
+      </div>
+      <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+        <dt class="truncate text-sm font-medium text-gray-500">Admin Users</dt>
+        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+          {{ admin_users_count }}
+        </dd>
+      </div>
+    </dl>
+  </div>
 {% endblock content %}
