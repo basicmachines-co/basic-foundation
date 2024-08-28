@@ -11,13 +11,19 @@
               <li>
                 <a href="/users">
                   <div class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg"
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke-width="1.5"
                       stroke="currentColor"
-                      class="size-4">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                      class="size-4"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M15.75 19.5 8.25 12l7.5-7.5"
+                      />
                     </svg>
                     <p class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Users</p>
                   </div>
@@ -26,7 +32,8 @@
             </ol>
           </nav>
         </div>
-        <!-- CSRF Token -->{{ form.csrf_token() }}
+        <!-- CSRF Token -->
+        {{ form.csrf_token() }}
         {% if error %}
           <div class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-800" id="errors" role="alert">
             {{ error }}
@@ -36,32 +43,46 @@
         <div class="space-y-12 sm:space-y-16">
           <div class="px-4 py-6 sm:px-6">
             <h2 class="text-base font-semibold leading-7 text-gray-900">{{ user.full_name }}</h2>
-            <div class="mt-4 space-y-8 border-b border-gray-900/10 pb-12 sm:space-y-0 sm:divide-y sm:divide-gray-900/10 sm:border-t sm:pb-0">
+            <div
+              class="mt-4 space-y-8 border-b border-gray-900/10 pb-12 sm:space-y-0 sm:divide-y sm:divide-gray-900/10 sm:border-t sm:pb-0"
+            >
               <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
-                <label class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
-                  for="first-name">Full Name</label>
+                <label
+                  class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
+                  for="first-name"
+                >
+                  Full Name
+                </label>
                 <div class="mt-2 sm:col-span-2 sm:mt-0">
-                  <input autocomplete="given-name"
+                  <input
+                    autocomplete="given-name"
                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                     id="full_name"
                     name="full_name"
                     value="{{ form.full_name.data|default(user.full_name, true) }}"
-                    type="text">
+                    type="text"
+                  />
                   {% if form.full_name.errors %}
                     <p class="mt-2 text-sm text-red-600">{{ form.full_name.errors[0] }}</p>
                   {% endif %}
                 </div>
               </div>
               <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
-                <label class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
-                  for="email">Email address</label>
+                <label
+                  class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
+                  for="email"
+                >
+                  Email address
+                </label>
                 <div class="mt-2 sm:col-span-2 sm:mt-0">
-                  <input autocomplete="email"
+                  <input
+                    autocomplete="email"
                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-md sm:text-sm sm:leading-6"
                     id="email"
                     name="email"
                     type="email"
-                    value="{{ form.email.data|default(user.email, true) }}">
+                    value="{{ form.email.data|default(user.email, true) }}"
+                  />
                   {% if form.email.errors %}
                     <p class="mt-2 text-sm text-red-600">{{ form.email.errors[0] }}</p>
                   {% endif %}
@@ -71,17 +92,20 @@
             <fieldset>
               <legend class="sr-only">Status</legend>
               <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:py-6">
-                <div aria-hidden="true" class="text-sm font-semibold leading-6 text-gray-900">Status</div>
+                <div aria-hidden="true" class="text-sm font-semibold leading-6 text-gray-900">
+                  Status
+                </div>
                 <div class="mt-4 sm:col-span-2 sm:mt-0">
                   <div class="max-w-lg space-y-6">
                     <div class="relative flex gap-x-3">
                       <div class="flex h-6 items-center">
-                        <input class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                        <input
+                          class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                           id="is_active"
                           name="is_active"
                           type="checkbox"
-                          {% if form.is_active.data|default(user.is_active) %} checked {% endif %}
-                        >
+                          {% if form.is_active.data|default(user.is_active) %}checked{% endif %}
+                        />
                       </div>
                       <div class="text-sm leading-6">
                         <label class="font-medium text-gray-900" for="comments">Active</label>
@@ -90,13 +114,15 @@
                     </div>
                     <div class="relative flex gap-x-3">
                       <div class="flex h-6 items-center">
-                        <input class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                        <input
+                          class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                           id="is_superuser"
                           name="is_superuser"
                           type="checkbox"
                           {% if form.is_superuser.data|default(user.is_superuser) %}
                             checked
-                          {% endif %}>
+                          {% endif %}
+                        />
                       </div>
                       <div class="text-sm leading-6">
                         <label class="font-medium text-gray-900" for="candidates">Admin</label>
@@ -112,10 +138,15 @@
         <div class="px-4 py-6 sm:px-6">
           <div class="mt-6 flex items-center justify-end gap-x-2">
             <a href="/users/{{ user.id }}">
-              <button class="text-sm font-semibold leading-6 text-gray-900" type="button">Cancel</button>
+              <button class="text-sm font-semibold leading-6 text-gray-900" type="button">
+                Cancel
+              </button>
             </a>
-            <button class="inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              type="submit">Save
+            <button
+              class="inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              type="submit"
+            >
+              Save
             </button>
             <button
               hx-delete="/users/{{ user.id }}"
@@ -130,7 +161,6 @@
         </div>
       </div>
     </form>
-    </div>
     <!-- /edit form -->
   </section>
 {% endblock content %}
