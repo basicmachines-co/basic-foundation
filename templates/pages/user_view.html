@@ -2,10 +2,32 @@
 
 {% block content %}
   <section id="user_view">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="sm:flex sm:items-center">
+    <!-- user detail -->
+    <div class="rounded-lg border-b border-gray-200 bg-white py-5">
+      <div class="px-6">
+        <nav class="flex" aria-label="Breadcrumb">
+          <ol role="list" class="flex items-center space-x-4">
+            <li>
+              <a href="/users">
+                <div class="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                  </svg>
+                  <p class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Users</p>
+                </div>
+              </a>
+            </li>
+          </ol>
+        </nav>
+      </div>
+      <div class="px-4 py-3 sm:px-6 sm:flex sm:items-center">
         <div class="sm:flex-auto">
-          <h1 class="text-xl font-semibold leading-6 text-gray-900">{{ user.full_name }}</h1>
+          <h1 class="text-base font-semibold leading-6 text-gray-900">{{ user.full_name }}</h1>
         </div>
         <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           <a hx-get="/users/{{ user.id }}/edit" hx-target="#user_view" hx-swap="outerHTML">
@@ -18,37 +40,59 @@
           </a>
         </div>
       </div>
-    </div>
-    <!-- user detail -->
-    <div class="mx-auto mt-8 max-w-7xl border border-gray-200 px-4 pb-12 sm:px-6 lg:px-8">
-      <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-        <div class="sm:col-span-4">
-          <label for="first-name" class="block text-sm font-medium leading-6 text-gray-900">
-            Full name
-          </label>
-          <p class="mt-2 text-gray-900 sm:text-sm">{{ user.full_name }}</p>
-        </div>
-        <div class="sm:col-span-4">
-          <label for="email" class="block text-sm font-medium leading-6 text-gray-900">
-            Email address
-          </label>
-          <p class="mt-2 text-gray-900 sm:text-sm">{{ user.email }}</p>
-        </div>
-      </div>
-      <div class="mt-10 space-y-10">
-        <fieldset>
-          <legend class="text-sm font-semibold leading-6 text-gray-900">Info</legend>
-          <ul class="mt-6 space-y-6 text-sm leading-6 text-gray-500">
-            <li>
-              is Active:
-              <span class="text-gray-900">{{ user.is_active }}</span>
-            </li>
-            <li>
-              is Admin:
-              <span class="text-gray-900">{{ user.is_superuser }}</span>
-            </li>
-          </ul>
-        </fieldset>
+      <div class="border-t border-gray-100">
+        <dl class="divide-y divide-gray-100">
+          <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-900">Full name</dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ user.full_name }}</dd>
+          </div>
+          <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-900">Email address</dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ user.email }}</dd>
+          </div>
+          <fieldset>
+            <legend class="sr-only">Status</legend>
+            <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:py-6">
+              <div aria-hidden="true"
+                class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 text-sm font-semibold leading-6 text-gray-900">Status
+              </div>
+              <div class="mt-4 sm:col-span-2 sm:mt-0">
+                <div class="max-w-lg space-y-6">
+                  <div class="relative flex gap-x-3">
+                    <div class="flex h-6 items-center">
+                      <input class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                        id="is_active"
+                        name="is_active"
+                        type="checkbox"
+                        {% if user.is_active %}
+                          checked
+                        {% endif %} disabled>
+                    </div>
+                    <div class="text-sm leading-6">
+                      <label class="font-medium text-gray-900" for="comments">Active</label>
+                      <p class="mt-1 text-gray-600">The user is active</p>
+                    </div>
+                  </div>
+                  <div class="relative flex gap-x-3">
+                    <div class="flex h-6 items-center">
+                      <input class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                        id="is_superuser"
+                        name="is_superuser"
+                        type="checkbox"
+                        {% if user.is_superuser %}
+                          checked
+                        {% endif %} disabled>
+                    </div>
+                    <div class="text-sm leading-6">
+                      <label class="font-medium text-gray-900" for="candidates">Admin</label>
+                      <p class="mt-1 text-gray-600">The user has admin privileges</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </dl>
       </div>
     </div>
   </section>

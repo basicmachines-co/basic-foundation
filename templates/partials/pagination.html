@@ -1,31 +1,19 @@
 <!-- pagination -->
-<nav
-  class="flex items-center justify-between border-t border-gray-200 bg-white py-3"
-  aria-label="Paginator"
->
+<nav aria-label="Pagination"
+  class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
   <div class="hidden sm:block">
     <p class="text-sm text-gray-700">
-      Showing
-      <span class="font-medium">{{ page.start }}</span>
-      to
-      <span class="font-medium">{{ page.end }}</span>
-      of
-      <span class="font-medium">{{ page.total }}</span>
-      results
+      Showing <span class="font-medium">{{ page.start }}</span> to <span class="font-medium">{{ page.end }}</span> of
+      <span class="font-medium">{{ page.total }}</span> results
     </p>
   </div>
   <div class="flex flex-1 justify-between sm:justify-end">
     <a
       href="{{ page.previous_page }}"
       class="{{ 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50' if page.has_previous else 'bg-gray-100 text-gray-400 ring-gray-200 cursor-not-allowed' }} relative inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold ring-1 ring-inset"
-    >
-      Previous
-    </a>
-    <a
-      href="{{ page.next_page }}"
-      class="{{ 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50' if page.has_next else 'bg-gray-100 text-gray-400 ring-gray-200 cursor-not-allowed' }} relative ml-3 inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold ring-1 ring-inset"
-    >
-      Next
-    </a>
+    > Previous </a> <a
+    href="{{ page.next_page }}"
+    class="{{ 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50' if page.has_next else 'bg-gray-100 text-gray-400 ring-gray-200 cursor-not-allowed' }} relative ml-3 inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold ring-1 ring-inset"
+  > Next </a>
   </div>
 </nav>
