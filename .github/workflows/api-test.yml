@@ -8,7 +8,6 @@ on:
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
 
     services:
@@ -32,7 +31,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12.1'
+          python-version: "3.12.1"
 
       - name: Bootstrap poetry
         run: |
@@ -52,6 +51,10 @@ jobs:
       - name: Run dbmate migrations
         run: |
           make migrate-up
+
+      - name: Run init data
+        run: |
+          make init-data
 
       - name: Run tests
         run: |

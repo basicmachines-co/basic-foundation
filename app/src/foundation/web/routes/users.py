@@ -20,7 +20,12 @@ router = HTMLRouter(dependencies=[LoginRequired])
 
 # helper methods to return template responses
 
-def user_list_template(request: Request, *, current_user: User, page: Page) -> templates.TemplateResponse:
+def user_list_template(
+        request: Request,
+        *,
+        current_user: User,
+        page: Page
+) -> templates.TemplateResponse:
     return templates.TemplateResponse(
         "pages/user_list.html",
         dict(
@@ -35,12 +40,14 @@ def user_view_template(
         request: Request,
         user: User,
         *,
+        current_user: CurrentUserDep,
         block_name=None
 ) -> templates.TemplateResponse:
     return templates.TemplateResponse(
         "pages/user_view.html",
         dict(
             request=request,
+            current_user=current_user,
             user=user
         ),
         block_name=block_name
@@ -50,6 +57,7 @@ def user_view_template(
 def user_create_template(
         request: Request,
         *,
+        current_user: CurrentUserDep,
         form: UserCreateForm,
         error: str = None,
         block_name=None
@@ -58,6 +66,7 @@ def user_create_template(
         "pages/user_create.html",
         dict(
             request=request,
+            current_user=current_user,
             form=form,
             error=error,
             block_name=block_name,
@@ -67,8 +76,9 @@ def user_create_template(
 
 def user_edit_template(
         request: Request,
-        *,
         user: User,
+        *,
+        current_user: CurrentUserDep,
         form: UserEditForm,
         error: str = None,
         block_name=None
@@ -78,6 +88,7 @@ def user_edit_template(
         dict(
             request=request,
             user=user,
+            current_user=current_user,
             form=form,
             error=error
         ),
@@ -102,15 +113,17 @@ async def users(
 @router.get("/users/create")
 async def user_create(
         request: Request,
+        current_user: CurrentUserDep,
 ):
     form = UserCreateForm(request)
-    return user_create_template(request, form=form)
+    return user_create_template(request, current_user=current_user, form=form)
 
 
 @router.post("/users/create")
 async def user_create_post(
         request: Request,
         user_service: UserServiceDep,
+        current_user: CurrentUserDep,
 ):
     form = await UserCreateForm.from_formdata(request)
     error = None
@@ -122,7 +135,7 @@ async def user_create_post(
             return user_view_template(request, created_user, block_name="content")
         except UserValueError as e:
             error = e.args
-    return user_create_template(request, form=form, error=error, block_name="content")
+    return user_create_template(request, current_user=current_user, form=form, error=error, block_name="content")
 
 
 @router.get("/users/{user_id}")
@@ -130,9 +143,10 @@ async def user(
         request: Request,
         user_id: UUID,
         user_service: UserServiceDep,
+        current_user: CurrentUserDep,
 ):
     view_user = await user_service.get_user_by_id(user_id=user_id)
-    return user_view_template(request, view_user)
+    return user_view_template(request, view_user, current_user=current_user, )
 
 
 @router.get("/users/{user_id}/edit")
@@ -140,13 +154,15 @@ async def user_edit(
         request: Request,
         user_id: UUID,
         user_service: UserServiceDep,
+        current_user: CurrentUserDep,
+
 ):
     edit_user = await user_service.get_user_by_id(user_id=user_id)
     form = UserEditForm(request, obj=edit_user)
 
     # Generate a CSRF token and set it in a cookie
     token = csrf_token(request)
-    response = user_edit_template(request, user=edit_user, form=form, block_name="content")
+    response = user_edit_template(request, user=edit_user, current_user=current_user, form=form, block_name="content")
     response.set_cookie("csrf_token", token)
     return response
 

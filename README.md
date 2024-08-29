@@ -2,11 +2,11 @@
 
 Opinionated Foundation Boilerplate for a SaaS Platform
 
-* Boring tech
-* Reproducible builds
-* Development flow
-* 100% test coverage
-* Easy to extend
+- Boring tech
+- Reproducible builds
+- Development flow
+- 100% test coverage
+- Easy to extend
 
 tech
 
@@ -16,9 +16,9 @@ tech
 
 ## Assumptions
 
-* Requires a python installation (recommend python [3.12](https://docs.python.org/release/3.12.1/whatsnew/3.12.html))
-* Github access https://docs.github.com/en/get-started/quickstart/set-up-git
-* IDE (.idea) file is included
+- Requires a python installation (recommend python [3.12](https://docs.python.org/release/3.12.1/whatsnew/3.12.html))
+- Github access https://docs.github.com/en/get-started/quickstart/set-up-git
+- IDE (.idea) file is included
 
 ## Getting started
 
@@ -32,7 +32,7 @@ Install pyenv
 https://github.com/pyenv/pyenv
 
 ```bash
-brew install pyenv 
+brew install pyenv
 ```
 
 using pyenv
@@ -51,20 +51,20 @@ sudo pipx --global ensurepath  # optional to allow pipx actions with --global ar
 
 ```bash
 brew update
-brew install pyenv 
+brew install pyenv
 eval "$(pyenv init -)"
 ```
 
 Install python
 
 ```bash
-pyenv install 3.12 
+pyenv install 3.12
 ```
 
 set the local dir to use the python version
 
 ```bash
-pyenv local 3.12 
+pyenv local 3.12
 ```
 
 Install Poetry
@@ -101,10 +101,10 @@ uvicorn app.main:app --reload
 
 ## deploy to render.com
 
-* Signup/Login to render.com dashboard
-* Select "New Blueprint"
-* Choose the basic-foundation repo from the list and click the "Connect" button
-* View the service on the [dashboard](https://dashboard.render.com/)
+- Signup/Login to render.com dashboard
+- Select "New Blueprint"
+- Choose the basic-foundation repo from the list and click the "Connect" button
+- View the service on the [dashboard](https://dashboard.render.com/)
 
 ## todo
 
@@ -127,29 +127,29 @@ uvicorn app.main:app --reload
 - [x] configure postgres on render.com
 - [x] db migrations
 - [x] add styling - tailwind/flowbite
-    - [x] alpine
-    - [x] tailwind plugins
-    - [x] login
-    - [x] register
+  - [x] alpine
+  - [x] tailwind plugins
+  - [x] login
+  - [x] register
 - [ ] replace auth
-    - remove fastapi-users
-    - replace with vanilla auth
+  - remove fastapi-users
+  - replace with vanilla auth
 - [ ] shadcn components
 - [ ] crud users
 - [ ] test coverage
-    - codecov https://github.com/marketplace/codecov/plan/MDIyOk1hcmtldHBsYWNlTGlzdGluZ1BsYW4xNg==#plan-16
+  - codecov https://github.com/marketplace/codecov/plan/MDIyOk1hcmtldHBsYWNlTGlzdGluZ1BsYW4xNg==#plan-16
 - [ ] playwright
 - [ ] csrf - https://github.com/simonw/asgi-csrf
 - [ ] view profile
 - [ ] app user management
-    - click to edit forms: https://htmx.org/examples/click-to-edit/
-    - icons: https://github.com/sirvan3tr/jinja-primer-icons
-    - example: render.com dashboard
-    - https://devdojo.com/wave#demo
+  - click to edit forms: https://htmx.org/examples/click-to-edit/
+  - icons: https://github.com/sirvan3tr/jinja-primer-icons
+  - example: render.com dashboard
+  - https://devdojo.com/wave#demo
 - [ ] forgot password flow
 - [ ] mailapi - sendgrid? or mailgun?
-    - https://sabuhish.github.io/fastapi-mail/example/
-    - https://pramod4040.medium.com/fastapi-forget-password-api-setup-632ab90ba958
+  - https://sabuhish.github.io/fastapi-mail/example/
+  - https://pramod4040.medium.com/fastapi-forget-password-api-setup-632ab90ba958
 - [ ] branch deploys (preview environments)
 - [ ] stripe integration
 - [ ] webhooks
@@ -158,17 +158,17 @@ uvicorn app.main:app --reload
 - [ ] sentry
 - [ ] codecov
 - [ ] static object storage
-    - https://docs.render.com/deploy-minio
-    - run minio
-      locally https://ktyptorio.medium.com/simple-openweather-api-service-using-fastapi-and-minio-object-storage-docker-version-f3587f7eb3de
+  - https://docs.render.com/deploy-minio
+  - run minio
+    locally https://ktyptorio.medium.com/simple-openweather-api-service-using-fastapi-and-minio-object-storage-docker-version-f3587f7eb3de
 - [ ] multi tenant
 - [ ] postgres row level security
 - [ ] web components
-    - lit
-    - shoelace
+  - lit
+  - shoelace
 - [ ] dockerfile - https://inboard.bws.bio/?
 - [ ] deploy docker to render
-    - https://docs.render.com/docker
+  - https://docs.render.com/docker
 
 ## references
 

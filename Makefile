@@ -22,11 +22,19 @@ lint:
 lint-fix:
 	poetry run ruff check --fix --unsafe-fixes .
 
-format:
+format-python:
 	poetry run ruff format .
 
-tailwind: install
-	npx tailwindcss -i ./static/src/input.css -o ./static/dist/css/output.css
+format-prettier:
+	npx prettier templates --write
+
+format: format-python
+
+tailwind:
+	npm run build
+
+tailwind-prod:
+	npm run build-prod
 
 # Database migrations
 
@@ -63,7 +71,7 @@ migrate-reset:
 # This is necessary for the container to connect to the local database.
 # You might need to adjust this depending on your Docker setup and database location.
 
-init_data:
+init-data:
 	poetry run python app/src/tools/init_data.py
 
 run:

@@ -1,23 +1,21 @@
-<!DOCTYPE html>
-<html lang="en" class="{{ html_class }}">
+<!doctype html>
+<html class="h-full bg-gray-50" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Basic Machines</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Dashboard Layout</title>
-    <!-- local tailwind -->{#    <link href="/static/dist/css/output.css" rel="stylesheet"/>#}
-    <!-- tailwind cdn -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
-    <!-- albine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <!-- tailwind inter font -->
-    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
-    <!-- htmx -->
-    <script src="https://unpkg.com/htmx.org@1.7.0"></script>
+  <meta charset="UTF-8" />
+  <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Basic Foundation</title>
+  <!-- Include the Alpine.js library -->
+  <script defer src="https://unpkg.com/alpinejs"></script>
+  <!-- Include the TailwindCSS library -->{#    <link href="/static/dist/css/output.css" rel="stylesheet" />#}
+  <!-- Include the TailwindCSS library -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <!-- tailwind inter font -->
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+  <!-- htmx -->
+  <script src="https://unpkg.com/htmx.org@1.7.0"></script>
 </head>
-<body class="{{ body_class }}">
+<!-- base.html -->
 {% block layout_content %}
-
 {% endblock layout_content %}
-</body>
 </html>

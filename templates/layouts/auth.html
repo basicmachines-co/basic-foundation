@@ -1,16 +1,14 @@
 {% extends "layouts/base.html" %}
-{# override class for html for full page #}{% set html_class = "h-full bg-white" %}
+{# override class for html for full page #}{%
+  set html_class =
+  "h-full bg-white"
+%}
 {# override class for body for full page #}{% set body_class = "h-full" %}
-
 {% block layout_content %}
-
-
-    <main>
-        <!-- Full-width on mobile, constrained with padded content above -->
-        <div class="mx-auto max-w-7xl p-8 sm:px-6 lg:px-8">
-            {% block content %}
-            {% endblock content %}
-        </div>
-    </main>
-
+  <main>
+    <!-- Full-width on mobile, constrained with padded content above -->
+    <div class="mx-auto max-w-7xl p-8 sm:px-6 lg:px-8">
+      {% block content %}{% endblock content %}
+    </div>
+  </main>
 {% endblock layout_content %}
