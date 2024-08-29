@@ -1,14 +1,25 @@
 {% extends "layouts/base.html" %}
-{# override class for html for full page #}{%
-  set html_class =
-  "h-full bg-white"
-%}
-{# override class for body for full page #}{% set body_class = "h-full" %}
 {% block layout_content %}
+  <body class="h-full">
   <main>
-    <!-- Full-width on mobile, constrained with padded content above -->
+    <!-- centered on page -->
     <div class="mx-auto max-w-7xl p-8 sm:px-6 lg:px-8">
-      {% block content %}{% endblock content %}
+      <!-- heading -->
+      <div class="flex min-h-full flex-col justify-center px-6 lg:py-12 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+          {% include "partials/logo.html" %}
+          <h2 class="sm:mt-4 lg:mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+            {% block heading_text %}{% endblock heading_text %}
+          </h2>
+        </div>
+      </div>
+      <!-- content -->
+      <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
+        <div class="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
+          {% block content %}{% endblock content %}
+        </div>
+      </div>
     </div>
   </main>
+  </body>
 {% endblock layout_content %}
