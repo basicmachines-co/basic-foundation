@@ -159,3 +159,4 @@ cython_debug/
 .DS_Store
 /.idea/
 /node_modules/
+!/templates/email/build/
