@@ -2,9 +2,9 @@ name: basic-api-test
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   test:
@@ -51,6 +51,10 @@ jobs:
       - name: Run dbmate migrations
         run: |
           make migrate-up
+
+      - name: Run init data
+        run: |
+          make init-data
 
       - name: Run tests
         run: |
