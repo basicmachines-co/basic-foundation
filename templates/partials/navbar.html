@@ -98,65 +98,34 @@
                 </li>
               </ul>
             </li>
-            <!-- Profile section with enhanced popout menu -->
+            <!-- Profile section with popout menu -->
             <li class="mt-auto" x-data="{ open: false }">
-              <div @click="open = !open" class="relative inline-block text-left w-full">
-                <button
-                  type="button"
-                  class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                  aria-expanded="true"
-                  aria-haspopup="true"
-                >
-                  Tom Cook
-                  <svg
-                    class="-mr-1 h-5 w-5 text-gray-400"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                </button>
-                <!-- Enhanced Popout menu -->
-                <div
-                  x-show="open"
-                  @click.away="open = false"
-                  x-transition:enter="transition ease-out duration-100"
-                  x-transition:enter-start="transform opacity-0 scale-95"
-                  x-transition:enter-end="transform opacity-100 scale-100"
-                  x-transition:leave="transition ease-in duration-75"
-                  x-transition:leave-start="transform opacity-100 scale-100"
-                  x-transition:leave-end="transform opacity-0 scale-95"
-                  class="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                  role="menu"
-                  aria-orientation="vertical"
-                  aria-labelledby="menu-button"
-                  tabindex="-1"
-                >
-                  <div class="px-4 py-3" role="none">
-                    <p class="text-sm" role="none">Signed in as</p>
-                    <p class="truncate text-sm font-medium text-gray-900" role="none">tom@example.com</p>
-                  </div>
-                  <div class="py-1" role="none">
-                    <a
-                      href="#"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      role="menuitem"
-                      tabindex="-1"
-                      id="menu-item-0"
-                    > Profile </a> <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    role="menuitem"
-                    tabindex="-1"
-                    id="menu-item-1"
-                  > Logout </a>
-                  </div>
-                </div>
+              <div @click="open = !open"
+                class="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 cursor-pointer">
+                <img
+                  alt="Your profile"
+                  class="h-8 w-8 rounded-full bg-gray-50"
+                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                /> <span class="sr-only">Your profile</span>
+                <span aria-hidden="true">{{ current_user.full_name }}</span>
+              </div>
+              <!-- Popout menu -->
+              <div
+                x-show="open"
+                @click.away="open = false"
+                x-transition:enter="transition ease-out duration-100"
+                x-transition:enter-start="transform opacity-0 scale-95"
+                x-transition:enter-end="transform opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-75"
+                x-transition:leave-start="transform opacity-100 scale-100"
+                x-transition:leave-end="transform opacity-0 scale-95"
+                class="mt-2 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none absolute right-0 z-50 w-48"
+                role="menu"
+                aria-orientation="vertical"
+                aria-labelledby="user-menu"
+              >
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Profile</a>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Logout</a>
               </div>
             </li>
           </ul>
@@ -224,16 +193,46 @@
             </li>
           </ul>
         </li>
-        <!-- Profile section -->
-        <li class="-mx-6 mt-auto">
-          <a
-            class="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50"
-            href="#"
-          > <img
-            alt="Your profile"
-            class="h-8 w-8 rounded-full bg-gray-50"
-            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-          /> <span class="sr-only">Your profile</span> <span aria-hidden="true">Tom Cook</span> </a>
+        <!-- Profile section with popout menu -->
+        <li class="-mx-6 mt-auto" x-data="{ open: false }">
+          <div @click="open = !open"
+            class="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 cursor-pointer">
+            <img
+              alt="Your profile"
+              class="h-8 w-8 rounded-full bg-gray-50"
+              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+            /> <span class="sr-only">Your profile</span> <span aria-hidden="true">{{ current_user.full_name }}</span>
+          </div>
+          <!-- Popout menu -->
+          <div
+            x-show="open"
+            @click.away="open = false"
+            x-transition:enter="transition ease-out duration-100"
+            x-transition:enter-start="transform opacity-0 scale-95"
+            x-transition:enter-end="transform opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-75"
+            x-transition:leave-start="transform opacity-100 scale-100"
+            x-transition:leave-end="transform opacity-0 scale-95"
+            class="mt-2 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none absolute left-0 bottom-16 z-50 w-64"
+            role="menu"
+            aria-orientation="vertical"
+            aria-labelledby="user-menu"
+          >
+            <div>
+              <a href="/logout"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                role="menuitem">Logout</a>
+            </div>
+            <div>
+              <a href="/profile"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                role="menuitem">Profile</a>
+            </div>
+            <div class="px-4 py-3" role="none">
+              <p class="text-sm" role="none">Signed in as</p>
+              <p class="truncate text-sm font-medium text-gray-900" role="none">{{ current_user.email }}</p>
+            </div>
+          </div>
         </li>
       </ul>
     </nav>
@@ -261,14 +260,14 @@
     </svg>
   </button>
   <div class="flex-1 text-sm font-semibold leading-6 text-gray-900">Dashboard</div>
-  <!-- Profile dropdown with enhanced popout menu -->
+  <!-- Profile dropdown with popout menu -->
   <div x-data="{ open: false }" class="relative">
     <a href="#" @click="open = !open"> <span class="sr-only">Your profile</span> <img
       alt="Your profile"
       class="h-8 w-8 rounded-full bg-gray-50"
       src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
     /> </a>
-    <!-- Enhanced Popout menu -->
+    <!-- Popout menu -->
     <div
       x-show="open"
       @click.away="open = false"
@@ -278,30 +277,22 @@
       x-transition:leave="transition ease-in duration-75"
       x-transition:leave-start="transform opacity-100 scale-100"
       x-transition:leave-end="transform opacity-0 scale-95"
-      class="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+      class="absolute right-0 mt-2 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 w-48"
       role="menu"
       aria-orientation="vertical"
-      aria-labelledby="menu-button"
-      tabindex="-1"
+      aria-labelledby="user-menu"
     >
       <div class="px-4 py-3" role="none">
         <p class="text-sm" role="none">Signed in as</p>
-        <p class="truncate text-sm font-medium text-gray-900" role="none">tom@example.com</p>
+        <p class="truncate text-sm font-medium text-gray-900" role="none">{{ current_user.email }}</p>
       </div>
-      <div class="py-1" role="none">
-        <a
-          href="#"
+      <div>
+        <a href="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Profile</a>
+      </div>
+      <div>
+        <a href="/logout"
           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-          role="menuitem"
-          tabindex="-1"
-          id="menu-item-0"
-        > Profile </a> <a
-        href="#"
-        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-        role="menuitem"
-        tabindex="-1"
-        id="menu-item-1"
-      > Logout </a>
+          role="menuitem">Logout</a>
       </div>
     </div>
   </div>
