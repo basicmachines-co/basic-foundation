@@ -71,7 +71,7 @@ migrate-reset:
 # This is necessary for the container to connect to the local database.
 # You might need to adjust this depending on your Docker setup and database location.
 
-init_data:
+init-data:
 	poetry run python app/src/tools/init_data.py
 
 run:
