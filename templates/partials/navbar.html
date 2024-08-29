@@ -43,25 +43,23 @@
       <!-- Sidebar content -->
       <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-2">
         <div class="flex h-16 shrink-0 items-center">
-          <img
-            alt="Your Company"
-            class="h-8 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-          />
+          {% include "partials/logo.html" %}
         </div>
         <nav class="flex flex-1 flex-col">
-          <ul class="flex flex-1 flex-col gap-y-7" role="list">
+          <ul class="flex flex-1 flex-col gap-y-7" role="list" x-data="{ currentPath: window.location.pathname }">
             <!-- Navigation links -->
             <li>
               <ul class="-mx-2 space-y-1" role="list">
                 <li>
                   <a
-                    class="group flex gap-x-3 rounded-md bg-gray-50 p-2 text-sm font-semibold leading-6 text-slate-600"
+                    :class="currentPath.startsWith('/dashboard') ? 'bg-gray-50 text-slate-600' : 'text-gray-700 hover:bg-gray-50 hover:text-slate-600'"
+                    class="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
                     href="/dashboard"
                   >
                     <svg
                       aria-hidden="true"
-                      class="h-6 w-6 shrink-0 text-slate-600"
+                      class="h-6 w-6 shrink-0"
+                      :class="currentPath.startsWith('/dashboard') ? 'text-slate-600' : 'text-gray-400 group-hover:text-slate-600'"
                       fill="none"
                       stroke="currentColor"
                       stroke-width="1.5"
@@ -77,12 +75,14 @@
                 </li>
                 <li>
                   <a
-                    class="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-slate-600"
+                    :class="currentPath.startsWith('/users') ? 'bg-gray-50 text-slate-600' : 'text-gray-700 hover:bg-gray-50 hover:text-slate-600'"
+                    class="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
                     href="/users"
                   >
                     <svg
                       aria-hidden="true"
-                      class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-slate-600"
+                      class="h-6 w-6 shrink-0"
+                      :class="currentPath.startsWith('/users') ? 'text-slate-600' : 'text-gray-400 group-hover:text-slate-600'"
                       fill="none"
                       stroke="currentColor"
                       stroke-width="1.5"
@@ -137,26 +137,24 @@
 <!-- Static sidebar for desktop -->
 <div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-64 lg:flex-col">
   <div class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
-    <div class="flex h-16 shrink-0 items-center">
-      <img
-        alt="Your Company"
-        class="h-8 w-auto"
-        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-      />
+    <div class="flex shrink-0 items-center">
+      {% include "partials/logo.html" %}
     </div>
-    <nav class="flex flex-1 flex-col">
+    <nav class="flex flex-1 flex-col" x-data="{ currentPath: window.location.pathname }">
       <ul class="flex flex-1 flex-col gap-y-7" role="list">
         <!-- Navigation links -->
         <li>
           <ul class="-mx-2 space-y-1" role="list">
             <li>
               <a
-                class="group flex gap-x-3 rounded-md bg-gray-50 p-2 text-sm font-semibold leading-6 text-slate-600"
+                :class="currentPath.startsWith('/dashboard') ? 'bg-gray-50 text-slate-600' : 'text-gray-700 hover:bg-gray-50 hover:text-slate-600'"
+                class="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
                 href="/dashboard"
               >
                 <svg
                   aria-hidden="true"
-                  class="h-6 w-6 shrink-0 text-slate-600"
+                  class="h-6 w-6 shrink-0"
+                  :class="currentPath.startsWith('/dashboard') ? 'text-slate-600' : 'text-gray-400 group-hover:text-slate-600'"
                   fill="none"
                   stroke="currentColor"
                   stroke-width="1.5"
@@ -172,12 +170,14 @@
             </li>
             <li>
               <a
-                class="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-slate-600"
+                :class="currentPath.startsWith('/users') ? 'bg-gray-50 text-slate-600' : 'text-gray-700 hover:bg-gray-50 hover:text-slate-600'"
+                class="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
                 href="/users"
               >
                 <svg
                   aria-hidden="true"
-                  class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-slate-600"
+                  class="h-6 w-6 shrink-0"
+                  :class="currentPath.startsWith('/users') ? 'text-slate-600' : 'text-gray-400 group-hover:text-slate-600'"
                   fill="none"
                   stroke="currentColor"
                   stroke-width="1.5"
@@ -197,11 +197,17 @@
         <li class="-mx-6 mt-auto" x-data="{ open: false }">
           <div @click="open = !open"
             class="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 cursor-pointer">
-            <img
-              alt="Your profile"
-              class="h-8 w-8 rounded-full bg-gray-50"
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-            /> <span class="sr-only">Your profile</span> <span aria-hidden="true">{{ current_user.full_name }}</span>
+            <svg xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6">
+              <path stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+            </svg>
+            <span class="sr-only">Your profile</span> <span aria-hidden="true">{{ current_user.full_name }}</span>
           </div>
           <!-- Popout menu -->
           <div
@@ -262,11 +268,18 @@
   <div class="flex-1 text-sm font-semibold leading-6 text-gray-900">Dashboard</div>
   <!-- Profile dropdown with popout menu -->
   <div x-data="{ open: false }" class="relative">
-    <a href="#" @click="open = !open"> <span class="sr-only">Your profile</span> <img
-      alt="Your profile"
-      class="h-8 w-8 rounded-full bg-gray-50"
-      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-    /> </a>
+    <a href="#" @click="open = !open"> <span class="sr-only">Your profile</span>
+      <svg xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-6">
+        <path stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+      </svg>
+    </a>
     <!-- Popout menu -->
     <div
       x-show="open"

@@ -12,7 +12,7 @@
           <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
             <a href="/users/create">
               <button
-                class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                class="block rounded-md bg-slate-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600"
                 type="button"
               >
                 Create user
@@ -25,67 +25,65 @@
             <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
               <table class="min-w-full divide-y divide-gray-300">
                 <thead>
-                  <tr>
-                    <th
-                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
-                      scope="col"
-                    >
-                      Name
-                    </th>
-                    <th
-                      class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      scope="col"
-                    >
-                      Email
-                    </th>
-                    <th
-                      class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      scope="col"
-                    >
-                      Is Active
-                    </th>
-                    <th
-                      class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      scope="col"
-                    >
-                      Is Admin
-                    </th>
-                    <th class="relative py-3.5 pl-3 pr-4 sm:pr-0" scope="col">
-                      <span class="sr-only">Edit</span>
-                    </th>
-                  </tr>
+                <tr>
+                  <th
+                    class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
+                    scope="col"
+                  >
+                    Name
+                  </th>
+                  <th
+                    class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    scope="col"
+                  >
+                    Email
+                  </th>
+                  <th
+                    class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    scope="col"
+                  >
+                    Is Active
+                  </th>
+                  <th
+                    class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    scope="col"
+                  >
+                    Is Admin
+                  </th>
+                  <th class="relative py-3.5 pl-3 pr-4 sm:pr-0" scope="col">
+                    <span class="sr-only">Edit</span>
+                  </th>
+                </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                  {% for user in page.items %}
-                    <tr>
-                      <td
-                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0"
-                      >
-                        <a href="/users/{{ user.id }}">{{ user.full_name }}</a>
-                      </td>
-                      <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {{ user.email }}
-                      </td>
-                      <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {{ user.is_active }}
-                      </td>
-                      <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {{ user.is_superuser }}
-                      </td>
-                      <td
-                        class="relative whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-0"
-                      >
-                        <a
-                          class="text-indigo-600 hover:text-blue-900"
-                          hx-get="/users/{{ user.id }}/edit"
-                          hx-target="#page_content"
-                          hx-push-url="true"
-                        >
-                          Edit
-                        </a>
-                      </td>
-                    </tr>
-                  {% endfor %}
+                {% for user in page.items %}
+                  <tr>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0"
+                    >
+                      <a href="/users/{{ user.id }}">{{ user.full_name }}</a>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      {{ user.email }}
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      {{ user.is_active }}
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      {{ user.is_superuser }}
+                    </td>
+                    <td
+                      class="relative whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-0"
+                    >
+                      <a
+                        class="font-semibold text-slate-600 hover:text-slate-500"
+                        hx-get="/users/{{ user.id }}/edit"
+                        hx-target="#page_content"
+                        hx-push-url="true"
+                      > Edit </a>
+                    </td>
+                  </tr>
+                {% endfor %}
                 </tbody>
               </table>
             </div>
