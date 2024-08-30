@@ -1,0 +1,20 @@
+{% extends "layouts/application.html" %}
+{% block content %}
+  <!-- padding for large -->
+  <div class="lg:pl-2 lg:pr-2">
+    <!-- page content -->
+    <section id="page_content">
+      {% set flash_message = get_flashed_message() %}
+      {% if flash_message %}
+        <!-- display any flash notifications to the user -->
+        <section id="messages">
+          <div class="mb-4 rounded border border-green-400 bg-green-100 p-4 text-green-700">
+            <span>{{ flash_message }}</span>
+          </div>
+        </section>
+      {% endif %}
+      {% block page_content %}
+      {% endblock page_content %}
+    </section>
+  </div>
+{% endblock content %}

@@ -1,9 +1,9 @@
-{% extends "layouts/application.html" %}
+{% extends "layouts/user.html" %}
 
-{% block content %}
+{% block page_content %}
   <section id="user_view">
-    <!-- breadcrumb -->
     <div class="rounded-lg border-b border-gray-200 bg-white py-5">
+      <!-- breadcrumb -->
       <div class="px-6">
         <nav class="flex" aria-label="Breadcrumb">
           <ol role="list" class="flex items-center space-x-4">
@@ -37,7 +37,7 @@
           <h1 class="text-base font-semibold leading-6 text-gray-900">{{ user.full_name }}</h1>
         </div>
         <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <a hx-get="/users/{{ user.id }}/edit" hx-target="#user_view" hx-swap="outerHTML">
+          <a hx-get="/users/{{ user.id }}/edit" hx-target="#page_content" hx-swap="outerHTML">
             <button
               type="button"
               class="block rounded-md bg-black px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600"
@@ -47,6 +47,7 @@
           </a>
         </div>
       </div>
+      <!-- detail -->
       <div class="mt-8 border-t border-gray-100">
         <dl class="divide-y divide-gray-100">
           <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -111,4 +112,4 @@
     </div>
     </div>
   </section>
-{% endblock content %}
+{% endblock page_content %}

@@ -8,7 +8,8 @@ from starlette_wtf import csrf_token
 
 from foundation.users.deps import UserServiceDep, UserPaginationDep
 from foundation.users.models import User
-from foundation.users.services import UserValueError, UserNotFoundError
+from foundation.users.schemas import UserPublic
+from foundation.users.services import UserValueError, UserNotFoundError, UserCreateError
 from foundation.web.deps import CurrentUserDep, LoginRequired
 from foundation.web.forms import UserCreateForm, UserEditForm
 from foundation.web.pagination import Page
@@ -23,7 +24,7 @@ router = HTMLRouter(dependencies=[LoginRequired])
 def user_list_template(
         request: Request,
         *,
-        current_user: User,
+        current_user: UserPublic,
         page: Page
 ) -> templates.TemplateResponse:
     return templates.TemplateResponse(
@@ -40,7 +41,7 @@ def user_view_template(
         request: Request,
         user: User,
         *,
-        current_user: CurrentUserDep,
+        current_user: UserPublic,
         block_name=None
 ) -> templates.TemplateResponse:
     return templates.TemplateResponse(
@@ -57,7 +58,7 @@ def user_view_template(
 def user_create_template(
         request: Request,
         *,
-        current_user: CurrentUserDep,
+        current_user: UserPublic,
         form: UserCreateForm,
         error: str = None,
         block_name=None
@@ -69,14 +70,14 @@ def user_create_template(
             current_user=current_user,
             form=form,
             error=error,
-            block_name=block_name,
         ),
+        block_name=block_name,
     )
 
 
 def user_edit_template(
         request: Request,
-        user: User,
+        user: UserPublic,
         *,
         current_user: CurrentUserDep,
         form: UserEditForm,
@@ -132,10 +133,13 @@ async def user_create_post(
             created_user = await user_service.create_user(
                 create_dict=form.data
             )
-            return user_view_template(request, created_user, block_name="content")
-        except UserValueError as e:
-            error = e.args
-    return user_create_template(request, current_user=current_user, form=form, error=error, block_name="content")
+            response = Response(status_code=status.HTTP_307_TEMPORARY_REDIRECT)
+            response.headers["HX-Redirect"] = router.url_path_for("user", user_id=created_user.id)
+            return response
+        except UserCreateError as e:
+            error = e.args[0]
+    return user_create_template(request, current_user=current_user, form=form, error=error,
+                                block_name="page_content")
 
 
 @router.get("/users/{user_id}")
@@ -155,14 +159,14 @@ async def user_edit(
         user_id: UUID,
         user_service: UserServiceDep,
         current_user: CurrentUserDep,
-
 ):
     edit_user = await user_service.get_user_by_id(user_id=user_id)
     form = UserEditForm(request, obj=edit_user)
 
     # Generate a CSRF token and set it in a cookie
     token = csrf_token(request)
-    response = user_edit_template(request, user=edit_user, current_user=current_user, form=form, block_name="content")
+    response = user_edit_template(request, user=edit_user, current_user=current_user, form=form,
+                                  block_name="page_content")
     response.set_cookie("csrf_token", token)
     return response
 
@@ -172,6 +176,8 @@ async def user_edit_post(
         request: Request,
         user_id: UUID,
         user_service: UserServiceDep,
+        current_user: CurrentUserDep,
+
 ):
     form = await UserEditForm.from_formdata(request)
     error = None
@@ -183,11 +189,13 @@ async def user_edit_post(
                 user_id=user_id,
                 update_dict=form.data,
             )
-            return user_view_template(request, user=updated_user, block_name="content")
+            return user_view_template(request, user=updated_user, current_user=current_user, block_name="page_content")
         except UserValueError as e:
             error = e.args
 
-    return user_edit_template(request, user=edit_user, error=error, form=form, block_name="content")
+    return user_edit_template(request, user=UserPublic.model_validate(edit_user), current_user=current_user,
+                              error=error, form=form,
+                              block_name="page_content")
 
 
 @router.delete("/users/{user_id}")

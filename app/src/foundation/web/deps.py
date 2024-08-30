@@ -7,6 +7,7 @@ from fastapi_jwt import JwtAccessCookie, JwtAuthorizationCredentials
 from foundation.core.config import settings
 from foundation.users.deps import UserServiceDep
 from foundation.users.models import User
+from foundation.users.schemas import UserPublic
 from foundation.users.services import UserNotFoundError
 
 access_token_security = JwtAccessCookie(
@@ -20,7 +21,7 @@ JwtAuthorizationCredentialsDep = Annotated[
 
 async def get_current_user(
         user_service: UserServiceDep, credentials: JwtAuthorizationCredentialsDep
-) -> User:
+) -> UserPublic:
     if not credentials:
         raise HTTPException(status_code=307, headers={"Location": "/login"})
 
@@ -38,9 +39,9 @@ async def get_current_user(
 
     if not user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
-    return user
+    return UserPublic.model_validate(user)
 
 
 LoginRequired = Depends(get_current_user)
 
-CurrentUserDep = Annotated[User, LoginRequired]
+CurrentUserDep = Annotated[UserPublic, LoginRequired]
