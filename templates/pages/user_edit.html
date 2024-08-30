@@ -38,13 +38,12 @@
             {{ error }}
           </div>
         {% endif %}
-
         <div class="space-y-12 sm:space-y-16">
-          <div class="px-4 py-6 sm:px-6">
-            <h2 class="text-base font-semibold leading-7 text-gray-900">{{ user.full_name }}</h2>
-            <div
-              class="mt-4 space-y-8 border-b border-gray-900/10 pb-12 sm:space-y-0 sm:divide-y sm:divide-gray-900/10 sm:border-t sm:pb-0"
-            >
+          <div class="px-4 lg:py-6 sm:px-6 sm:py-6">
+            <!-- header -->
+            <h1 class="text-base font-semibold leading-7 text-gray-900">{{ user.full_name }}</h1>
+            <div class="mt-16 border-b border-gray-900/10 pb-12 sm:space-y-0 sm:divide-y sm:divide-gray-900/10 sm:border-t sm:pb-0">
+              <!-- user detail -->
               <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
                 <label
                   class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"

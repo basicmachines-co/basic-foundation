@@ -2,7 +2,7 @@
 
 {% block content %}
   <section id="user_view">
-    <!-- user detail -->
+    <!-- breadcrumb -->
     <div class="rounded-lg border-b border-gray-200 bg-white py-5">
       <div class="px-6">
         <nav class="flex" aria-label="Breadcrumb">
@@ -31,7 +31,8 @@
           </ol>
         </nav>
       </div>
-      <div class="px-4 py-3 sm:flex sm:items-center sm:px-6">
+      <!-- header -->
+      <div class="px-4 lg:py-6 sm:flex sm:items-center sm:px-6 sm:py-2">
         <div class="sm:flex-auto">
           <h1 class="text-base font-semibold leading-6 text-gray-900">{{ user.full_name }}</h1>
         </div>
@@ -46,7 +47,7 @@
           </a>
         </div>
       </div>
-      <div class="border-t border-gray-100">
+      <div class="mt-8 border-t border-gray-100">
         <dl class="divide-y divide-gray-100">
           <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt class="text-sm font-medium text-gray-900">Full name</dt>
@@ -60,59 +61,54 @@
               {{ user.email }}
             </dd>
           </div>
-          <fieldset>
-            <legend class="sr-only">Status</legend>
-            <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:py-6">
-              <div
-                aria-hidden="true"
-                class="px-4 text-sm font-semibold leading-6 text-gray-900 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
-              >
-                Status
-              </div>
-              <div class="mt-4 sm:col-span-2 sm:mt-0">
-                <div class="max-w-lg space-y-6">
-                  <div class="relative flex gap-x-3">
-                    <div class="flex h-6 items-center">
-                      <input
-                        class="h-4 w-4 rounded border-gray-300 text-slate-600 focus:ring-slate-600"
-                        id="is_active"
-                        name="is_active"
-                        type="checkbox"
-                        {% if user.is_active %}
-                          checked
-                        {% endif %}
-                        disabled
-                      />
-                    </div>
-                    <div class="text-sm leading-6">
-                      <label class="font-medium text-gray-900" for="comments">Active</label>
-                      <p class="mt-1 text-gray-600">The user is active</p>
-                    </div>
+          <div class="px-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-6">
+            <div aria-hidden="true"
+              class="text-sm font-semibold leading-6 text-gray-900 sm:grid sm:grid-cols-3 sm:gap-4">Status
+            </div>
+            <div class="mt-4 sm:col-span-2 sm:mt-0">
+              <div class="max-w-lg space-y-6">
+                <div class="relative flex gap-x-3">
+                  <div class="flex h-6 items-center">
+                    <input
+                      class="h-4 w-4 rounded border-gray-300 text-slate-600 focus:ring-slate-600"
+                      id="is_active"
+                      name="is_active"
+                      type="checkbox"
+                      {% if user.is_active %}
+                        checked
+                      {% endif %}
+                      disabled
+                    />
                   </div>
-                  <div class="relative flex gap-x-3">
-                    <div class="flex h-6 items-center">
-                      <input
-                        class="h-4 w-4 rounded border-gray-300 text-slate-600 focus:ring-slate-600"
-                        id="is_superuser"
-                        name="is_superuser"
-                        type="checkbox"
-                        {% if user.is_superuser %}
-                          checked
-                        {% endif %}
-                        disabled
-                      />
-                    </div>
-                    <div class="text-sm leading-6">
-                      <label class="font-medium text-gray-900" for="candidates">Admin</label>
-                      <p class="mt-1 text-gray-600">The user has admin privileges</p>
-                    </div>
+                  <div class="text-sm leading-6">
+                    <label class="font-medium text-gray-900" for="comments">Active</label>
+                    <p class="mt-1 text-gray-600">The user is active</p>
+                  </div>
+                </div>
+                <div class="relative flex gap-x-3">
+                  <div class="flex h-6 items-center">
+                    <input
+                      class="h-4 w-4 rounded border-gray-300 text-slate-600 focus:ring-slate-600"
+                      id="is_superuser"
+                      name="is_superuser"
+                      type="checkbox"
+                      {% if user.is_superuser %}
+                        checked
+                      {% endif %}
+                      disabled
+                    />
+                  </div>
+                  <div class="text-sm leading-6">
+                    <label class="font-medium text-gray-900" for="candidates">Admin</label>
+                    <p class="mt-1 text-gray-600">The user has admin privileges</p>
                   </div>
                 </div>
               </div>
             </div>
-          </fieldset>
+          </div>
         </dl>
       </div>
+    </div>
     </div>
   </section>
 {% endblock content %}
