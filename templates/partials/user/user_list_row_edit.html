@@ -44,7 +44,8 @@
       {% if form.is_superuser.data|default(user.is_superuser) %}checked{% endif %}
     />
   </td>
-  <td class="whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-0 justify-end flex space-x-2">
+  <td hx-ext="response-targets"
+    class="whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-0 justify-end flex space-x-2">
     <button
       hx-put="/users/{{ user.id }}"
       hx-target="closest tr"

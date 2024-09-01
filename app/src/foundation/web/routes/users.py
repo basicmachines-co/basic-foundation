@@ -99,10 +99,12 @@ def user_edit_template(
 
 def partial_template(
         request: Request,
-        user: UserPublic,
+        user: UserPublic = None,
         *,
+        partial_template,
         form: UserEditForm = None,
-        partial_template="user/user_list_row_edit.html"
+        error: str = None,
+        status_code=status.HTTP_200_OK
 ) -> templates.TemplateResponse:
     return templates.TemplateResponse(
         f"partials/{partial_template}",
@@ -110,7 +112,9 @@ def partial_template(
             request=request,
             user=user,
             form=form,
-        )
+            error=error
+        ),
+        status_code,
     )
 
 
@@ -252,24 +256,25 @@ async def user_edit_put(
     edit_user = await user_service.get_user_by_id(user_id=user_id)
     form = await UserEditForm.from_formdata(request)
 
-    # validate and return edit form if errors
-    if not await form.validate():
-        return partial_template(request,
-                                user=edit_user,
-                                form=form,
-                                partial_template="user/user_list_row_edit.html")
-
-    try:
-        updated_user = await user_service.update_user(
-            user_id=user_id,
-            update_dict=form.data,
-        )
-        return partial_template(request,
-                                user=updated_user,
-                                form=form,
-                                partial_template="user/user_list_row_view.html")
-    except UserValueError:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User could not be updated.")
+    if await form.validate():
+        try:
+            updated_user = await user_service.update_user(
+                user_id=user_id,
+                update_dict=form.data,
+            )
+            return partial_template(request,
+                                    user=updated_user,
+                                    form=form,
+                                    partial_template="user/user_list_row_view.html")
+        except UserValueError as e:
+            return partial_template(request,
+                                    user={"id": user_id},
+                                    error=e.args[0],
+                                    partial_template="user/user_list_row_error.html")
+    return partial_template(request,
+                            user=edit_user,
+                            form=form,
+                            partial_template="user/user_list_row_edit.html")
 
 
 @router.delete("/users/{user_id}")
