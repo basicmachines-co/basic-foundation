@@ -16,6 +16,16 @@
             </a>
           </div>
         </div>
+        {% set flash_message = get_flashed_message() %}
+        {% if flash_message %}
+          <!-- display any flash notifications to the user -->
+          <section id="messages" class="p-4">
+            <div class="mb-4 rounded border border-blue-400 bg-blue-100 p-4 text-blue-700">
+              <span>{{ flash_message }}</span>
+            </div>
+          </section>
+        {% endif %}
+
         <!-- list -->
         <div class="mt-8 flow-root px-4 py-3 sm:px-6">
           <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">

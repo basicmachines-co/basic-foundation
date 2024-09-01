@@ -250,31 +250,32 @@ async def user_edit_put(
         request: Request,
         user_id: UUID,
         user_service: UserServiceDep,
-        current_user: CurrentUserDep,
-
 ):
     edit_user = await user_service.get_user_by_id(user_id=user_id)
     form = await UserEditForm.from_formdata(request)
 
-    if await form.validate():
-        try:
-            updated_user = await user_service.update_user(
-                user_id=user_id,
-                update_dict=form.data,
-            )
-            return partial_template(request,
-                                    user=updated_user,
-                                    form=form,
-                                    partial_template="user/user_list_row_view.html")
-        except UserValueError as e:
-            return partial_template(request,
-                                    user={"id": user_id},
-                                    error=e.args[0],
-                                    partial_template="user/user_list_row_error.html")
+    # display the form with errors
+    if not await form.validate():
+        return partial_template(request,
+                                user=edit_user,
+                                form=form,
+                                partial_template="user/user_list_row_edit.html")
+    try:
+        updated_user = await user_service.update_user(
+            user_id=user_id,
+            update_dict=form.data,
+        )
+    except UserValueError as e:
+        # display an error notice
+        return partial_template(request,
+                                user={"id": user_id},
+                                error=e.args[0],
+                                partial_template="user/user_list_row_error.html",
+                                status_code=status.HTTP_400_BAD_REQUEST)
     return partial_template(request,
-                            user=edit_user,
+                            user=updated_user,
                             form=form,
-                            partial_template="user/user_list_row_edit.html")
+                            partial_template="user/user_list_row_view.html")
 
 
 @router.delete("/users/{user_id}")
