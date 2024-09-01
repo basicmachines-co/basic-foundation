@@ -97,6 +97,23 @@ def user_edit_template(
     )
 
 
+def partial_template(
+        request: Request,
+        user: UserPublic,
+        *,
+        form: UserEditForm = None,
+        partial_template="user/user_list_row_edit.html"
+) -> templates.TemplateResponse:
+    return templates.TemplateResponse(
+        f"partials/{partial_template}",
+        dict(
+            request=request,
+            user=user,
+            form=form,
+        )
+    )
+
+
 @router.get("/users")
 async def users(
         request: Request,
@@ -171,6 +188,32 @@ async def user_edit(
     return response
 
 
+@router.get("/users/{user_id}/row-edit")
+async def user_edit(
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
+):
+    edit_user = await user_service.get_user_by_id(user_id=user_id)
+    form = UserEditForm(request, obj=edit_user)
+    return partial_template(request, user=edit_user, form=form,
+                            partial_template="user/user_list_row_edit.html")
+
+
+@router.get("/users/{user_id}/row-view")
+async def user_edit(
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
+):
+    edit_user = await user_service.get_user_by_id(user_id=user_id)
+    form = UserEditForm(request, obj=edit_user)
+    return partial_template(request, user=edit_user,
+                            partial_template="user/user_list_row_view.html")
+
+
 @router.post("/users/{user_id}")
 async def user_edit_post(
         request: Request,
@@ -196,6 +239,37 @@ async def user_edit_post(
     return user_edit_template(request, user=UserPublic.model_validate(edit_user), current_user=current_user,
                               error=error, form=form,
                               block_name="page_content")
+
+
+@router.put("/users/{user_id}")
+async def user_edit_put(
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
+
+):
+    edit_user = await user_service.get_user_by_id(user_id=user_id)
+    form = await UserEditForm.from_formdata(request)
+
+    # validate and return edit form if errors
+    if not await form.validate():
+        return partial_template(request,
+                                user=edit_user,
+                                form=form,
+                                partial_template="user/user_list_row_edit.html")
+
+    try:
+        updated_user = await user_service.update_user(
+            user_id=user_id,
+            update_dict=form.data,
+        )
+        return partial_template(request,
+                                user=updated_user,
+                                form=form,
+                                partial_template="user/user_list_row_view.html")
+    except UserValueError:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User could not be updated.")
 
 
 @router.delete("/users/{user_id}")

@@ -1,6 +1,8 @@
-{% extends "layouts/page.html" %} {% block page_title %}Users{% endblock %}
+{% extends "layouts/page.html" %}
+
 {% block page_content %}
   <section id="user_list">
+    <!--  page content card -->
     <div class="rounded-lg border-b border-gray-200 bg-white py-5">
       <!--  header-->
       <div>
@@ -25,28 +27,21 @@
                     scope="col">Name
                   </th>
                   <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Email</th>
-                  <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Is Active</th>
-                  <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Is Admin</th>
-                  <th class="relative py-3.5 pl-3 pr-4 sm:pr-0" scope="col"><span class="sr-only">Edit</span></th>
+                  <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Active</th>
+                  <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Admin</th>
+                  <th class="px-3 py-3.5 text-right text-sm font-semibold text-gray-400" scope="col">Edit</th>
                 </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200">{% for user in page.items %}
-                  <tr>
-                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
-                      <a href="/users/{{ user.id }}">{{ user.full_name }}</a></td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ user.email }}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ user.is_active }}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ user.is_superuser }}</td>
-                    <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-0"><a href="#"
-                      class="font-semibold text-slate-600 hover:text-slate-500"
-                      hx-get="/users/{{ user.id }}/edit"
-                      hx-target="#page_content"
-                      hx-push-url="true"> Edit </a></td>
-                  </tr> {% endfor %}</tbody>
+                <tbody class="divide-y divide-gray-200">
+                {% for user in page.items %}
+                  {% include "partials/user/user_list_row_view.html" %}
+                {% endfor %}
+                </tbody>
               </table>
             </div>
           </div>
         </div>
+        <!-- footer -->
         <div class="px-4 py-3 sm:px-6">
           {% with page=page %}
             {% include "partials/pagination.html" %}

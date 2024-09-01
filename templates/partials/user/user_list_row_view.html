@@ -1,0 +1,18 @@
+<tr>
+  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+    <a href="/users/{{ user.id }}">{{ user.full_name }}</a>
+  </td>
+  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ user.email }}</td>
+  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ user.is_active }}</td>
+  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ user.is_superuser }}</td>
+  <td class="whitespace-nowrap py-4 pl-3 pr-4 sm:pr-0 text-right">
+    <button
+      hx-get="/users/{{ user.id }}/row-edit"
+      hx-target="closest tr"
+      hx-swap="outerHTML"
+      type="button"
+      class="rounded-md bg-white px-2 py-1 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+      Edit
+    </button>
+  </td>
+</tr>
