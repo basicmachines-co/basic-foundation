@@ -40,8 +40,8 @@ class UserCreateError(Exception):
 class UserValueError(Exception):
     """Raised when a user can not be updated."""
 
-    def __init__(self, id_val: UUID | str):
-        super().__init__(f"user {id_val} can not be updated")
+    def __init__(self, id_val: UUID | str, value: Any = None):
+        super().__init__(f"user {id_val} can not be updated with value '{value}'")
 
 
 class UserService:
@@ -98,7 +98,7 @@ class UserService:
             user = await self.repository.create(create_dict)
         except IntegrityError as e:
             logger.info(f"error creating user: {e}")
-            raise UserCreateError(create_dict.get("email"))
+            raise UserCreateError(create_dict.get("email")) from e
 
         if settings.EMAIL_ENABLED and user.email:
             email_data = generate_new_account_email(
@@ -123,7 +123,7 @@ class UserService:
             return await self.repository.update(user_id, update_dict)
         except IntegrityError as e:
             logger.info(f"error updating user: {e}")
-            raise UserValueError(user_id)
+            raise UserValueError(user_id, update_dict['email']) from e
 
     async def delete_user(self, *, user_id: UUID) -> None:
         deleted = await self.repository.delete(user_id)

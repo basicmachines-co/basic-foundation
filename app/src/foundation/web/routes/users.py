@@ -75,28 +75,6 @@ def user_create_template(
     )
 
 
-def user_edit_template(
-        request: Request,
-        user: UserPublic,
-        *,
-        current_user: CurrentUserDep,
-        form: UserEditForm,
-        error: str = None,
-        block_name=None
-) -> templates.TemplateResponse:
-    return templates.TemplateResponse(
-        "pages/user_edit.html",
-        dict(
-            request=request,
-            user=user,
-            current_user=current_user,
-            form=form,
-            error=error
-        ),
-        block_name=block_name,
-    )
-
-
 def partial_template(
         request: Request,
         user: dict = None,
@@ -119,7 +97,7 @@ def partial_template(
 
 
 @router.get("/users")
-async def users(
+async def user_list(
         request: Request,
         user_pagination: UserPaginationDep,
         current_user: CurrentUserDep,
@@ -164,18 +142,18 @@ async def user_create_post(
 
 
 @router.get("/users/{user_id}")
-async def user(
+async def user_detail_view(
         request: Request,
         user_id: UUID,
         user_service: UserServiceDep,
         current_user: CurrentUserDep,
 ):
     view_user = await user_service.get_user_by_id(user_id=user_id)
-    return user_view_template(request, view_user, current_user=current_user, )
+    return user_view_template(request, view_user, current_user=current_user)
 
 
 @router.get("/users/detail/{user_id}/edit")
-async def user_edit(
+async def user_detail_edit(
         request: Request,
         user_id: UUID,
         user_service: UserServiceDep,
@@ -191,7 +169,7 @@ async def user_edit(
 
 
 @router.put("/users/detail/{user_id}")
-async def user_put(
+async def user_detail_put(
         request: Request,
         user_id: UUID,
         user_service: UserServiceDep,
@@ -221,7 +199,7 @@ async def user_put(
 
 
 @router.get("/users/list/{user_id}/edit")
-async def user_edit(
+async def user_list_edit(
         request: Request,
         user_id: UUID,
         user_service: UserServiceDep,
@@ -233,7 +211,7 @@ async def user_edit(
 
 
 @router.get("/users/list/{user_id}")
-async def user_edit(
+async def user_list_view(
         request: Request,
         user_id: UUID,
         user_service: UserServiceDep,
@@ -244,7 +222,7 @@ async def user_edit(
 
 
 @router.put("/users/list/{user_id}")
-async def user_put(
+async def user_list_put(
         request: Request,
         user_id: UUID,
         user_service: UserServiceDep,
@@ -304,5 +282,5 @@ async def delete_user(
 
     flash(request, f"User {user.full_name} was deleted")
     response = Response(status_code=status.HTTP_307_TEMPORARY_REDIRECT)
-    response.headers["HX-Redirect"] = router.url_path_for("users")
+    response.headers["HX-Redirect"] = router.url_path_for("user_list")
     return response
