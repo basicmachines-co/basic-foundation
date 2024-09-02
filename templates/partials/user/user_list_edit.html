@@ -6,7 +6,7 @@
       class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:max-w-xs sm:text-sm sm:leading-6"
       id="full_name"
       name="full_name"
-      value="{{ form.full_name.data|default(user.full_name, true) }}"
+      value="{{ form.full_name.data }}"
       type="text"
     />
     {% if form.full_name.errors %}
@@ -20,7 +20,7 @@
       id="email"
       name="email"
       type="email"
-      value="{{ form.email.data|default(user.email, true) }}"
+      value="{{ form.email.data }}"
     />
     {% if form.email.errors %}
       <p class="mt-2 text-sm text-red-600">{{ form.email.errors[0] }}</p>
@@ -47,8 +47,9 @@
   <td hx-ext="response-targets"
     class="whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-0 justify-end flex space-x-2">
     <button
-      hx-put="/users/{{ user.id }}"
+      hx-put="/users/list/{{ user.id }}"
       hx-target="closest tr"
+      hx-target-error="closest tr"
       hx-include="closest tr"
       hx-swap="outerHTML"
       type="button"
@@ -56,7 +57,7 @@
       Save
     </button>
     <button
-      hx-get="/users/{{ user.id }}/row-view"
+      hx-get="/users/list/{{ user.id }}"
       hx-target="closest tr"
       hx-swap="outerHTML"
       type="button"

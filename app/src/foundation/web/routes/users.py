@@ -99,7 +99,7 @@ def user_edit_template(
 
 def partial_template(
         request: Request,
-        user: UserPublic = None,
+        user: dict = None,
         *,
         partial_template,
         form: UserEditForm = None,
@@ -174,92 +174,89 @@ async def user(
     return user_view_template(request, view_user, current_user=current_user, )
 
 
-@router.get("/users/{user_id}/edit")
+@router.get("/users/detail/{user_id}/edit")
 async def user_edit(
         request: Request,
         user_id: UUID,
         user_service: UserServiceDep,
-        current_user: CurrentUserDep,
 ):
     edit_user = await user_service.get_user_by_id(user_id=user_id)
     form = UserEditForm(request, obj=edit_user)
 
-    # Generate a CSRF token and set it in a cookie
+    # Generate a CSRF token and set it in a cookie, checked on delete
     token = csrf_token(request)
-    response = user_edit_template(request, user=edit_user, current_user=current_user, form=form,
-                                  block_name="page_content")
+    response = partial_template(request, user=edit_user, form=form, partial_template="user/user_detail_edit.html")
     response.set_cookie("csrf_token", token)
     return response
 
 
-@router.get("/users/{user_id}/row-edit")
-async def user_edit(
+@router.put("/users/detail/{user_id}")
+async def user_put(
         request: Request,
         user_id: UUID,
         user_service: UserServiceDep,
-        current_user: CurrentUserDep,
 ):
-    edit_user = await user_service.get_user_by_id(user_id=user_id)
-    form = UserEditForm(request, obj=edit_user)
-    return partial_template(request, user=edit_user, form=form,
-                            partial_template="user/user_list_row_edit.html")
-
-
-@router.get("/users/{user_id}/row-view")
-async def user_edit(
-        request: Request,
-        user_id: UUID,
-        user_service: UserServiceDep,
-        current_user: CurrentUserDep,
-):
-    edit_user = await user_service.get_user_by_id(user_id=user_id)
-    form = UserEditForm(request, obj=edit_user)
-    return partial_template(request, user=edit_user,
-                            partial_template="user/user_list_row_view.html")
-
-
-@router.post("/users/{user_id}")
-async def user_edit_post(
-        request: Request,
-        user_id: UUID,
-        user_service: UserServiceDep,
-        current_user: CurrentUserDep,
-
-):
+    user = await user_service.get_user_by_id(user_id=user_id)
     form = await UserEditForm.from_formdata(request)
     error = None
 
-    edit_user = await user_service.get_user_by_id(user_id=user_id)
     if await form.validate():
         try:
             updated_user = await user_service.update_user(
                 user_id=user_id,
                 update_dict=form.data,
             )
-            return user_view_template(request, user=updated_user, current_user=current_user, block_name="page_content")
+            return partial_template(request,
+                                    user=updated_user,
+                                    form=form,
+                                    partial_template=f"user/user_detail_view.html")
         except UserValueError as e:
-            error = e.args
+            error = e.args[0]
 
-    return user_edit_template(request, user=UserPublic.model_validate(edit_user), current_user=current_user,
-                              error=error, form=form,
-                              block_name="page_content")
+    return partial_template(request,
+                            user={"id": user_id},
+                            form=form,
+                            error=error,
+                            partial_template="user/user_detail_edit.html")
 
 
-@router.put("/users/{user_id}")
-async def user_edit_put(
+@router.get("/users/list/{user_id}/edit")
+async def user_edit(
         request: Request,
         user_id: UUID,
         user_service: UserServiceDep,
 ):
     edit_user = await user_service.get_user_by_id(user_id=user_id)
-    form = await UserEditForm.from_formdata(request)
+    form = UserEditForm(request, obj=edit_user)
+    return partial_template(request, user=edit_user, form=form,
+                            partial_template="user/user_list_edit.html")
 
-    # display the form with errors
+
+@router.get("/users/list/{user_id}")
+async def user_edit(
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
+):
+    edit_user = await user_service.get_user_by_id(user_id=user_id)
+    return partial_template(request, user=edit_user,
+                            partial_template="user/user_list_view.html")
+
+
+@router.put("/users/list/{user_id}")
+async def user_put(
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
+):
+    user = await user_service.get_user_by_id(user_id=user_id)
+    form = await UserEditForm.from_formdata(request)
     if not await form.validate():
+        # display the form with errors
         return partial_template(request,
-                                user=edit_user,
+                                user=user,
                                 form=form,
-                                partial_template="user/user_list_row_edit.html")
+                                partial_template="user/user_list_edit.html")
     try:
         updated_user = await user_service.update_user(
             user_id=user_id,
@@ -270,12 +267,12 @@ async def user_edit_put(
         return partial_template(request,
                                 user={"id": user_id},
                                 error=e.args[0],
-                                partial_template="user/user_list_row_error.html",
+                                partial_template="user/user_list_error.html",
                                 status_code=status.HTTP_400_BAD_REQUEST)
     return partial_template(request,
                             user=updated_user,
                             form=form,
-                            partial_template="user/user_list_row_view.html")
+                            partial_template=f"user/user_list_view.html")
 
 
 @router.delete("/users/{user_id}")
