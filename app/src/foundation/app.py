@@ -3,6 +3,7 @@ import sys
 
 from fastapi import FastAPI
 from loguru import logger
+from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.staticfiles import StaticFiles
 from starlette_wtf import CSRFProtectMiddleware
@@ -15,6 +16,7 @@ from foundation.core.config import BASE_DIR, settings
 from foundation.web.routes.app import router as html_app_router
 from foundation.web.routes.auth import router as html_auth_router
 from foundation.web.routes.users import router as html_users_router
+from foundation.web.templates import templates
 
 # delete all existing default loggers
 logger.remove()
@@ -53,3 +55,23 @@ async def on_startup():
 
     # setup admin user if not present in db
     tools.init_data.main()
+
+
+from fastapi.exception_handlers import (
+    http_exception_handler,
+)
+
+
+@app.exception_handler(StarletteHTTPException)
+async def custom_http_exception_handler(request, exc):
+    accept_header = request.headers.get("accept", "")
+
+    if "text/html" in accept_header:
+        if exc.status_code == 404:
+            return templates.TemplateResponse("pages/404.html", {"request": request}, status_code=404)
+        elif exc.status_code == 500:
+            return templates.TemplateResponse("pages/500.html", {"request": request}, status_code=500)
+        else:
+            raise exc
+    else:
+        return await http_exception_handler(request, exc)
