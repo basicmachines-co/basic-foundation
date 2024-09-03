@@ -2,6 +2,7 @@
   <!-- edit form -->
   <form hx-put="/users/detail/{{ user.id }}"
     hx-target="#user_detail"
+    hx-target-error="#user_error"
     hx-swap="outerHTML"
     method="put">
     <!-- CSRF Token -->{{ form.csrf_token() }}

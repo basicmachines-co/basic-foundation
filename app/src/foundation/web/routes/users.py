@@ -176,26 +176,29 @@ async def user_detail_put(
 ):
     user = await user_service.get_user_by_id(user_id=user_id)
     form = await UserEditForm.from_formdata(request)
-    error = None
 
-    if await form.validate():
-        try:
-            updated_user = await user_service.update_user(
-                user_id=user_id,
-                update_dict=form.data,
-            )
-            return partial_template(request,
-                                    user=updated_user,
-                                    form=form,
-                                    partial_template=f"user/user_detail_view.html")
-        except UserValueError as e:
-            error = e.args[0]
+    if not await form.validate():
+        return partial_template(request,
+                                user={"id": user_id},
+                                form=form,
+                                partial_template="user/user_detail_edit.html")
 
-    return partial_template(request,
-                            user={"id": user_id},
-                            form=form,
-                            error=error,
-                            partial_template="user/user_detail_edit.html")
+    try:
+        updated_user = await user_service.update_user(
+            user_id=user_id,
+            update_dict=form.data,
+        )
+        return partial_template(request,
+                                user=updated_user,
+                                form=form,
+                                partial_template=f"user/user_detail_view.html")
+    except UserValueError as e:
+        return partial_template(request,
+                                user={"id": user_id},
+                                form=form,
+                                error=e.args[0],
+                                partial_template="user/user_detail_error.html",
+                                status_code=status.HTTP_400_BAD_REQUEST)
 
 
 @router.get("/users/list/{user_id}/edit")
