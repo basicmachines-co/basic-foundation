@@ -86,17 +86,17 @@ async def login_post(
             email=form.username.data, password=form.password.data
         )
 
-        if user is None or not user.is_active:
-            return templates.TemplateResponse(
-                "pages/login.html",
-                dict(
-                    request=request,
-                    error="Incorrect Username or Password",
-                    status_code=401,
-                    form=form,
-                ),
-                block_name="login_form",
-            )
+    if user is None or not user.is_active:
+        return templates.TemplateResponse(
+            "pages/login.html",
+            dict(
+                request=request,
+                error="Incorrect Username or Password",
+                status_code=401,
+                form=form,
+            ),
+            block_name="login_form",
+        )
 
     return await login_user(request, user)
 

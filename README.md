@@ -228,6 +228,7 @@ uvicorn app.main:app --reload
         - [ ] delete user
         - [ ] edit profile
         - [ ] logout
+        - [ ] fixup styles for mobile
 
 ## references
 
