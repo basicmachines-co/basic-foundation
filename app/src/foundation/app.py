@@ -70,7 +70,5 @@ async def custom_http_exception_handler(request, exc):
             return templates.TemplateResponse("pages/404.html", {"request": request}, status_code=404)
         elif exc.status_code == 500:
             return templates.TemplateResponse("pages/500.html", {"request": request}, status_code=500)
-        else:
-            raise exc
-    else:
-        return await http_exception_handler(request, exc)
+        
+    return await http_exception_handler(request, exc)
