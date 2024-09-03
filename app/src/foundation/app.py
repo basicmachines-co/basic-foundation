@@ -24,9 +24,8 @@ logger.add(sys.stderr, colorize=True, backtrace=True, diagnose=True)
 
 app = FastAPI()
 
-# Add the session middleware to the FastAPI app
-app.add_middleware(SessionMiddleware, secret_key=settings.JWT_SECRET)
 # Add middleware for sessions and CSRF protection
+app.add_middleware(SessionMiddleware, secret_key=settings.JWT_SECRET)
 app.add_middleware(CSRFProtectMiddleware, csrf_secret=settings.CSRF_SECRET)
 
 app.mount("/static", StaticFiles(directory=f"{BASE_DIR}/static"), name="static")
