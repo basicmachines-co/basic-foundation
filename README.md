@@ -12,7 +12,7 @@ tech
 
 - fastapi
 - htmx
-- tailwindUI/Flowbite
+- tailwind.css
 
 ## Assumptions
 
@@ -127,29 +127,28 @@ uvicorn app.main:app --reload
 - [x] configure postgres on render.com
 - [x] db migrations
 - [x] add styling - tailwind/flowbite
-  - [x] alpine
-  - [x] tailwind plugins
-  - [x] login
-  - [x] register
-- [ ] replace auth
-  - remove fastapi-users
-  - replace with vanilla auth
-- [ ] shadcn components
-- [ ] crud users
+    - [x] alpine
+    - [x] tailwind plugins
+    - [x] login
+    - [x] register
+- [x] replace auth
+    - remove fastapi-users
+    - replace with vanilla auth
+- [-] shadcn components
+- [x] crud users
 - [ ] test coverage
-  - codecov https://github.com/marketplace/codecov/plan/MDIyOk1hcmtldHBsYWNlTGlzdGluZ1BsYW4xNg==#plan-16
-- [ ] playwright
-- [ ] csrf - https://github.com/simonw/asgi-csrf
-- [ ] view profile
+    - codecov https://github.com/marketplace/codecov/plan/MDIyOk1hcmtldHBsYWNlTGlzdGluZ1BsYW4xNg==#plan-16
+- [x] csrf - https://github.com/simonw/asgi-csrf
+- [x] view profile
 - [ ] app user management
-  - click to edit forms: https://htmx.org/examples/click-to-edit/
-  - icons: https://github.com/sirvan3tr/jinja-primer-icons
-  - example: render.com dashboard
-  - https://devdojo.com/wave#demo
-- [ ] forgot password flow
+    - click to edit forms: https://htmx.org/examples/click-to-edit/
+    - icons: https://github.com/sirvan3tr/jinja-primer-icons
+    - example: render.com dashboard
+    - https://devdojo.com/wave#demo
+- [x] forgot password flow
 - [ ] mailapi - sendgrid? or mailgun?
-  - https://sabuhish.github.io/fastapi-mail/example/
-  - https://pramod4040.medium.com/fastapi-forget-password-api-setup-632ab90ba958
+    - https://sabuhish.github.io/fastapi-mail/example/
+    - https://pramod4040.medium.com/fastapi-forget-password-api-setup-632ab90ba958
 - [ ] branch deploys (preview environments)
 - [ ] stripe integration
 - [ ] webhooks
@@ -158,27 +157,79 @@ uvicorn app.main:app --reload
 - [ ] sentry
 - [ ] codecov
 - [ ] static object storage
-  - https://docs.render.com/deploy-minio
-  - run minio
-    locally https://ktyptorio.medium.com/simple-openweather-api-service-using-fastapi-and-minio-object-storage-docker-version-f3587f7eb3de
+    - https://docs.render.com/deploy-minio
+    - run minio
+      locally https://ktyptorio.medium.com/simple-openweather-api-service-using-fastapi-and-minio-object-storage-docker-version-f3587f7eb3de
 - [ ] multi tenant
 - [ ] postgres row level security
-- [ ] web components
-  - lit
-  - shoelace
+- [-] web components
+    - lit
+    - shoelace
 - [ ] dockerfile - https://inboard.bws.bio/?
 - [ ] deploy docker to render
-  - https://docs.render.com/docker
+    - https://docs.render.com/docker
+- [x] install fastapi-jwt (https://github.com/k4black/fastapi-jwt/)
+- [x] implement examples from fastapi-jwt:
+    - https://k4black.github.io/fastapi-jwt/user_guide/examples/
+    - https://k4black.github.io/fastapi-jwt/
+- [x] clone https://github.com/tiangolo/full-stack-fastapi-template
+- [x] implement user db schema, models, tests
+- [x] add initial super user via init with hashed password
+- [x] implement users routes, tests
+- [x] implement auth api routes, tests
+- [x] implement emails
+- [x] refactor to app.core
+- [x] refactor to app.users
+- [x] refactor to app.auth
+- [x] recover password routes
+- [x] refactor app base package to foundation
+- [x] use fastapi cli command
+- [x] refactor service code
+    - send emails
+    - reset pass
+    - return Errors from service
+- [x] modify frontend routes
+- [ ] remove all print() calls
+- [ ] add faastapi-problems for error responses: https://github.com/NRWLDev/fastapi-problem
+- [x] remove fastapi-users
+- [ ] package as separate modules?
+    - core
+    - api
+    - web-htmx
+- [ ] permission checks
+    - [ ] user service with current user
+    - [ ] has to be at least one admin
+    - [ ] only admins can create/edit users
+    - [ ] db: rename is_superuser to is_admin
+- [ ] frontend
+    - [x] crud users happy path
+    - [x] reset password flow
+    - [x] user profile
+    - [x] pagination for users list
+    - [x] dashboard page
+    - [x] use pydantic models for form
+        - use ids in form post
+        - use one route for get/post for html pages
+    - [x] refactor web route files for cleanup
+    - [-] daisyui
+    - [ ] htmx
+        - [x] 404 page
+        - [x] 500 page
+        - [ ] oob swap for name after updating detail
+        - [-] db exception in error message
+    - [ ] playwrite tests for html flow
+        - [ ] login
+        - [ ] password reset
+        - [ ] dashboard
+        - [ ] list users
+        - [ ] view user
+        - [ ] edit user
+        - [ ] add user
+        - [ ] delete user
+        - [ ] edit profile
+        - [ ] logout
 
 ## references
 
 - https://github.com/mjhea0/awesome-fastapi
 - https://github.com/whythawk/full-stack-fastapi-postgresql/blob/master/docs/development-guide.md
-
-tailwind
-
-- https://github.com/themesberg/tailwind-flask-starter
-
-ui elements
-
-- https://devdojo.com/pines
