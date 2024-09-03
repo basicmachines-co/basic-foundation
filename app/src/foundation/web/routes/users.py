@@ -10,7 +10,7 @@ from foundation.users.deps import UserServiceDep, UserPaginationDep
 from foundation.users.models import User
 from foundation.users.schemas import UserPublic
 from foundation.users.services import UserValueError, UserNotFoundError, UserCreateError
-from foundation.web.deps import CurrentUserDep, LoginRequired
+from foundation.web.deps import CurrentUserDep, LoginRequired, AdminRequired
 from foundation.web.forms import UserCreateForm, UserEditForm
 from foundation.web.pagination import Page
 from foundation.web.templates import templates
@@ -96,7 +96,15 @@ def partial_template(
     )
 
 
-@router.get("/users")
+def authorize_admin_or_owner(*, user: User, current_user: UserPublic):
+    if current_user.is_superuser:
+        return
+    if user.id != current_user.id:
+        return Response(status_code=status.HTTP_403_FORBIDDEN)
+
+
+@router.get("/users",
+            dependencies=[AdminRequired])
 async def user_list(
         request: Request,
         user_pagination: UserPaginationDep,
@@ -110,7 +118,8 @@ async def user_list(
     return user_list_template(request, current_user=current_user, page=page)
 
 
-@router.get("/users/create")
+@router.get("/users/create",
+            dependencies=[AdminRequired])
 async def user_create(
         request: Request,
         current_user: CurrentUserDep,
@@ -119,7 +128,8 @@ async def user_create(
     return user_create_template(request, current_user=current_user, form=form)
 
 
-@router.post("/users/create")
+@router.post("/users/create",
+             dependencies=[AdminRequired])
 async def user_create_post(
         request: Request,
         user_service: UserServiceDep,
@@ -133,7 +143,7 @@ async def user_create_post(
                 create_dict=form.data
             )
             response = Response(status_code=status.HTTP_307_TEMPORARY_REDIRECT)
-            response.headers["HX-Redirect"] = router.url_path_for("user", user_id=created_user.id)
+            response.headers["HX-Redirect"] = router.url_path_for("user_detail_view", user_id=created_user.id)
             return response
         except UserCreateError as e:
             error = e.args[0]
@@ -149,6 +159,7 @@ async def user_detail_view(
         current_user: CurrentUserDep,
 ):
     view_user = await user_service.get_user_by_id(user_id=user_id)
+    authorize_admin_or_owner(user=view_user, current_user=current_user)
     return user_view_template(request, view_user, current_user=current_user)
 
 
@@ -157,9 +168,11 @@ async def user_detail_edit(
         request: Request,
         user_id: UUID,
         user_service: UserServiceDep,
+        current_user: CurrentUserDep,
 ):
     edit_user = await user_service.get_user_by_id(user_id=user_id)
     form = UserEditForm(request, obj=edit_user)
+    authorize_admin_or_owner(user=edit_user, current_user=current_user)
 
     # Generate a CSRF token and set it in a cookie, checked on delete
     token = csrf_token(request)
@@ -173,9 +186,11 @@ async def user_detail_put(
         request: Request,
         user_id: UUID,
         user_service: UserServiceDep,
+        current_user: CurrentUserDep,
 ):
     user = await user_service.get_user_by_id(user_id=user_id)
     form = await UserEditForm.from_formdata(request)
+    authorize_admin_or_owner(user=user, current_user=current_user)
 
     if not await form.validate():
         return partial_template(request,
@@ -184,9 +199,15 @@ async def user_detail_put(
                                 partial_template="user/user_detail_edit.html")
 
     try:
+        # if the user is not an admin, they can not set these fields
+        if not current_user.is_superuser:
+            update_dict = {k: v for k, v in form.data.items() if k not in ('is_superuser', 'is_active')}
+        else:
+            update_dict = form.data
+
         updated_user = await user_service.update_user(
             user_id=user_id,
-            update_dict=form.data,
+            update_dict=update_dict,
         )
         return partial_template(request,
                                 user=updated_user,
@@ -201,7 +222,8 @@ async def user_detail_put(
                                 status_code=status.HTTP_400_BAD_REQUEST)
 
 
-@router.get("/users/list/{user_id}/edit")
+@router.get("/users/list/{user_id}/edit",
+            dependencies=[AdminRequired])
 async def user_list_edit(
         request: Request,
         user_id: UUID,
@@ -213,7 +235,8 @@ async def user_list_edit(
                             partial_template="user/user_list_edit.html")
 
 
-@router.get("/users/list/{user_id}")
+@router.get("/users/list/{user_id}",
+            dependencies=[AdminRequired])
 async def user_list_view(
         request: Request,
         user_id: UUID,
@@ -224,7 +247,8 @@ async def user_list_view(
                             partial_template="user/user_list_view.html")
 
 
-@router.put("/users/list/{user_id}")
+@router.put("/users/list/{user_id}",
+            dependencies=[AdminRequired])
 async def user_list_put(
         request: Request,
         user_id: UUID,
@@ -256,7 +280,8 @@ async def user_list_put(
                             partial_template=f"user/user_list_view.html")
 
 
-@router.delete("/users/{user_id}")
+@router.delete("/users/{user_id}",
+               dependencies=[AdminRequired])
 async def delete_user(
         request: Request,
         user_id: UUID,
@@ -267,15 +292,15 @@ async def delete_user(
     """
     Delete a user. Only admins can delete users.
     """
-    if not current_user.is_superuser:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only admins can delete users.")
+    if not user_id == current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admins can not delete their own user")
 
     # Retrieve the CSRF token from the cookie
     csrf_token_in_cookie = request.cookies.get("csrf_token")
 
     # Validate the CSRF token directly from the header
     if not x_csrftoken or x_csrftoken != csrf_token_in_cookie:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid CSRF token.")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid CSRF token")
 
     try:
         user = await user_service.get_user_by_id(user_id=user_id)

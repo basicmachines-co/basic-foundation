@@ -2,7 +2,7 @@ from fastapi import Request
 from starlette.responses import RedirectResponse
 
 from foundation.users.deps import UserServiceDep
-from foundation.web.deps import CurrentUserDep, LoginRequired
+from foundation.web.deps import CurrentUserDep, LoginRequired, AdminRequired
 from foundation.web.templates import templates
 from foundation.web.utils import HTMLRouter
 
@@ -10,11 +10,16 @@ router = HTMLRouter()
 
 
 @router.get("/")
-async def index():
-    return RedirectResponse(url=router.url_path_for("dashboard"))
+async def index(request: Request,
+                current_user: CurrentUserDep,
+                ):
+    if current_user.is_superuser:
+        return RedirectResponse(url=router.url_path_for("dashboard"))
+    else:
+        return RedirectResponse(url=router.url_path_for("profile"))
 
 
-@router.get("/dashboard", dependencies=[LoginRequired])
+@router.get("/dashboard", dependencies=[AdminRequired])
 async def dashboard(
         request: Request,
         user_service: UserServiceDep,

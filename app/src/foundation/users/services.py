@@ -50,9 +50,11 @@ class UserService:
     """
 
     repository: Repository[User]
+    current_user: User | None
 
-    def __init__(self, repository: Repository[User]):
+    def __init__(self, repository: Repository[User], current_user: User | None = None):
         self.repository = repository
+        self.current_user = current_user
 
     async def get_users(self, *, skip: int, limit: int) -> (int, List[User]):
         count = await self.repository.count()

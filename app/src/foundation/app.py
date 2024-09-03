@@ -66,9 +66,11 @@ async def custom_http_exception_handler(request, exc):
     accept_header = request.headers.get("accept", "")
 
     if "text/html" in accept_header:
-        if exc.status_code == 404:
+        if exc.status_code == 403:
+            return templates.TemplateResponse("pages/403.html", {"request": request}, status_code=403)
+        elif exc.status_code == 404:
             return templates.TemplateResponse("pages/404.html", {"request": request}, status_code=404)
         elif exc.status_code == 500:
             return templates.TemplateResponse("pages/500.html", {"request": request}, status_code=500)
-        
+
     return await http_exception_handler(request, exc)

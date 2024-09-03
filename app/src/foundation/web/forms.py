@@ -42,12 +42,12 @@ class UserCreateForm(StarletteForm):
     full_name = StringField('Full Name', [validators.DataRequired(), validators.Length(min=2, max=100)])
     email = StringField('Email', [validators.DataRequired(), validators.Email()])
     password = PasswordField('Password', [validators.DataRequired(), validators.Length(min=8)])
-    is_active = BooleanField('Is Active')
-    is_superuser = BooleanField('Is Superuser')
+    is_active = BooleanField('Active')
+    is_superuser = BooleanField('Superuser')
 
 
 class UserEditForm(StarletteForm):
     full_name = StringField('Full Name', [validators.DataRequired(), validators.Length(min=2, max=100)])
     email = StringField('Email', [validators.DataRequired(), validators.Email()])
-    is_active = BooleanField('Is Active')
-    is_superuser = BooleanField('Is Superuser')
+    is_active = BooleanField('Active')
+    is_superuser = BooleanField('Superuser')

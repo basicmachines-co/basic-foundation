@@ -65,12 +65,17 @@
                     id="is_active"
                     name="is_active"
                     type="checkbox"
-                    {% if form.is_active.data|default(user.is_active) %}checked{% endif %}
+                    {% if form.is_active.data|default(user.is_active) %}
+                      checked
+                    {% endif %}
+                    {% if not user.is_superuser %}
+                      disabled
+                    {% endif %}
                   />
                 </div>
                 <div class="text-sm leading-6">
                   <label class="font-medium text-gray-900" for="comments">Active</label>
-                  <p class="mt-1 text-gray-600">The user is active</p>
+                  <p class="mt-1 text-gray-600">is active</p>
                 </div>
               </div>
               <div class="relative flex gap-x-3">
@@ -83,11 +88,14 @@
                     {% if form.is_superuser.data|default(user.is_superuser) %}
                       checked
                     {% endif %}
+                    {% if not user.is_superuser %}
+                      disabled
+                    {% endif %}
                   />
                 </div>
                 <div class="text-sm leading-6">
                   <label class="font-medium text-gray-900" for="candidates">Admin</label>
-                  <p class="mt-1 text-gray-600">The user has admin privileges</p>
+                  <p class="mt-1 text-gray-600">has admin privileges</p>
                 </div>
               </div>
             </div>

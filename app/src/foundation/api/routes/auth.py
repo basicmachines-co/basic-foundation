@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordRequestForm
 
-from foundation.api.deps import access_token_security, CurrentUser
+from foundation.api.deps import access_token_security_bearer, CurrentUserDep
 from foundation.core.config import settings
 from foundation.core.security import verify_password_reset_token
 from foundation.users.deps import UserServiceDep
@@ -23,8 +23,8 @@ router = APIRouter()
 
 @router.post("/login/access-token")
 async def login_access_token(
-    user_service: UserServiceDep,
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+        user_service: UserServiceDep,
+        form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> AuthToken:
     """
     OAuth2 compatible token login, get an access token for future requests
@@ -38,7 +38,7 @@ async def login_access_token(
         raise HTTPException(status_code=400, detail="Inactive user")
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     return AuthToken(
-        access_token=access_token_security.create_access_token(
+        access_token=access_token_security_bearer.create_access_token(
             subject=jsonable_encoder(AuthTokenPayload(id=user.id)),
             expires_delta=access_token_expires,
         )
@@ -46,7 +46,7 @@ async def login_access_token(
 
 
 @router.post("/login/test-token", response_model=UserPublic)
-async def test_token(current_user: CurrentUser) -> Any:
+async def test_token(current_user: CurrentUserDep) -> Any:
     """
     Test access token
     """
