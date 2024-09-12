@@ -2,16 +2,17 @@
 url: the endpoint to fetch dynamic content
 info.name: name of the stat being displayed
 #}
-{%- set target_id=name|lower|replace(' ', '-') -%}
-<div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-  <dt class="truncate text-sm font-medium text-gray-500">{{ name }}</dt>
-  <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900"
-    hx-get="{{ url }}"
-    hx-trigger="load"
-    hx-target="#stat-value-{{ target_id }}"
-  >
-    <!-- Placeholder spinner for loading -->
-    <span id="stat-value-{{ target_id }}">
+{% macro stat(url, name) %}
+  {%- set target_id=name|lower|replace(' ', '-') -%}
+  <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+    <dt class="truncate text-sm font-medium text-gray-500">{{ name }}</dt>
+    <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900"
+      hx-get="{{ url }}"
+      hx-trigger="load"
+      hx-target="#stat-value-{{ target_id }}"
+    >
+      <!-- Placeholder spinner for loading -->
+      <span id="stat-value-{{ target_id }}">
       <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <style>.spinner_ajPY {
               transform-origin: center;
@@ -28,5 +29,6 @@ info.name: name of the stat being displayed
             class="spinner_ajPY" />
         </svg>
     </span>
-  </dd>
-</div>
+    </dd>
+  </div>
+{% endmacro %}

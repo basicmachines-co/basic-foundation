@@ -1,20 +1,12 @@
 {% extends "layouts/application.html" %}
-
+{% from "macros/stat.html" import stat %}
 {% block content %}
   <div class="pl-2 pr-2">
     <h3 class="pl-2 pt-2 text-base font-semibold leading-6 text-gray-900">Users</h3>
     <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-      {% with url="/dashboard/users/count", name= "Total Users" %}
-        {% include 'partials/stat.html' %}
-      {% endwith %}
-
-      {% with url="/dashboard/users/active_count", name= "Active Users" %}
-        {% include 'partials/stat.html' %}
-      {% endwith %}
-
-      {% with url="/dashboard/users/admin_count", name= "Admin Users" %}
-        {% include 'partials/stat.html' %}
-      {% endwith %}
+      <!-- total users -->{{ stat("/dashboard/users/count", "Total Users") }}
+      <!-- active users -->{{ stat("/dashboard/users/active_count", "Active Users") }}
+      <!-- admin users -->{{ stat("/dashboard/users/admin_count", "Admin Users") }}
     </dl>
   </div>
 {% endblock content %}
