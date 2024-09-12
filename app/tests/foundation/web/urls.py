@@ -1,0 +1,6 @@
+BASE_URL = "http://localhost:8000"
+URL_LOGIN_PAGE = f"{BASE_URL}/login"
+URL_DASHBOARD_PAGE = f"{BASE_URL}/dashboard"
+URL_PROFILE_PAGE = f"{BASE_URL}/profile"
+URL_REGISTER_PAGE = f"{BASE_URL}/register"
+URL_FORGOT_PASSWORD_PAGE = f"{BASE_URL}/forgot-password"
