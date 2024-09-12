@@ -4,22 +4,17 @@
   <div class="pl-2 pr-2">
     <h3 class="pl-2 pt-2 text-base font-semibold leading-6 text-gray-900">Users</h3>
     <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-      <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-        <dt class="truncate text-sm font-medium text-gray-500">Total Users</dt>
-        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{ users_count }}</dd>
-      </div>
-      <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-        <dt class="truncate text-sm font-medium text-gray-500">Active Users</dt>
-        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-          {{ active_users_count }}
-        </dd>
-      </div>
-      <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-        <dt class="truncate text-sm font-medium text-gray-500">Admin Users</dt>
-        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-          {{ admin_users_count }}
-        </dd>
-      </div>
+      {% with url="/dashboard/users/count", name= "Total Users" %}
+        {% include 'partials/stat.html' %}
+      {% endwith %}
+
+      {% with url="/dashboard/users/active_count", name= "Active Users" %}
+        {% include 'partials/stat.html' %}
+      {% endwith %}
+
+      {% with url="/dashboard/users/admin_count", name= "Admin Users" %}
+        {% include 'partials/stat.html' %}
+      {% endwith %}
     </dl>
   </div>
 {% endblock content %}
