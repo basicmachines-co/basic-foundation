@@ -1,12 +1,22 @@
 {% extends "layouts/application.html" %}
-{% from "macros/stat.html" import stat %}
+{% from "macros.html" import svg_loader %}
+
 {% block content %}
   <div class="pl-2 pr-2">
     <h3 class="pl-2 pt-2 text-base font-semibold leading-6 text-gray-900">Users</h3>
     <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-      <!-- total users -->{{ stat("/dashboard/users/count", "Total Users") }}
-      <!-- active users -->{{ stat("/dashboard/users/active_count", "Active Users") }}
-      <!-- admin users -->{{ stat("/dashboard/users/admin_count", "Admin Users") }}
+      <!-- Total Users -->
+      <div hx-get="/dashboard/users/count" hx-trigger="load" hx-swap="outerHTML">
+        {{ svg_loader() }}
+      </div>
+      <!-- Active Users -->
+      <div hx-get="/dashboard/users/active_count" hx-trigger="load" hx-swap="outerHTML">
+        {{ svg_loader() }}
+      </div>
+      <!-- Admin Users -->
+      <div hx-get="/dashboard/users/admin_count" hx-trigger="load" hx-swap="outerHTML">
+        {{ svg_loader() }}
+      </div>
     </dl>
   </div>
-{% endblock content %}
+{% endblock %}

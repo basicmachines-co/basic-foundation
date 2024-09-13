@@ -39,7 +39,11 @@ async def dashboard_users_count(
         user_service: UserServiceDep
 ):
     users_count = await user_service.get_users_count()
-    return str(users_count)
+    return templates.TemplateResponse("partials/stat.html", {
+        "request": request,
+        "name": "Total Users",
+        "value": users_count
+    })
 
 
 @router.get("/dashboard/users/active_count", dependencies=[AdminRequired])
@@ -47,7 +51,12 @@ async def dashboard_active_users_count(
         request: Request,
         user_service: UserServiceDep
 ):
-    return str(await user_service.get_active_users_count())
+    count = await user_service.get_active_users_count()
+    return templates.TemplateResponse("partials/stat.html", {
+        "request": request,
+        "name": "Active Users",
+        "value": count
+    })
 
 
 @router.get("/dashboard/users/admin_count", dependencies=[AdminRequired])
@@ -55,7 +64,12 @@ async def dashboard_admin_users_count(
         request: Request,
         user_service: UserServiceDep
 ):
-    return str(await user_service.get_admin_users_count())
+    count = await user_service.get_admin_users_count()
+    return templates.TemplateResponse("partials/stat.html", {
+        "request": request,
+        "name": "Active Users",
+        "value": count
+    })
 
 
 @router.get("/profile", dependencies=[LoginRequired])
