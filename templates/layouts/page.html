@@ -4,8 +4,11 @@
   <div class="lg:pl-2 lg:pr-2">
     <!-- page content -->
     <section id="page_content">
-      {% block page_content %}
-      {% endblock page_content %}
+      <!-- Modal container -->
+      <div id="modal-container" x-data="{ modal: false }">
+        {% block page_content %}
+        {% endblock page_content %}
+      </div>
     </section>
   </div>
 {% endblock content %}
