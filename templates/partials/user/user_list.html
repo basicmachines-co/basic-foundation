@@ -1,4 +1,6 @@
-<section id="user_list" hx-get="/users/list" hx-trigger="refresh from:body">
+<section id="user_list"
+  hx-get="/users/list?page={{ page.page }}&page_size={{ page.page_size }}"
+  hx-trigger="refresh from:body">
   {% include "partials/flash_message.html" %}
   <table class="min-w-full divide-y divide-gray-300">
     <thead>

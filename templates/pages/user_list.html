@@ -21,7 +21,7 @@
         <div
           id="user-list"
           class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8"
-          hx-get="/users/list"
+          hx-get="/users/list?page={{ page.page }}&page_size={{ page.page_size }}"
           hx-trigger="load">
           {{ svg_loader() }}
         </div>
