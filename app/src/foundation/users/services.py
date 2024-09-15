@@ -41,7 +41,7 @@ class UserValueError(Exception):
     """Raised when a user can not be updated."""
 
     def __init__(self, id_val: UUID | str, value: Any = None):
-        super().__init__(f"user {id_val} can not be updated with value '{value}'")
+        super().__init__(f"user can not be updated with value '{value}'")
 
 
 class UserService:

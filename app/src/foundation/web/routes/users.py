@@ -82,7 +82,10 @@ def partial_template(
         partial_template,
         form: UserEditForm = None,
         error: str = None,
-        status_code=status.HTTP_200_OK
+        status_code=status.HTTP_200_OK,
+        block_name=None,
+        headers=None,
+        **kwargs
 ) -> templates.TemplateResponse:
     return templates.TemplateResponse(
         f"partials/{partial_template}",
@@ -90,9 +93,12 @@ def partial_template(
             request=request,
             user=user,
             form=form,
-            error=error
+            error=error,
+            **kwargs
         ),
         status_code,
+        headers=headers,
+        block_name=block_name,
     )
 
 
@@ -218,11 +224,11 @@ async def user_detail_put(
                                 user={"id": user_id},
                                 form=form,
                                 error=e.args[0],
-                                partial_template="user/user_detail_error.html",
+                                partial_template="user/user_edit_error.html",
                                 status_code=status.HTTP_400_BAD_REQUEST)
 
 
-@router.get("/users/list/{user_id}/edit",
+@router.get("/users/modal/{user_id}/edit",
             dependencies=[AdminRequired])
 async def user_list_edit(
         request: Request,
@@ -232,7 +238,7 @@ async def user_list_edit(
     edit_user = await user_service.get_user_by_id(user_id=user_id)
     form = UserEditForm(request, obj=edit_user)
     return partial_template(request, user=edit_user, form=form,
-                            partial_template="user/user_list_edit.html")
+                            partial_template="user/user_modal_edit.html")
 
 
 @router.get("/users/list/{user_id}",
@@ -247,7 +253,7 @@ async def user_list_view(
                             partial_template="user/user_list_view.html")
 
 
-@router.put("/users/list/{user_id}",
+@router.put("/users/modal/{user_id}",
             dependencies=[AdminRequired])
 async def user_list_put(
         request: Request,
@@ -261,7 +267,9 @@ async def user_list_put(
         return partial_template(request,
                                 user=user,
                                 form=form,
-                                partial_template="user/user_list_edit.html")
+                                partial_template="user/user_modal_edit.html",
+                                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                                block_name="modal_content")
     try:
         updated_user = await user_service.update_user(
             user_id=user_id,
@@ -271,13 +279,16 @@ async def user_list_put(
         # display an error notice
         return partial_template(request,
                                 user={"id": user_id},
+                                form=form,
                                 error=e.args[0],
-                                partial_template="user/user_list_error.html",
+                                partial_template="user/user_modal_edit.html",
                                 status_code=status.HTTP_400_BAD_REQUEST)
     return partial_template(request,
                             user=updated_user,
                             form=form,
-                            partial_template=f"user/user_list_view.html")
+                            close_modal=True,
+                            partial_template=f"user/user_modal_edit.html",
+                            headers={"HX-Trigger": "refreshUsers"})
 
 
 @router.delete("/users/{user_id}",

@@ -1,21 +1,25 @@
-<section id="user_detail">
-  <!-- edit form -->
-  <form hx-put="/users/detail/{{ user.id }}"
-    hx-target="#user_detail"
-    hx-target-error="#user_edit_error"
-    hx-swap="outerHTML"
-    method="put">
-    <!-- CSRF Token -->{{ form.csrf_token() }}
-    <!-- user detail -->
-    <div class="px-6">
-      {% if error %}
-        {% include "partials/user/user_edit_error.html" %}
-      {% endif %}
+{% extends "layouts/modal.html" %}
 
+{% block modal_content %}
+
+  <section id="user_edit">
+    <!-- user edit form -->
+    {% if error %}
+      {% include "partials/user/user_edit_error.html" %}
+    {% endif %}
+
+    <form
+      id="user-edit-{{ user.id }}"
+      hx-put="/users/modal/{{ user.id }}"
+      hx-target="#modal"
+      hx-target-error="#modal-content"
+      hx-swap="outerHTML"
+      method="put">
+      <!-- CSRF Token -->{{ form.csrf_token() }}
       <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
         <label
           class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
-          for="first-name"
+          for="full_name"
         > Full Name </label>
         <div class="mt-2 sm:col-span-2 sm:mt-0">
           <input
@@ -43,7 +47,7 @@
             id="email"
             name="email"
             type="email"
-            value="{{ form.email.data|default(user.email, true) }}"
+            value="{{ form.email.data }}"
           />
           {% if form.email.errors %}
             <p class="mt-2 text-sm text-red-600">{{ form.email.errors[0] }}</p>
@@ -65,16 +69,13 @@
                     id="is_active"
                     name="is_active"
                     type="checkbox"
-                    {% if form.is_active.data|default(user.is_active) %}
+                    {% if form.is_active.data %}
                       checked
-                    {% endif %}
-                    {% if not user.is_superuser %}
-                      disabled
                     {% endif %}
                   />
                 </div>
                 <div class="text-sm leading-6">
-                  <label class="font-medium text-gray-900" for="comments">Active</label>
+                  <label class="font-medium text-gray-900" for="is_active">Active</label>
                   <p class="mt-1 text-gray-600">is active</p>
                 </div>
               </div>
@@ -85,16 +86,13 @@
                     id="is_superuser"
                     name="is_superuser"
                     type="checkbox"
-                    {% if form.is_superuser.data|default(user.is_superuser) %}
+                    {% if form.is_superuser.data %}
                       checked
-                    {% endif %}
-                    {% if not user.is_superuser %}
-                      disabled
                     {% endif %}
                   />
                 </div>
                 <div class="text-sm leading-6">
-                  <label class="font-medium text-gray-900" for="candidates">Admin</label>
+                  <label class="font-medium text-gray-900" for="is_superuser">Admin</label>
                   <p class="mt-1 text-gray-600">has admin privileges</p>
                 </div>
               </div>
@@ -102,29 +100,22 @@
           </div>
         </div>
       </fieldset>
-      <!-- save/cancel buttons -->
-      <div class="mt-6 flex items-center justify-end gap-x-2">
-        <a href="/users/{{ user.id }}">
-          <button class="text-sm font-semibold leading-6 text-gray-900" type="button">
-            Cancel
-          </button>
-        </a>
-        <button
-          class="inline-flex justify-center rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600"
-          type="submit"
-        >
-          Save
-        </button>
-        <button
-          hx-delete="/users/{{ user.id }}"
-          hx-headers='{"X-CSRFToken": "{{ form.csrf_token.current_token }}"}'
-          type="button"
-          hx-confirm="Are you sure you wish to delete this user?"
-          class="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-          Delete
-        </button>
-      </div>
+    </form>
+    <!-- /edit form -->
+    <!-- save/cancel buttons -->
+    <div class="mt-6 flex items-center justify-end gap-x-2">
+      <button
+        form="user-edit-{{ user.id }}"
+        type="submit"
+        class="inline-flex justify-center rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600">
+        Save
+      </button>
+      <button
+        form="user-edit-{{ user.id }}"
+        @click="modal = false"
+        class="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+        Cancel
+      </button>
     </div>
-  </form>
-  <!-- /edit form -->
-</section>
+  </section>
+{% endblock modal_content %}
