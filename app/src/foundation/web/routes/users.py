@@ -12,7 +12,6 @@ from foundation.users.schemas import UserPublic
 from foundation.users.services import UserValueError, UserNotFoundError, UserCreateError
 from foundation.web.deps import CurrentUserDep, LoginRequired, AdminRequired
 from foundation.web.forms import UserCreateForm, UserEditForm
-from foundation.web.pagination import Page
 from foundation.web.templates import templates
 from foundation.web.utils import flash, HTMLRouter
 
@@ -21,18 +20,16 @@ router = HTMLRouter(dependencies=[LoginRequired])
 
 # helper methods to return template responses
 
-def user_list_template(
+def users_template(
         request: Request,
         *,
         current_user: UserPublic,
-        page: Page
 ) -> templates.TemplateResponse:
     return templates.TemplateResponse(
-        "pages/user_list.html",
+        "pages/users.html",
         dict(
             request=request,
             current_user=current_user,
-            page=page,
         ),
     )
 
@@ -111,22 +108,16 @@ def authorize_admin_or_owner(*, user: User, current_user: UserPublic):
 
 @router.get("/users",
             dependencies=[AdminRequired])
-async def user_page(
+async def users_page(
         request: Request,
-        user_pagination: UserPaginationDep,
         current_user: CurrentUserDep,
-        page: int = 1,
-        page_size: int = 10,
 ):
-    query = select(User)
-    pagination = user_pagination.paginate(request, query, page_size=page_size)
-    page = await pagination.page(page=page)
-    return user_list_template(request, current_user=current_user, page=page)
+    return users_template(request, current_user=current_user)
 
 
 @router.get("/users/list",
             dependencies=[AdminRequired])
-async def user_page(
+async def users_list(
         request: Request,
         user_pagination: UserPaginationDep,
         current_user: CurrentUserDep,
