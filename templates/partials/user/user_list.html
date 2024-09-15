@@ -1,0 +1,29 @@
+<section id="user_list" hx-get="/users/list" hx-trigger="refresh from:body">
+  <table class="min-w-full divide-y divide-gray-300">
+    <thead>
+    <tr>
+      <th class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
+        scope="col">Name
+      </th>
+      <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Email</th>
+      <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Active</th>
+      <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Admin</th>
+      <th class="px-3 py-3.5 text-right text-sm font-semibold text-gray-400" scope="col">Edit</th>
+    </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200">
+    {% for user in page.items %}
+      {% include "partials/user/user_list_view.html" %}
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    <tr>
+      <td colspan="5">
+        {% with page=page %}
+          {% include "partials/pagination.html" %}
+        {% endwith %}
+      </td>
+    </tr>
+    </tfoot>
+  </table>
+</section>

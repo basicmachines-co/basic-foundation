@@ -111,7 +111,7 @@ def authorize_admin_or_owner(*, user: User, current_user: UserPublic):
 
 @router.get("/users",
             dependencies=[AdminRequired])
-async def user_list(
+async def user_page(
         request: Request,
         user_pagination: UserPaginationDep,
         current_user: CurrentUserDep,
@@ -122,6 +122,21 @@ async def user_list(
     pagination = user_pagination.paginate(request, query, page_size=page_size)
     page = await pagination.page(page=page)
     return user_list_template(request, current_user=current_user, page=page)
+
+
+@router.get("/users/list",
+            dependencies=[AdminRequired])
+async def user_page(
+        request: Request,
+        user_pagination: UserPaginationDep,
+        current_user: CurrentUserDep,
+        page: int = 1,
+        page_size: int = 10,
+):
+    query = select(User)
+    pagination = user_pagination.paginate(request, query, page_size=page_size)
+    page = await pagination.page(page=page)
+    return partial_template(request, partial_template="user/user_list.html", current_user=current_user, page=page)
 
 
 @router.get("/users/create",
@@ -288,7 +303,7 @@ async def user_list_put(
                             form=form,
                             close_modal=True,
                             partial_template=f"user/user_modal_edit.html",
-                            headers={"HX-Trigger": "refreshUsers"})
+                            headers={"HX-Trigger": "refresh"})
 
 
 @router.delete("/users/{user_id}",
