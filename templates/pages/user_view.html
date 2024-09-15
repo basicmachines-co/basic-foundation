@@ -2,27 +2,24 @@
 
 {% block page_content %}
   <section id="user_page">
-    <!--  page content card -->
-    <div class="rounded-lg border-b border-gray-200 bg-white py-5">
-      {% if current_user.is_superuser %}
-        {% with item={"link": "/users", "name": "Users"} %}
-          {% include "partials/breadcrumb.html" %}
-        {% endwith %}
-      {% endif %}
+    {% if current_user.is_superuser %}
+      {% with item={"link": "/users", "name": "Users"} %}
+        {% include "partials/breadcrumb.html" %}
+      {% endwith %}
+    {% endif %}
 
-      <!-- header -->
-      <div class="px-4 lg:py-6 sm:flex sm:items-center sm:px-6 sm:py-2">
-        <div class="sm:flex-auto">
-          <h1 class="text-base font-semibold leading-6 text-gray-900">{{ user.full_name }}</h1>
-        </div>
+    <!-- header -->
+    <div class="px-4 lg:py-6 sm:flex sm:items-center sm:px-6 sm:py-2">
+      <div class="sm:flex-auto">
+        <h1 class="text-base font-semibold leading-6 text-gray-900">{{ user.full_name }}</h1>
       </div>
-      <!-- detail -->
-      <div class="mt-8 border-t border-gray-100">
-        <!-- displayed on error -->
-        <section id="user_error">
-        </section>
-        {% include "partials/user/user_detail_view.html" %}
-      </div>
+    </div>
+    <!-- detail -->
+    <div class="mt-8 border-t border-gray-100">
+      <!-- displayed on error -->
+      <section id="user_error">
+      </section>
+      {% include "partials/user/user_detail_view.html" %}
     </div>
   </section>
 

@@ -6,8 +6,11 @@
     <section id="page_content">
       <!-- Modal container -->
       <div id="modal-container" x-data="{ modal: false }">
-        {% block page_content %}
-        {% endblock page_content %}
+        <!--  page content card -->
+        <div class="rounded-lg border border-gray-200 bg-white py-5">
+          {% block page_content %}
+          {% endblock page_content %}
+        </div>
       </div>
     </section>
   </div>
