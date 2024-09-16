@@ -1,30 +1,68 @@
+{% macro up_down(column_name, order_by, ascending) %}
+  {% if column_name == order_by and ascending %}
+    <svg xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="ml-2 h-4 w-4 transition-transform duration-200 ease-in-out">
+      <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
+    </svg>
+  {% elif column_name == order_by %}
+    <svg xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="ml-2 h-4 w-4 transition-transform duration-200 ease-in-out">
+      <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+    </svg>
+  {% endif %}
+{% endmacro %}
+
 <section id="user_list"
-  hx-get="/users/list?page={{ page.page }}&page_size={{ page.page_size }}"
+  hx-get="/users/list?page={{ page.page }}&page_size={{ page.page_size }}&order_by={{ page.order_by }}&ascending={{ page.ascending }}"
   hx-trigger="refresh from:body">
-  {% include "partials/flash_message.html" %}
+  <!-- Flash message partial -->{% include "partials/flash_message.html" %}
+  <!-- Table Layout -->
   <table class="min-w-full divide-y divide-gray-300">
     <thead>
     <tr>
-      <th class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
-        scope="col">Name
+      <!-- Name -->
+      <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900">
+        <div class="flex items-center cursor-pointer"
+          hx-get="/users/list?page={{ page.page }}&page_size={{ page.page_size }}&order_by=full_name&ascending={{ not page.ascending }}"
+          hx-target="#user_list"
+          hx-swap="outerHTML">
+          <span>Name</span> {{ up_down("full_name", page.order_by, page.ascending) }}
+        </div>
       </th>
-      <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Email</th>
+      <!-- Email Column with Sorting -->
+      <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900">
+        <div class="flex items-center cursor-pointer"
+          hx-get="/users/list?page={{ page.page }}&page_size={{ page.page_size }}&order_by=email&ascending={{ not page.ascending }}"
+          hx-target="#user_list"
+          hx-swap="outerHTML">
+          <span>Email</span> {{ up_down("email", page.order_by, page.ascending) }}
+        </div>
+      </th>
+      <!-- Active and Admin columns (no sorting) -->
       <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Active</th>
       <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Admin</th>
       <th class="px-3 py-3.5 text-right text-sm font-semibold text-gray-400" scope="col">Edit</th>
     </tr>
     </thead>
+    <!-- Table Body -->
     <tbody class="divide-y divide-gray-200">
     {% for user in page.items %}
       {% include "partials/user/user_list_view.html" %}
     {% endfor %}
     </tbody>
+    <!-- Pagination Controls -->
     <tfoot>
     <tr>
       <td colspan="5">
-        {% with page=page %}
-          {% include "partials/pagination.html" %}
-        {% endwith %}
+        {% include "partials/pagination.html" %}
       </td>
     </tr>
     </tfoot>

@@ -3,7 +3,7 @@ from uuid import UUID
 from fastapi import Request, Header, HTTPException
 from fastapi import Response
 from fastapi import status
-from sqlalchemy import select
+from sqlalchemy import select, desc, asc
 from starlette_wtf import csrf_token
 
 from foundation.users.deps import UserServiceDep, UserPaginationDep
@@ -123,9 +123,21 @@ async def users_list(
         current_user: CurrentUserDep,
         page: int = 1,
         page_size: int = 10,
+        order_by: str = "full_name",
+        ascending: bool = True,
 ):
+    valid_columns = ["full_name", "email"]
+    if order_by not in valid_columns:
+        order_by = "full_name"
+
     query = select(User)
-    pagination = user_pagination.paginate(request, query, page_size=page_size)
+
+    if ascending:
+        query = query.order_by(asc(getattr(User, order_by)))
+    else:
+        query = query.order_by(desc(getattr(User, order_by)))
+
+    pagination = user_pagination.paginate(request, query, page_size=page_size, order_by=order_by, asc=ascending)
     page = await pagination.page(page=page)
     return partial_template(request, partial_template="user/user_list.html", current_user=current_user, page=page)
 
