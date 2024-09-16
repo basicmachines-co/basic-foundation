@@ -300,7 +300,9 @@ async def user_list_put(
                                 form=form,
                                 error=e.args[0],
                                 partial_template="user/user_modal_edit.html",
-                                status_code=status.HTTP_400_BAD_REQUEST)
+                                status_code=status.HTTP_400_BAD_REQUEST,
+                                block_name="modal_content")
+    
     flash(request, f"User {user.full_name} updated")
     return partial_template(request,
                             user=updated_user,

@@ -12,10 +12,11 @@
       id="user-edit"
       hx-put="/users/modal/{{ user.id }}"
       hx-target="#modal"
-      hx-target-error="#modal-content"
+      hx-target-error="#user_edit"
       hx-swap="outerHTML"
       method="put">
       <!-- CSRF Token -->{{ form.csrf_token() }}
+      <!-- Full Name -->
       <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
         <label
           class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
@@ -24,17 +25,20 @@
         <div class="mt-2 sm:col-span-2 sm:mt-0">
           <input
             autocomplete="given-name"
-            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:max-w-xs sm:text-sm sm:leading-6"
+            class="block w-full rounded-md py-1.5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:max-w-xs sm:text-sm sm:leading-6
+          {{ 'border-red-600 ring-red-600' if form.full_name.errors else 'ring-gray-300' }}"
             id="full_name"
             name="full_name"
-            value="{{ form.full_name.data }}"
             type="text"
+            value="{{ form.full_name.data }}"
+            required
           />
           {% if form.full_name.errors %}
             <p class="mt-2 text-sm text-red-600">{{ form.full_name.errors[0] }}</p>
           {% endif %}
         </div>
       </div>
+      <!-- Email Address -->
       <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
         <label
           class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
@@ -43,17 +47,20 @@
         <div class="mt-2 sm:col-span-2 sm:mt-0">
           <input
             autocomplete="email"
-            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:max-w-md sm:text-sm sm:leading-6"
+            class="block w-full rounded-md py-1.5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:max-w-md sm:text-sm sm:leading-6
+          {{ 'border-red-600 ring-red-600' if form.email.errors else 'ring-gray-300' }}"
             id="email"
             name="email"
             type="email"
             value="{{ form.email.data }}"
+            required
           />
           {% if form.email.errors %}
             <p class="mt-2 text-sm text-red-600">{{ form.email.errors[0] }}</p>
           {% endif %}
         </div>
       </div>
+      <!-- Status Checkboxes -->
       <fieldset>
         <legend class="sr-only">Status</legend>
         <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:py-6">
@@ -100,22 +107,22 @@
           </div>
         </div>
       </fieldset>
+      <!-- Save/Cancel Buttons -->
+      <div class="mt-6 flex items-center justify-end gap-x-2">
+        <button
+          form="user-edit"
+          type="submit"
+          class="inline-flex justify-center rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600">
+          Save
+        </button>
+        <button
+          form="user-edit"
+          @click="modal = false"
+          class="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+          Cancel
+        </button>
+      </div>
     </form>
-    <!-- /edit form -->
-    <!-- save/cancel buttons -->
-    <div class="mt-6 flex items-center justify-end gap-x-2">
-      <button
-        form="user-edit"
-        type="submit"
-        class="inline-flex justify-center rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600">
-        Save
-      </button>
-      <button
-        form="user-edit"
-        @click="modal = false"
-        class="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-        Cancel
-      </button>
-    </div>
   </section>
+
 {% endblock modal_content %}
