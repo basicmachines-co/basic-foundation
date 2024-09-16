@@ -1,107 +1,16 @@
 <section id="user_detail">
   <!-- edit form -->
-  <form hx-put="/users/detail/{{ user.id }}"
-    hx-target="#user_detail"
-    hx-target-error="#user_edit_error"
-    hx-swap="outerHTML"
-    method="put">
-    <!-- CSRF Token -->{{ form.csrf_token() }}
-    <!-- user detail -->
-    <div class="px-6">
-      {% if error %}
-        {% include "partials/user/user_edit_error.html" %}
-      {% endif %}
+  {% if error %}
+    {% include "partials/user/user_edit_error.html" %}
+  {% endif %}
 
-      <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
-        <label
-          class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
-          for="first-name"
-        > Full Name </label>
-        <div class="mt-2 sm:col-span-2 sm:mt-0">
-          <input
-            autocomplete="given-name"
-            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:max-w-xs sm:text-sm sm:leading-6"
-            id="full_name"
-            name="full_name"
-            value="{{ form.full_name.data }}"
-            type="text"
-          />
-          {% if form.full_name.errors %}
-            <p class="mt-2 text-sm text-red-600">{{ form.full_name.errors[0] }}</p>
-          {% endif %}
-        </div>
-      </div>
-      <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
-        <label
-          class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
-          for="email"
-        > Email address </label>
-        <div class="mt-2 sm:col-span-2 sm:mt-0">
-          <input
-            autocomplete="email"
-            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:max-w-md sm:text-sm sm:leading-6"
-            id="email"
-            name="email"
-            type="email"
-            value="{{ form.email.data|default(user.email, true) }}"
-          />
-          {% if form.email.errors %}
-            <p class="mt-2 text-sm text-red-600">{{ form.email.errors[0] }}</p>
-          {% endif %}
-        </div>
-      </div>
-      <fieldset>
-        <legend class="sr-only">Status</legend>
-        <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:py-6">
-          <div aria-hidden="true" class="text-sm font-semibold leading-6 text-gray-900">
-            Status
-          </div>
-          <div class="mt-4 sm:col-span-2 sm:mt-0">
-            <div class="max-w-lg space-y-6">
-              <div class="relative flex gap-x-3">
-                <div class="flex h-6 items-center">
-                  <input
-                    class="h-4 w-4 rounded border-gray-300 text-slate-600 focus:ring-slate-600"
-                    id="is_active"
-                    name="is_active"
-                    type="checkbox"
-                    {% if form.is_active.data|default(user.is_active) %}
-                      checked
-                    {% endif %}
-                    {% if not user.is_superuser %}
-                      disabled
-                    {% endif %}
-                  />
-                </div>
-                <div class="text-sm leading-6">
-                  <label class="font-medium text-gray-900" for="comments">Active</label>
-                  <p class="mt-1 text-gray-600">is active</p>
-                </div>
-              </div>
-              <div class="relative flex gap-x-3">
-                <div class="flex h-6 items-center">
-                  <input
-                    class="h-4 w-4 rounded border-gray-300 text-slate-600 focus:ring-slate-600"
-                    id="is_superuser"
-                    name="is_superuser"
-                    type="checkbox"
-                    {% if form.is_superuser.data|default(user.is_superuser) %}
-                      checked
-                    {% endif %}
-                    {% if not user.is_superuser %}
-                      disabled
-                    {% endif %}
-                  />
-                </div>
-                <div class="text-sm leading-6">
-                  <label class="font-medium text-gray-900" for="candidates">Admin</label>
-                  <p class="mt-1 text-gray-600">has admin privileges</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </fieldset>
+  <div class="px-6">
+    <form hx-put="/users/detail/{{ user.id }}"
+      hx-target="#user_detail"
+      hx-target-error="#user_edit_error"
+      hx-swap="outerHTML"
+      method="put">
+      {% include "partials/user/user_form.html" %}
       <!-- save/cancel buttons -->
       <div class="mt-6 flex items-center justify-end gap-x-2">
         <a href="/users/{{ user.id }}">
@@ -124,7 +33,7 @@
           Delete
         </button>
       </div>
-    </div>
-  </form>
+    </form>
+  </div>
   <!-- /edit form -->
 </section>

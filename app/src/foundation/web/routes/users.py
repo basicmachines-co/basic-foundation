@@ -233,6 +233,7 @@ async def user_detail_put(
             user_id=user_id,
             update_dict=update_dict,
         )
+        flash(request, f"User {updated_user.full_name} updated")
         return partial_template(request,
                                 user=updated_user,
                                 form=form,
@@ -273,7 +274,7 @@ async def user_list_view(
 
 @router.put("/users/modal/{user_id}",
             dependencies=[AdminRequired])
-async def user_list_put(
+async def user_modal_put(
         request: Request,
         user_id: UUID,
         user_service: UserServiceDep,
@@ -302,7 +303,7 @@ async def user_list_put(
                                 partial_template="user/user_modal_edit.html",
                                 status_code=status.HTTP_400_BAD_REQUEST,
                                 block_name="modal_content")
-    
+
     flash(request, f"User {user.full_name} updated")
     return partial_template(request,
                             user=updated_user,
