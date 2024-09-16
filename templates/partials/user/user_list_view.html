@@ -60,8 +60,16 @@
     {{ user.full_name }}
   </td>
   <td class="whitespace-nowrap px-2 py-4 text-sm text-gray-500">{{ user.email }}</td>
-  <td class="whitespace-nowrap px-2 py-4 text-sm text-gray-500">{{ user.is_active }}</td>
-  <td class="whitespace-nowrap px-2 py-4 text-sm text-gray-500">{{ user.is_superuser }}</td>
+  <td class="whitespace-nowrap px-3 py-4 text-sm">
+    <input
+      class="h-4 w-4 rounded border-gray-300 text-slate-600 focus:ring-slate-600"
+      type="checkbox" disabled {{ 'checked' if user.is_active }}>
+  </td>
+  <td class="whitespace-nowrap px-3 py-4 text-sm">
+    <input
+      class="h-4 w-4 rounded border-gray-300 text-slate-600 focus:ring-slate-600"
+      type="checkbox" disabled {{ 'checked' if user.is_superuser }}>
+  </td>
   <td class="whitespace-nowrap px-2 py-4 text-right">
     {{ edit_delete_popup(user.id) }}
   </td>
