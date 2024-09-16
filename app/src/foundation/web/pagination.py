@@ -12,13 +12,16 @@ from foundation.core.repository import Repository
 @dataclass
 class Page:
     def __init__(
-        self, url: URL, items: List[Type[Any]], page: int, page_size: int, total: int
+            self, url: URL, items: List[Type[Any]], page: int, page_size: int, total: int, order_by: str,
+            ascending: bool
     ):
         self.url = url
         self.items = items
         self.page = page
         self.page_size = page_size
         self.total = total
+        self.order_by = order_by
+        self.ascending = ascending
 
     @property
     def pages(self) -> int:
@@ -54,17 +57,21 @@ class Page:
 
 class Paginator:
     def __init__(
-        self,
-        request: Request,
-        repository: Repository,
-        query: Query = None,
-        page_size: int = 10,
+            self,
+            request: Request,
+            repository: Repository,
+            query: Query = None,
+            page_size: int = 10,
+            order_by: str = None,
+            ascending: bool = True,
     ):
         self.request = request
         self.repository = repository
         self.query = query
         self.page_size = page_size
         self._total = None
+        self.order_by = order_by
+        self.ascending = ascending
 
     @property
     async def total(self) -> int:
@@ -89,4 +96,6 @@ class Paginator:
             page=page,
             page_size=self.page_size,
             total=await self.total,
+            order_by=self.order_by,
+            ascending=self.ascending
         )

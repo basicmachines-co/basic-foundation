@@ -3,7 +3,7 @@ from uuid import UUID
 from fastapi import Request, Header, HTTPException
 from fastapi import Response
 from fastapi import status
-from sqlalchemy import select
+from sqlalchemy import select, desc, asc
 from starlette_wtf import csrf_token
 
 from foundation.users.deps import UserServiceDep, UserPaginationDep
@@ -12,7 +12,6 @@ from foundation.users.schemas import UserPublic
 from foundation.users.services import UserValueError, UserNotFoundError, UserCreateError
 from foundation.web.deps import CurrentUserDep, LoginRequired, AdminRequired
 from foundation.web.forms import UserCreateForm, UserEditForm
-from foundation.web.pagination import Page
 from foundation.web.templates import templates
 from foundation.web.utils import flash, HTMLRouter
 
@@ -21,18 +20,16 @@ router = HTMLRouter(dependencies=[LoginRequired])
 
 # helper methods to return template responses
 
-def user_list_template(
+def users_template(
         request: Request,
         *,
         current_user: UserPublic,
-        page: Page
 ) -> templates.TemplateResponse:
     return templates.TemplateResponse(
-        "pages/user_list.html",
+        "pages/users.html",
         dict(
             request=request,
             current_user=current_user,
-            page=page,
         ),
     )
 
@@ -82,7 +79,10 @@ def partial_template(
         partial_template,
         form: UserEditForm = None,
         error: str = None,
-        status_code=status.HTTP_200_OK
+        status_code=status.HTTP_200_OK,
+        block_name=None,
+        headers=None,
+        **kwargs
 ) -> templates.TemplateResponse:
     return templates.TemplateResponse(
         f"partials/{partial_template}",
@@ -90,9 +90,12 @@ def partial_template(
             request=request,
             user=user,
             form=form,
-            error=error
+            error=error,
+            **kwargs
         ),
         status_code,
+        headers=headers,
+        block_name=block_name,
     )
 
 
@@ -105,17 +108,38 @@ def authorize_admin_or_owner(*, user: User, current_user: UserPublic):
 
 @router.get("/users",
             dependencies=[AdminRequired])
-async def user_list(
+async def users_page(
+        request: Request,
+        current_user: CurrentUserDep,
+):
+    return users_template(request, current_user=current_user)
+
+
+@router.get("/users/list",
+            dependencies=[AdminRequired])
+async def users_list(
         request: Request,
         user_pagination: UserPaginationDep,
         current_user: CurrentUserDep,
         page: int = 1,
         page_size: int = 10,
+        order_by: str = "full_name",
+        ascending: bool = True,
 ):
+    valid_columns = ["full_name", "email"]
+    if order_by not in valid_columns:
+        order_by = "full_name"
+
     query = select(User)
-    pagination = user_pagination.paginate(request, query, page_size=page_size)
+
+    if ascending:
+        query = query.order_by(asc(getattr(User, order_by)))
+    else:
+        query = query.order_by(desc(getattr(User, order_by)))
+
+    pagination = user_pagination.paginate(request, query, page_size=page_size, order_by=order_by, asc=ascending)
     page = await pagination.page(page=page)
-    return user_list_template(request, current_user=current_user, page=page)
+    return partial_template(request, partial_template="user/user_list.html", current_user=current_user, page=page)
 
 
 @router.get("/users/create",
@@ -209,6 +233,7 @@ async def user_detail_put(
             user_id=user_id,
             update_dict=update_dict,
         )
+        flash(request, f"User {updated_user.full_name} updated")
         return partial_template(request,
                                 user=updated_user,
                                 form=form,
@@ -218,11 +243,11 @@ async def user_detail_put(
                                 user={"id": user_id},
                                 form=form,
                                 error=e.args[0],
-                                partial_template="user/user_detail_error.html",
+                                partial_template="user/user_edit_error.html",
                                 status_code=status.HTTP_400_BAD_REQUEST)
 
 
-@router.get("/users/list/{user_id}/edit",
+@router.get("/users/modal/{user_id}/edit",
             dependencies=[AdminRequired])
 async def user_list_edit(
         request: Request,
@@ -232,7 +257,7 @@ async def user_list_edit(
     edit_user = await user_service.get_user_by_id(user_id=user_id)
     form = UserEditForm(request, obj=edit_user)
     return partial_template(request, user=edit_user, form=form,
-                            partial_template="user/user_list_edit.html")
+                            partial_template="user/user_modal_edit.html")
 
 
 @router.get("/users/list/{user_id}",
@@ -247,9 +272,9 @@ async def user_list_view(
                             partial_template="user/user_list_view.html")
 
 
-@router.put("/users/list/{user_id}",
+@router.put("/users/modal/{user_id}",
             dependencies=[AdminRequired])
-async def user_list_put(
+async def user_modal_put(
         request: Request,
         user_id: UUID,
         user_service: UserServiceDep,
@@ -261,7 +286,9 @@ async def user_list_put(
         return partial_template(request,
                                 user=user,
                                 form=form,
-                                partial_template="user/user_list_edit.html")
+                                partial_template="user/user_modal_edit.html",
+                                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                                block_name="modal_content")
     try:
         updated_user = await user_service.update_user(
             user_id=user_id,
@@ -271,13 +298,19 @@ async def user_list_put(
         # display an error notice
         return partial_template(request,
                                 user={"id": user_id},
+                                form=form,
                                 error=e.args[0],
-                                partial_template="user/user_list_error.html",
-                                status_code=status.HTTP_400_BAD_REQUEST)
+                                partial_template="user/user_modal_edit.html",
+                                status_code=status.HTTP_400_BAD_REQUEST,
+                                block_name="modal_content")
+
+    flash(request, f"User {user.full_name} updated")
     return partial_template(request,
                             user=updated_user,
                             form=form,
-                            partial_template=f"user/user_list_view.html")
+                            close_modal=True,
+                            partial_template=f"user/user_modal_edit.html",
+                            headers={"HX-Trigger": "refresh"})
 
 
 @router.delete("/users/{user_id}",

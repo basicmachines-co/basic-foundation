@@ -4,8 +4,14 @@
   <div class="lg:pl-2 lg:pr-2">
     <!-- page content -->
     <section id="page_content">
-      {% block page_content %}
-      {% endblock page_content %}
+      <!-- Modal container -->
+      <div id="modal-container" x-data="{ modal: false }">
+        <!--  page content card -->
+        <div class="lg:rounded-lg lg:border lg:border-gray-200 bg-white py-5 px-2">
+          {% block page_content %}
+          {% endblock page_content %}
+        </div>
+      </div>
     </section>
   </div>
 {% endblock content %}

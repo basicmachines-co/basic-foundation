@@ -1,0 +1,33 @@
+{% if close_modal %}
+  <div id="modal" x-data="{model: false}">
+  </div>
+{% else %}
+  <!-- /modal -->
+  <div id="modal"
+    x-data=""
+    x-show="modal"
+    @keydown.escape.window="modal = false"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
+    <div class="bg-white rounded-lg p-6">
+      <div class="flex items-center justify-between pb-3">
+        <h3 class="text-lg font-semibold">Edit User</h3>
+        <button @click="modal=false">
+          <svg xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div id="modal-content">
+        {% block modal_content %}
+        {% endblock modal_content %}
+      </div>
+    </div>
+  </div>
+  <!-- /modal -->
+
+{% endif %}

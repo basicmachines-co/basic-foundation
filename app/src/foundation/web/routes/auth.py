@@ -60,7 +60,7 @@ async def register_post(
             error=error,
             form=form
         ),
-        block_name="register_form")
+        block_name="content")
 
 
 @router.get("/login")
@@ -95,7 +95,7 @@ async def login_post(
                 status_code=401,
                 form=form,
             ),
-            block_name="login_form",
+            block_name="content",
         )
 
     return await login_user(request, user)
@@ -110,8 +110,8 @@ async def login_user(request: Request, user: User):
         expires_delta=access_token_expires,
     )
     access_token_security.set_access_cookie(response, token, access_token_expires)
-    # redirect user to the dashboard
-    response.headers["HX-Redirect"] = str(request.url_for("dashboard"))
+    # redirect user to the root page
+    response.headers["HX-Redirect"] = str(request.url_for("index"))
     return Response(headers=response.headers)
 
 

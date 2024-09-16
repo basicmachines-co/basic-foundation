@@ -7,10 +7,10 @@ install:
 	npm install
 
 test:
-	poetry run pytest
+	poetry run pytest -m "not playwright"
 
 test-playrwight:  # assumes app is running on localhost:8000
-	poetry run pytest ./app/tests/playwright
+	poetry run pytest -m "playwright"
 
 clean:
 	find . -type f -name '*.pyc' -delete

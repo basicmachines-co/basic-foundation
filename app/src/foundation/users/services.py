@@ -41,7 +41,7 @@ class UserValueError(Exception):
     """Raised when a user can not be updated."""
 
     def __init__(self, id_val: UUID | str, value: Any = None):
-        super().__init__(f"user {id_val} can not be updated with value '{value}'")
+        super().__init__(f"user can not be updated with value '{value}'")
 
 
 class UserService:
@@ -172,5 +172,6 @@ class UserPagination:
     def __init__(self, repository: Repository[User]):
         self.repository = repository
 
-    def paginate(self, request: Request, query: Query = None, page_size: int = 10):
-        return Paginator(request, self.repository, query, page_size)
+    def paginate(self, request: Request, query: Query = None, page_size: int = 10, order_by: str = None,
+                 asc: bool = True):
+        return Paginator(request, self.repository, query, page_size, order_by, asc)

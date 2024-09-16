@@ -140,7 +140,7 @@ uvicorn app.main:app --reload
     - codecov https://github.com/marketplace/codecov/plan/MDIyOk1hcmtldHBsYWNlTGlzdGluZ1BsYW4xNg==#plan-16
 - [x] csrf - https://github.com/simonw/asgi-csrf
 - [x] view profile
-- [ ] app user management
+- [x] app user management
     - click to edit forms: https://htmx.org/examples/click-to-edit/
     - icons: https://github.com/sirvan3tr/jinja-primer-icons
     - example: render.com dashboard
@@ -190,7 +190,7 @@ uvicorn app.main:app --reload
     - return Errors from service
 - [x] modify frontend routes
 - [ ] remove all print() calls
-- [ ] add faastapi-problems for error responses: https://github.com/NRWLDev/fastapi-problem
+- [-] add faastapi-problems for error responses: https://github.com/NRWLDev/fastapi-problem
 - [x] remove fastapi-users
 - [ ] package as separate modules?
     - core
@@ -212,10 +212,10 @@ uvicorn app.main:app --reload
         - use one route for get/post for html pages
     - [x] refactor web route files for cleanup
     - [-] daisyui
-    - [ ] htmx
+    - [x] htmx
         - [x] 404 page
         - [x] 500 page
-        - [ ] oob swap for name after updating detail
+        - [-] oob swap for name after updating detail
         - [-] db exception in error message
     - [ ] playwrite tests for html flow
         - [ ] login
@@ -229,6 +229,10 @@ uvicorn app.main:app --reload
         - [ ] edit profile
         - [ ] logout
         - [ ] fixup styles for mobile
+    - [ ] refactor
+        - [ ] try/catch/finally in db dep
+        - [ ] error handling in services
+        - [ ] stacked navbar layout
 
 ## references
 
