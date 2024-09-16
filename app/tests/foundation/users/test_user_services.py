@@ -135,7 +135,7 @@ async def test_update_user_fails(user_service, sample_user: User):
         "is_superuser": True,
     }
     with pytest.raises(
-            UserValueError, match=f"user {created_user.id} can not be updated"
+            UserValueError, match=f"user can not be updated"
     ):
         await user_service.update_user(user_id=created_user.id, update_dict=user_update)
 
