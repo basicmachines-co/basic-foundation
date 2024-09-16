@@ -1,8 +1,8 @@
 <nav class="border-b border-gray-200 bg-white dark:bg-gray-900"
-  x-data="{ mobileMenuOpen: false, darkMode: localStorage.getItem('darkMode') === 'true' }"
+  x-data="{ mobileMenuOpen: false, darkMode: localStorage.getItem('darkMode') === 'true', currentPath: window.location.pathname }"
   x-init="$watch('darkMode', value => { document.documentElement.classList.toggle('dark', value); localStorage.setItem('darkMode', value); })">
   <!-- Container for the navbar content -->
-  <div class="px-4 sm:px-6 lg:px-8" x-data="{ currentPath: window.location.pathname }">
+  <div class="px-4 sm:px-6 lg:px-8">
     <div class="flex h-16 justify-between">
       <!-- Left-aligned section for logo and menu links -->
       <div class="flex">
@@ -109,9 +109,16 @@
   <div x-show="mobileMenuOpen" class="sm:hidden">
     <div class="space-y-1 pb-3 pt-2">
       <a href="/dashboard"
-        class="block border-l-4 border-slate-500 bg-slate-50 py-2 pl-3 pr-4 text-base font-medium text-slate-700 dark:bg-gray-800 dark:text-gray-200">Dashboard</a>
-      <a href="/users"
-        class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800">Users</a>
+        :class="{
+            'block border-l-4 border-slate-500 bg-slate-50 py-2 pl-3 pr-4 text-base font-medium text-slate-700 dark:bg-gray-800 dark:text-gray-200': currentPath.startsWith('/dashboard'),
+            'block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800': !currentPath.startsWith('/dashboard')
+            }"
+      >Dashboard</a> <a href="/users"
+      :class="{
+            'block border-l-4 border-slate-500 bg-slate-50 py-2 pl-3 pr-4 text-base font-medium text-slate-700 dark:bg-gray-800 dark:text-gray-200': currentPath.startsWith('/users'),
+            'block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800': !currentPath.startsWith('/users')
+            }"
+    >Users</a>
     </div>
   </div>
 </nav>
