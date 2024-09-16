@@ -2,7 +2,7 @@
   x-data="{ mobileMenuOpen: false, darkMode: localStorage.getItem('darkMode') === 'true' }"
   x-init="$watch('darkMode', value => { document.documentElement.classList.toggle('dark', value); localStorage.setItem('darkMode', value); })">
   <!-- Container for the navbar content -->
-  <div class="px-4 sm:px-6 lg:px-8">
+  <div class="px-4 sm:px-6 lg:px-8" x-data="{ currentPath: window.location.pathname }">
     <div class="flex h-16 justify-between">
       <!-- Left-aligned section for logo and menu links -->
       <div class="flex">
@@ -12,9 +12,16 @@
         <!-- Main navigation links for larger screens -->
         <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
           <a href="/dashboard"
-            class="inline-flex items-center border-b-2 border-slate-500 px-1 pt-1 text-sm font-medium text-gray-900 dark:text-gray-200"
-            aria-current="page"> Dashboard</a> <a href="/users"
-          class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400">Users</a>
+            :class="{
+            'inline-flex items-center border-b-2 border-slate-500 px-1 pt-1 text-sm font-medium text-gray-900': currentPath.startsWith('/dashboard'),
+            'inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700': !currentPath.startsWith('/dashboard')
+            }"
+          > Dashboard </a> <a href="/users"
+          :class="{
+            'inline-flex items-center border-b-2 border-slate-500 px-1 pt-1 text-sm font-medium text-gray-900': currentPath.startsWith('/users'),
+            'inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700': !currentPath.startsWith('/users')
+            }"
+        > Users </a>
         </div>
       </div>
       <!-- Right-aligned section for dark mode toggle and profile dropdown -->
