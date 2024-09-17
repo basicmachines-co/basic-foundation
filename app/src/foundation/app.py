@@ -34,7 +34,7 @@ app.mount("/static", StaticFiles(directory=f"{BASE_DIR}/static"), name="static")
 app.include_router(api_auth_router, prefix="/api/auth", tags=["auth"])
 app.include_router(api_user_router, prefix="/api/users", tags=["users"])
 
-# html routes
+# web html routes
 app.include_router(html_users_router)
 app.include_router(html_app_router)
 app.include_router(html_auth_router)

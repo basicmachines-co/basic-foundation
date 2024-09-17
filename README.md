@@ -232,7 +232,7 @@ uvicorn app.main:app --reload
     - [ ] refactor
         - [ ] try/catch/finally in db dep
         - [ ] error handling in services
-        - [ ] stacked navbar layout
+        - [x] stacked navbar layout
         - [ ] 422 error on page load - http://127.0.0.1:8000/reset-password
 
 ## references
