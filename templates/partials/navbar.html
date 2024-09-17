@@ -1,4 +1,4 @@
-<nav class="border-b border-gray-200 bg-white dark:bg-gray-900"
+<nav class="border-b bg-white border-gray-200 dark:bg-black dark:border-gray-700"
   x-data="{ mobileMenuOpen: false, darkMode: localStorage.getItem('darkMode') === 'true', currentPath: window.location.pathname }"
   x-init="$watch('darkMode', value => { document.documentElement.classList.toggle('dark', value); localStorage.setItem('darkMode', value); })">
   <!-- Container for the navbar content -->
@@ -13,13 +13,13 @@
         <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
           <a href="/dashboard"
             :class="{
-            'inline-flex items-center border-b-2 border-slate-500 px-1 pt-1 text-sm font-medium text-gray-900': currentPath.startsWith('/dashboard'),
-            'inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700': !currentPath.startsWith('/dashboard')
+            'inline-flex items-center border-b-2 border-slate-500 px-1 pt-1 text-sm font-medium text-gray-900 dark:text-gray-100': currentPath.startsWith('/dashboard'),
+            'inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 dark:text-gray-400 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-300': !currentPath.startsWith('/dashboard')
             }"
           > Dashboard </a> <a href="/users"
           :class="{
-            'inline-flex items-center border-b-2 border-slate-500 px-1 pt-1 text-sm font-medium text-gray-900': currentPath.startsWith('/users'),
-            'inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700': !currentPath.startsWith('/users')
+            'inline-flex items-center border-b-2 border-slate-500 px-1 pt-1 text-sm font-medium text-gray-900 dark:text-gray-100': currentPath.startsWith('/users'),
+            'inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 dark:text-gray-400 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-300': !currentPath.startsWith('/users')
             }"
         > Users </a>
         </div>
@@ -31,7 +31,7 @@
           <span class="sr-only">Toggle dark mode</span>
           <svg x-show="!darkMode"
             xmlns="http://www.w3.org/2000/svg"
-            class="w-6 h-6"
+            class="w-6 h-6 "
             fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
@@ -42,7 +42,7 @@
           </svg>
           <svg x-show="darkMode"
             xmlns="http://www.w3.org/2000/svg"
-            class="w-6 h-6"
+            class="w-6 h-6 dark:stroke-white"
             fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
@@ -111,12 +111,12 @@
       <a href="/dashboard"
         :class="{
             'block border-l-4 border-slate-500 bg-slate-50 py-2 pl-3 pr-4 text-base font-medium text-slate-700 dark:bg-gray-800 dark:text-gray-200': currentPath.startsWith('/dashboard'),
-            'block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800': !currentPath.startsWith('/dashboard')
+            'block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium dark:text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800': !currentPath.startsWith('/dashboard')
             }"
       >Dashboard</a> <a href="/users"
       :class="{
             'block border-l-4 border-slate-500 bg-slate-50 py-2 pl-3 pr-4 text-base font-medium text-slate-700 dark:bg-gray-800 dark:text-gray-200': currentPath.startsWith('/users'),
-            'block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800': !currentPath.startsWith('/users')
+            'block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium dark:text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800': !currentPath.startsWith('/users')
             }"
     >Users</a>
     </div>
@@ -136,10 +136,10 @@
         </div>
         <div class="ml-3">
           <div class="text-base font-medium text-gray-800">{{ current_user.full_name }}</div>
-          <div class="text-sm font-medium text-gray-500">{{ current_user.email }}</div>
+          <div class="text-sm font-medium dark:text-gray-500 dark:text-gray-400">{{ current_user.email }}</div>
         </div>
         <button @click="darkMode = !darkMode"
-          class="relative ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-600 hover:text-gray-700">
+          class="relative ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-600 hover:text-gray-700 dark:hover:text-gray-300">
           <span class="sr-only">Toggle dark mode</span>
           <svg x-show="!darkMode"
             xmlns="http://www.w3.org/2000/svg"
@@ -168,9 +168,9 @@
       </div>
       <div class="mt-3 space-y-1">
         <a href="/profile"
-          class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800">Profile</a>
+          class="block px-4 py-2 text-base font-medium dark:text-gray-500 dark:text-gray-400 hover:bg-gray-100 hover:text-gray-800">Profile</a>
         <a href="/logout"
-          class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800">Log out</a>
+          class="block px-4 py-2 text-base font-medium dark:text-gray-500 dark:text-gray-400 hover:bg-gray-100 hover:text-gray-800">Log out</a>
       </div>
     </div>
   </div>

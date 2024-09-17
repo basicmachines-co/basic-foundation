@@ -25,11 +25,11 @@
   hx-trigger="refresh from:body">
   <!-- Flash message partial -->{% include "partials/flash_message.html" %}
   <!-- Table Layout -->
-  <table class="min-w-full divide-y divide-gray-300">
+  <table class="min-w-full divide-y divide-gray-300 dark:divide-gray-600">
     <thead>
     <tr>
       <!-- Name -->
-      <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900">
+      <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-100">
         <div class="flex items-center cursor-pointer"
           hx-get="/users/list?page={{ page.page }}&page_size={{ page.page_size }}&order_by=full_name&ascending={{ not page.ascending }}"
           hx-target="#user_list"
@@ -38,7 +38,7 @@
         </div>
       </th>
       <!-- Email Column with Sorting -->
-      <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900">
+      <th scope="col" class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-100">
         <div class="flex items-center cursor-pointer"
           hx-get="/users/list?page={{ page.page }}&page_size={{ page.page_size }}&order_by=email&ascending={{ not page.ascending }}"
           hx-target="#user_list"
@@ -47,13 +47,13 @@
         </div>
       </th>
       <!-- Active and Admin columns (no sorting) -->
-      <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Active</th>
-      <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Admin</th>
+      <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100" scope="col">Active</th>
+      <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100" scope="col">Admin</th>
       <th class="px-3 py-3.5 text-right text-sm font-semibold text-gray-400" scope="col">Edit</th>
     </tr>
     </thead>
     <!-- Table Body -->
-    <tbody class="divide-y divide-gray-200">
+    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
     {% for user in page.items %}
       {% include "partials/user/user_list_view.html" %}
     {% endfor %}

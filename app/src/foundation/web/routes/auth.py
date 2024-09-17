@@ -161,7 +161,7 @@ async def forgot_password_post(
             error=error,
             success=success
         ),
-        block_name="forgot_password_form",
+        block_name="content",
     )
 
 

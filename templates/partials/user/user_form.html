@@ -2,18 +2,18 @@
 <!-- Full Name -->
 <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
   <label
-    class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
+    class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100 sm:pt-1.5"
     for="full_name"
   > Full Name </label>
   <div class="mt-2 sm:col-span-2 sm:mt-0">
     <input
       autocomplete="given-name"
-      class="block w-full rounded-md py-1.5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:max-w-xs sm:text-sm sm:leading-6
-          {{ 'border-red-600 ring-red-600' if form.full_name.errors else 'ring-gray-300' }}"
+      class="block w-full bg-white dark:bg-black rounded-md py-1.5 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-slate-600 dark:focus:ring-slate-300 sm:max-w-xs sm:text-sm sm:leading-6
+          {{ 'border-red-600 dark:border-red-300 ring-red-600 dark:ring-red-300' if form.full_name.errors else 'ring-gray-300 dark:ring-gray-600' }}"
       id="full_name"
       name="full_name"
       type="text"
-      value="{{ form.full_name.data }}"
+      value="{{ form.full_name.data|default('', true) }}"
       required
     />
     {% if form.full_name.errors %}
@@ -24,18 +24,18 @@
 <!-- Email Address -->
 <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
   <label
-    class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
+    class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100 sm:pt-1.5"
     for="email"
   > Email address </label>
   <div class="mt-2 sm:col-span-2 sm:mt-0">
     <input
       autocomplete="email"
-      class="block w-full rounded-md py-1.5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:max-w-md sm:text-sm sm:leading-6
-          {{ 'border-red-600 ring-red-600' if form.email.errors else 'ring-gray-300' }}"
+      class="block w-full bg-white dark:bg-black rounded-md py-1.5 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-slate-600 dark:focus:ring-slate-300 sm:max-w-xs sm:text-sm sm:leading-6
+          {{ 'border-red-600 dark:border-red-300 ring-red-600 dark:ring-red-300' if form.email.errors else 'ring-gray-300 dark:ring-gray-600' }}"
       id="email"
       name="email"
       type="email"
-      value="{{ form.email.data }}"
+      value="{{ form.email.data|default('', true) }}"
       required
     />
     {% if form.email.errors %}
@@ -43,11 +43,31 @@
     {% endif %}
   </div>
 </div>
+<!-- password -->
+<div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
+  <label
+    class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100 sm:pt-1.5"
+    for="password"> Password </label>
+  <div class="mt-2 sm:col-span-2 sm:mt-0">
+    <input id="password"
+      name="password"
+      type="password"
+      placeholder="••••••••"
+      value="{{ form.password.data|default('', true) }}"
+      required
+      class="block w-full bg-white dark:bg-black rounded-md py-1.5 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-slate-600 dark:focus:ring-slate-300 sm:max-w-xs sm:text-sm sm:leading-6
+                    {{ 'border-red-600 dark:border-red-300 ring-red-600 dark:ring-red-300' if form.password.errors else 'ring-gray-300 dark:ring-gray-600' }}"
+    />
+    {% if form.password.errors %}
+      <p class="mt-2 text-sm text-red-600">{{ form.password.errors[0] }}</p>
+    {% endif %}
+  </div>
+</div>
 <!-- Status Checkboxes -->
 <fieldset>
   <legend class="sr-only">Status</legend>
   <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:py-6">
-    <div aria-hidden="true" class="text-sm font-semibold leading-6 text-gray-900">
+    <div aria-hidden="true" class="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-100">
       Status
     </div>
     <div class="mt-4 sm:col-span-2 sm:mt-0">
@@ -65,7 +85,7 @@
             />
           </div>
           <div class="text-sm leading-6">
-            <label class="font-medium text-gray-900" for="is_active">Active</label>
+            <label class="font-medium text-gray-900 dark:text-gray-100" for="is_active">Active</label>
             <p class="mt-1 text-gray-600">is active</p>
           </div>
         </div>
@@ -82,7 +102,7 @@
             />
           </div>
           <div class="text-sm leading-6">
-            <label class="font-medium text-gray-900" for="is_superuser">Admin</label>
+            <label class="font-medium text-gray-900 dark:text-gray-100" for="is_superuser">Admin</label>
             <p class="mt-1 text-gray-600">has admin privileges</p>
           </div>
         </div>
