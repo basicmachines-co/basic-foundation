@@ -1,25 +1,35 @@
 {% extends "layouts/base.html" %}
 {% block layout_content %}
   <body class="h-full">
-  <main>
-    <!-- centered on page -->
-    <div class="mx-auto max-w-7xl p-8 sm:px-6 lg:px-8">
-      <!-- heading -->
-      <div class="flex min-h-full flex-col justify-center px-6 lg:py-12 lg:px-8">
-        <div class="sm:mx-auto sm:w-full sm:max-w-sm text-center">
-          {% include "partials/logo.html" %}
-          <h2 class="sm:mt-4 lg:mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-gray-100">
-            {% block heading_text %}{% endblock heading_text %}
-          </h2>
-        </div>
-      </div>
-      <!-- content -->
-      <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
-        <div class="sm:px-12 py-12 shadow rounded-lg bg-white dark:bg-black border border-gray-200 dark:border-gray-700">
-          {% block content %}{% endblock content %}
+  <div class="px-4 sm:px-6 lg:px-8">
+    <div class="flex h-16 justify-end">
+      <!-- Left-aligned section for logo and menu links -->
+      <div class="flex">
+        <!-- Right-aligned section for dark mode toggle and profile dropdown -->
+        <div class="hidden sm:ml-6 sm:flex sm:items-center">
+          {% include "partials/dark_mode_toggle.html" %}
         </div>
       </div>
     </div>
-  </main>
+    <main>
+      <!-- centered on page -->
+      <div class="mx-auto max-w-7xl p-8 sm:px-6 lg:px-8">
+        <!-- heading -->
+        <div class="flex min-h-full flex-col justify-center px-6 lg:py-12 lg:px-8">
+          <div class="sm:mx-auto sm:w-full sm:max-w-sm text-center">
+            {% include "partials/logo.html" %}
+            <h2 class="sm:mt-4 lg:mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-gray-100">
+              {% block heading_text %}{% endblock heading_text %}
+            </h2>
+          </div>
+        </div>
+        <!-- content -->
+        <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
+          <div class="sm:px-12 py-12 shadow rounded-lg bg-white dark:bg-black border border-gray-200 dark:border-gray-700">
+            {% block content %}{% endblock content %}
+          </div>
+        </div>
+      </div>
+    </main>
   </body>
 {% endblock layout_content %}
