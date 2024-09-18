@@ -1,13 +1,8 @@
-<section id="user_detail">
-  <!-- edit form -->
-  {% if error %}
-    {% include "partials/user/user_edit_error.html" %}
-  {% endif %}
-
+<section id="user_edit">
   <div class="px-6">
     <form hx-put="/users/detail/{{ user.id }}"
-      hx-target="#user_detail"
-      hx-target-error="#user_edit_error"
+      hx-target="#user_edit"
+      hx-target-422="#user_edit"
       hx-swap="outerHTML"
       method="put">
       {% include "partials/user/user_form.html" %}

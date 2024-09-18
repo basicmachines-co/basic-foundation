@@ -52,14 +52,31 @@
     <input id="password"
       name="password"
       type="password"
-      placeholder="••••••••"
+      placeholder="********"
       value="{{ form.password.data|default('', true) }}"
-      required
       class="block w-full bg-white dark:bg-black rounded-md py-1.5 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-slate-600 dark:focus:ring-slate-300 sm:max-w-xs sm:text-sm sm:leading-6
                     {{ 'border-red-600 dark:border-red-300 ring-red-600 dark:ring-red-300' if form.password.errors else 'ring-gray-300 dark:ring-gray-600' }}"
     />
     {% if form.password.errors %}
       <p class="mt-2 text-sm text-red-600">{{ form.password.errors[0] }}</p>
+    {% endif %}
+  </div>
+</div>
+<div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
+  <label
+    class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100 sm:pt-1.5"
+    for="password_2">Repeat Password </label>
+  <div class="mt-2 sm:col-span-2 sm:mt-0">
+    <input id="password_2"
+      name="password_2"
+      type="password"
+      placeholder="********"
+      value="{{ form.password_2.data|default('', true) }}"
+      class="block w-full bg-white dark:bg-black rounded-md py-1.5 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-slate-600 dark:focus:ring-slate-300 sm:max-w-xs sm:text-sm sm:leading-6
+                    {{ 'border-red-600 dark:border-red-300 ring-red-600 dark:ring-red-300' if form.password_2.errors else 'ring-gray-300 dark:ring-gray-600' }}"
+    />
+    {% if form.password_2.errors %}
+      <p class="mt-2 text-sm text-red-600">{{ form.password_2.errors[0] }}</p>
     {% endif %}
   </div>
 </div>
@@ -75,7 +92,7 @@
         <div class="relative flex gap-x-3">
           <div class="flex h-6 items-center">
             <input
-              class="h-4 w-4 rounded border-gray-300 text-slate-600 focus:ring-slate-600"
+              class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-slate-600 dark:text-slate-400 focus:ring-slate-600 dark:focus:ring-slate-300"
               id="is_active"
               name="is_active"
               type="checkbox"
@@ -86,13 +103,13 @@
           </div>
           <div class="text-sm leading-6">
             <label class="font-medium text-gray-900 dark:text-gray-100" for="is_active">Active</label>
-            <p class="mt-1 text-gray-600">is active</p>
+            <p class="mt-1 text-gray-600 dark:text-gray-400">active users can log in</p>
           </div>
         </div>
         <div class="relative flex gap-x-3">
           <div class="flex h-6 items-center">
             <input
-              class="h-4 w-4 rounded border-gray-300 text-slate-600 focus:ring-slate-600"
+              class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-slate-600 dark:text-slate-400 focus:ring-slate-600 dark:focus:ring-slate-300"
               id="is_superuser"
               name="is_superuser"
               type="checkbox"
@@ -103,7 +120,7 @@
           </div>
           <div class="text-sm leading-6">
             <label class="font-medium text-gray-900 dark:text-gray-100" for="is_superuser">Admin</label>
-            <p class="mt-1 text-gray-600">has admin privileges</p>
+            <p class="mt-1 text-gray-600 dark:text-gray-400">has admin privileges</p>
           </div>
         </div>
       </div>

@@ -23,7 +23,7 @@
 <section id="user_list"
   hx-get="/users/list?page={{ page.page }}&page_size={{ page.page_size }}&order_by={{ page.order_by }}&ascending={{ page.ascending }}"
   hx-trigger="refresh from:body">
-  <!-- Flash message partial -->{% include "partials/flash_message.html" %}
+  {# TODO  <!-- Flash message partial -->{% include "partials/flash_message.html" %}#}
   <!-- Table Layout -->
   <table class="min-w-full divide-y divide-gray-300 dark:divide-gray-600">
     <thead>

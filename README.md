@@ -230,10 +230,20 @@ uvicorn app.main:app --reload
         - [ ] logout
         - [ ] fixup styles for mobile
     - [ ] refactor
-        - [ ] try/catch/finally in db dep
+        - [x] try/catch/finally in db dep
         - [ ] error handling in services
         - [x] stacked navbar layout
         - [ ] 422 error on page load - http://127.0.0.1:8000/reset-password
+        - [ ] fasthx
+            - [ ] redo flash message
+                - edit success
+                - edit error
+            - [-] remove Jinja2Blocks
+            - [x] edit password
+            - [ ] fix delete user
+            - [ ] remove shadow from rounded borders
+            - [ ] clean up tailwind styles
+            - [ ] user name update oob on edit success
 
 ## references
 

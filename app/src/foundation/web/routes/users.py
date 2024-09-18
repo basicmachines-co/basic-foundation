@@ -1,3 +1,4 @@
+import typing
 from uuid import UUID
 
 from fastapi import Request, Header, HTTPException
@@ -11,7 +12,7 @@ from foundation.users.models import User
 from foundation.users.schemas import UserPublic
 from foundation.users.services import UserValueError, UserNotFoundError, UserCreateError
 from foundation.web.deps import CurrentUserDep, LoginRequired, AdminRequired
-from foundation.web.forms import UserCreateForm, UserEditForm
+from foundation.web.forms import UserForm
 from foundation.web.templates import templates
 from foundation.web.utils import flash, HTMLRouter
 
@@ -19,19 +20,6 @@ router = HTMLRouter(dependencies=[LoginRequired])
 
 
 # helper methods to return template responses
-
-def users_template(
-        request: Request,
-        *,
-        current_user: UserPublic,
-) -> templates.TemplateResponse:
-    return templates.TemplateResponse(
-        "pages/users.html",
-        dict(
-            request=request,
-            current_user=current_user,
-        ),
-    )
 
 
 def user_view_template(
@@ -56,7 +44,7 @@ def user_create_template(
         request: Request,
         *,
         current_user: UserPublic,
-        form: UserCreateForm,
+        form: UserForm,
         error: str = None,
         block_name=None
 ) -> templates.TemplateResponse:
@@ -77,7 +65,7 @@ def partial_template(
         user: dict = None,
         *,
         partial_template,
-        form: UserEditForm = None,
+        form: UserForm = None,
         error: str = None,
         status_code=status.HTTP_200_OK,
         block_name=None,
@@ -99,6 +87,14 @@ def partial_template(
     )
 
 
+def template(request: Request,
+             name: str,
+             context: dict,
+             status_code: int = 200,
+             headers: typing.Optional[typing.Mapping[str, str]] = None, **kwargs) -> templates.TemplateResponse:
+    return templates.TemplateResponse(request, name, context, status_code, headers, **kwargs)
+
+
 def authorize_admin_or_owner(*, user: User, current_user: UserPublic):
     if current_user.is_superuser:
         return
@@ -106,17 +102,12 @@ def authorize_admin_or_owner(*, user: User, current_user: UserPublic):
         return Response(status_code=status.HTTP_403_FORBIDDEN)
 
 
-@router.get("/users",
-            dependencies=[AdminRequired])
-async def users_page(
-        request: Request,
-        current_user: CurrentUserDep,
-):
-    return users_template(request, current_user=current_user)
+@router.get("/users", dependencies=[AdminRequired])
+async def users_page(request: Request, current_user: CurrentUserDep):
+    return template(request, "pages/users.html", {"current_user": current_user})
 
 
-@router.get("/users/list",
-            dependencies=[AdminRequired])
+@router.get("/users/list", dependencies=[AdminRequired])
 async def users_list(
         request: Request,
         user_pagination: UserPaginationDep,
@@ -126,8 +117,7 @@ async def users_list(
         order_by: str = "full_name",
         ascending: bool = True,
 ):
-    valid_columns = ["full_name", "email"]
-    if order_by not in valid_columns:
+    if order_by not in ["full_name", "email"]:
         order_by = "full_name"
 
     query = select(User)
@@ -139,7 +129,7 @@ async def users_list(
 
     pagination = user_pagination.paginate(request, query, page_size=page_size, order_by=order_by, asc=ascending)
     page = await pagination.page(page=page)
-    return partial_template(request, partial_template="user/user_list.html", current_user=current_user, page=page)
+    return template(request, "partials/user/user_list.html", {"current_user": current_user, "page": page})
 
 
 @router.get("/users/create",
@@ -148,8 +138,8 @@ async def user_create(
         request: Request,
         current_user: CurrentUserDep,
 ):
-    form = UserCreateForm(request)
-    return user_create_template(request, current_user=current_user, form=form)
+    form = UserForm(request)
+    return template(request, "pages/user_create.html", {"request": request, "current_user": current_user, "form": form})
 
 
 @router.post("/users/create",
@@ -159,20 +149,23 @@ async def user_create_post(
         user_service: UserServiceDep,
         current_user: CurrentUserDep,
 ):
-    form = await UserCreateForm.from_formdata(request)
-    error = None
+    form = await UserForm.from_formdata(request)
     if await form.validate():
         try:
             created_user = await user_service.create_user(
                 create_dict=form.data
             )
+            # Because we are handling a post, we do a redirect in the response
             response = Response(status_code=status.HTTP_307_TEMPORARY_REDIRECT)
             response.headers["HX-Redirect"] = router.url_path_for("user_detail_view", user_id=created_user.id)
             return response
         except UserCreateError as e:
-            error = e.args[0]
-    return user_create_template(request, current_user=current_user, form=form, error=error,
-                                block_name="page_content")
+            pass
+            # TODO return error
+            # error = e.args[0]
+
+    return template(request, "partials/user/user_form.html",
+                    {"current_user": current_user, "form": form})
 
 
 @router.get("/users/{user_id}")
@@ -195,13 +188,12 @@ async def user_detail_edit(
         current_user: CurrentUserDep,
 ):
     edit_user = await user_service.get_user_by_id(user_id=user_id)
-    form = UserEditForm(request, obj=edit_user)
+    form = UserForm(request, obj=edit_user)
     authorize_admin_or_owner(user=edit_user, current_user=current_user)
 
+    response = template(request, "partials/user/user_detail_edit.html", {"user": edit_user, "form": form})
     # Generate a CSRF token and set it in a cookie, checked on delete
-    token = csrf_token(request)
-    response = partial_template(request, user=edit_user, form=form, partial_template="user/user_detail_edit.html")
-    response.set_cookie("csrf_token", token)
+    response.set_cookie("csrf_token", csrf_token(request))
     return response
 
 
@@ -213,14 +205,15 @@ async def user_detail_put(
         current_user: CurrentUserDep,
 ):
     user = await user_service.get_user_by_id(user_id=user_id)
-    form = await UserEditForm.from_formdata(request)
+    form = await UserForm.from_formdata(request)
     authorize_admin_or_owner(user=user, current_user=current_user)
 
     if not await form.validate():
-        return partial_template(request,
-                                user={"id": user_id},
-                                form=form,
-                                partial_template="user/user_detail_edit.html")
+        # display the form with errors
+        return template(request,
+                        "partials/user/user_detail_edit.html",
+                        {"user": {"id": user_id}, "form": form},
+                        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
     try:
         # if the user is not an admin, they can not set these fields
@@ -234,10 +227,9 @@ async def user_detail_put(
             update_dict=update_dict,
         )
         flash(request, f"User {updated_user.full_name} updated")
-        return partial_template(request,
-                                user=updated_user,
-                                form=form,
-                                partial_template=f"user/user_detail_view.html")
+        return template(request,
+                        "partials/user/user_detail_view.html",
+                        {"user": updated_user, "form": form})
     except UserValueError as e:
         return partial_template(request,
                                 user={"id": user_id},
@@ -249,27 +241,14 @@ async def user_detail_put(
 
 @router.get("/users/modal/{user_id}/edit",
             dependencies=[AdminRequired])
-async def user_list_edit(
+async def user_modal_edit(
         request: Request,
         user_id: UUID,
         user_service: UserServiceDep,
 ):
     edit_user = await user_service.get_user_by_id(user_id=user_id)
-    form = UserEditForm(request, obj=edit_user)
-    return partial_template(request, user=edit_user, form=form,
-                            partial_template="user/user_modal_edit.html")
-
-
-@router.get("/users/list/{user_id}",
-            dependencies=[AdminRequired])
-async def user_list_view(
-        request: Request,
-        user_id: UUID,
-        user_service: UserServiceDep,
-):
-    edit_user = await user_service.get_user_by_id(user_id=user_id)
-    return partial_template(request, user=edit_user,
-                            partial_template="user/user_list_view.html")
+    form = UserForm(request, obj=edit_user)
+    return template(request, "pages/user_modal.html", {"user": edit_user, "form": form})
 
 
 @router.put("/users/modal/{user_id}",
@@ -280,15 +259,13 @@ async def user_modal_put(
         user_service: UserServiceDep,
 ):
     user = await user_service.get_user_by_id(user_id=user_id)
-    form = await UserEditForm.from_formdata(request)
+    form = await UserForm.from_formdata(request)
     if not await form.validate():
         # display the form with errors
-        return partial_template(request,
-                                user=user,
-                                form=form,
-                                partial_template="user/user_modal_edit.html",
-                                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                                block_name="modal_content")
+        return template(request,
+                        "partials/user/user_modal_edit.html",
+                        {"user": user, "form": form},
+                        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
     try:
         updated_user = await user_service.update_user(
             user_id=user_id,
@@ -305,12 +282,13 @@ async def user_modal_put(
                                 block_name="modal_content")
 
     flash(request, f"User {user.full_name} updated")
-    return partial_template(request,
-                            user=updated_user,
-                            form=form,
-                            close_modal=True,
-                            partial_template=f"user/user_modal_edit.html",
-                            headers={"HX-Trigger": "refresh"})
+    return template(request,
+                    "pages/user_modal.html",
+                    {
+                        "user": updated_user,
+                        "form": form,
+                        "close_modal": True},
+                    headers={"HX-Trigger": "refresh"})
 
 
 @router.delete("/users/{user_id}",
