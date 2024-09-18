@@ -1,9 +1,11 @@
+<div id="notification"></div>
 <section id="user_edit">
   <form
     id="user-edit"
     hx-put="/users/modal/{{ user.id }}"
     hx-target="#modal"
     hx-target-422="#user_edit"
+    hx-target-400="#notification"
     hx-swap="outerHTML"
     method="put">
     {% include "partials/user/user_form.html" %}

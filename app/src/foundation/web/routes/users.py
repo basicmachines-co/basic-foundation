@@ -14,50 +14,9 @@ from foundation.users.services import UserValueError, UserNotFoundError, UserCre
 from foundation.web.deps import CurrentUserDep, LoginRequired, AdminRequired
 from foundation.web.forms import UserForm
 from foundation.web.templates import templates
-from foundation.web.utils import flash, HTMLRouter
+from foundation.web.utils import HTMLRouter
 
 router = HTMLRouter(dependencies=[LoginRequired])
-
-
-# helper methods to return template responses
-
-
-def user_view_template(
-        request: Request,
-        user: User,
-        *,
-        current_user: UserPublic,
-        block_name=None
-) -> templates.TemplateResponse:
-    return templates.TemplateResponse(
-        "pages/user_view.html",
-        dict(
-            request=request,
-            current_user=current_user,
-            user=user
-        ),
-        block_name=block_name
-    )
-
-
-def user_create_template(
-        request: Request,
-        *,
-        current_user: UserPublic,
-        form: UserForm,
-        error: str = None,
-        block_name=None
-) -> templates.TemplateResponse:
-    return templates.TemplateResponse(
-        "pages/user_create.html",
-        dict(
-            request=request,
-            current_user=current_user,
-            form=form,
-            error=error,
-        ),
-        block_name=block_name,
-    )
 
 
 def partial_template(
@@ -93,6 +52,14 @@ def template(request: Request,
              status_code: int = 200,
              headers: typing.Optional[typing.Mapping[str, str]] = None, **kwargs) -> templates.TemplateResponse:
     return templates.TemplateResponse(request, name, context, status_code, headers, **kwargs)
+
+
+def error_notification(request, e):
+    return template(request,
+                    "partials/notification.html",
+                    {"error": True, "title": "An error occurred", "message": e.args[0]},
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    headers={"HX-Trigger": "notification"})
 
 
 def authorize_admin_or_owner(*, user: User, current_user: UserPublic):
@@ -177,7 +144,7 @@ async def user_detail_view(
 ):
     view_user = await user_service.get_user_by_id(user_id=user_id)
     authorize_admin_or_owner(user=view_user, current_user=current_user)
-    return user_view_template(request, view_user, current_user=current_user)
+    return template(request, "pages/user_view.html", {"user": view_user, "current_user": current_user})
 
 
 @router.get("/users/detail/{user_id}/edit")
@@ -209,7 +176,7 @@ async def user_detail_put(
     authorize_admin_or_owner(user=user, current_user=current_user)
 
     if not await form.validate():
-        # display the form with errors
+        # display the page with errors
         return template(request,
                         "partials/user/user_detail_edit.html",
                         {"user": {"id": user_id}, "form": form},
@@ -226,17 +193,11 @@ async def user_detail_put(
             user_id=user_id,
             update_dict=update_dict,
         )
-        flash(request, f"User {updated_user.full_name} updated")
         return template(request,
                         "partials/user/user_detail_view.html",
                         {"user": updated_user, "form": form})
     except UserValueError as e:
-        return partial_template(request,
-                                user={"id": user_id},
-                                form=form,
-                                error=e.args[0],
-                                partial_template="user/user_edit_error.html",
-                                status_code=status.HTTP_400_BAD_REQUEST)
+        return error_notification(request, e)
 
 
 @router.get("/users/modal/{user_id}/edit",
@@ -272,16 +233,8 @@ async def user_modal_put(
             update_dict=form.data,
         )
     except UserValueError as e:
-        # display an error notice
-        return partial_template(request,
-                                user={"id": user_id},
-                                form=form,
-                                error=e.args[0],
-                                partial_template="user/user_modal_edit.html",
-                                status_code=status.HTTP_400_BAD_REQUEST,
-                                block_name="modal_content")
+        return error_notification(request, e)
 
-    flash(request, f"User {user.full_name} updated")
     return template(request,
                     "pages/user_modal.html",
                     {
@@ -301,7 +254,7 @@ async def delete_user(
         x_csrftoken: str = Header(None)
 ):
     """
-    Delete a user. Only admins can delete users.
+    Delete a user
     """
     if not user_id == current_user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admins can not delete their own user")
@@ -314,12 +267,12 @@ async def delete_user(
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid CSRF token")
 
     try:
-        user = await user_service.get_user_by_id(user_id=user_id)
+        await user_service.get_user_by_id(user_id=user_id)
         await user_service.delete_user(user_id=user_id)
     except UserNotFoundError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.args[0])
 
-    flash(request, f"User {user.full_name} was deleted")
+    # flash(request, f"User {user.full_name} was deleted")
     response = Response(status_code=status.HTTP_307_TEMPORARY_REDIRECT)
     response.headers["HX-Redirect"] = router.url_path_for("user_list")
     return response
