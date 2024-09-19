@@ -61,7 +61,7 @@ async def test_authenticate(user_service, sample_user: User, sample_user_passwor
 
 
 async def test_authenticate_fails(
-        user_service, sample_user: User, sample_user_password: str
+    user_service, sample_user: User, sample_user_password: str
 ):
     authenticated_user = await user_service.authenticate(
         email=sample_user.email, password="bad pass"
@@ -92,7 +92,7 @@ async def test_create_user_fails(user_service, sample_user: User):
         "password": random_lower_string(),
     }
     with pytest.raises(
-            UserCreateError, match=f"user {user_create.get("email")} can not be created"
+        UserCreateError, match=f"user {user_create.get("email")} can not be created"
     ):
         await user_service.create_user(create_dict=user_create)
 
@@ -134,9 +134,7 @@ async def test_update_user_fails(user_service, sample_user: User):
         "is_active": True,
         "is_superuser": True,
     }
-    with pytest.raises(
-            UserValueError, match=f"user can not be updated"
-    ):
+    with pytest.raises(UserValueError, match=f"user can not be updated"):
         await user_service.update_user(user_id=created_user.id, update_dict=user_update)
 
 
@@ -144,7 +142,7 @@ async def test_delete_user(user_service, sample_user: User):
     await user_service.delete_user(user_id=sample_user.id)
 
     with pytest.raises(
-            UserNotFoundError, match=f"user {sample_user.id} does not exist"
+        UserNotFoundError, match=f"user {sample_user.id} does not exist"
     ):
         assert await user_service.get_user_by_id(user_id=sample_user.id)
 

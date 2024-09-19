@@ -2,26 +2,29 @@
   <dl class="divide-y divide-gray-100 dark:divide-gray-800">
     <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
       <dt class="text-sm font-medium text-gray-900 dark:text-gray-100">Full name</dt>
-      <dd class="mt-1 text-sm leading-6 text-gray-700 dark:text-gray-200 sm:col-span-2 sm:mt-0">
+      <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 dark:text-gray-200">
         {{ user.full_name }}
       </dd>
     </div>
     <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-      <dt class="text-sm font-medium text-gray-900  dark:text-gray-100">Email address</dt>
-      <dd class="mt-1 text-sm leading-6 text-gray-700 dark:text-gray-200 sm:col-span-2 sm:mt-0">
+      <dt class="text-sm font-medium text-gray-900 dark:text-gray-100">Email address</dt>
+      <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 dark:text-gray-200">
         {{ user.email }}
       </dd>
     </div>
     <div class="px-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-6">
-      <div aria-hidden="true"
-        class="text-sm font-semibold leading-6 text-gray-900  dark:text-gray-100 sm:grid sm:grid-cols-3 sm:gap-4">Status
+      <div
+        aria-hidden="true"
+        class="text-sm font-semibold leading-6 text-gray-900 sm:grid sm:grid-cols-3 sm:gap-4 dark:text-gray-100"
+      >
+        Status
       </div>
       <div class="mt-4 sm:col-span-2 sm:mt-0">
         <div class="max-w-lg space-y-6">
           <div class="relative flex gap-x-3">
             <div class="flex h-6 items-center">
               <input
-                class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-slate-600 dark:text-slate-400 focus:ring-slate-600 dark:focus:ring-slate-300"
+                class="h-4 w-4 rounded border-gray-300 text-slate-600 focus:ring-slate-600 dark:border-gray-600 dark:text-slate-400 dark:focus:ring-slate-300"
                 id="is_active"
                 name="is_active"
                 type="checkbox"
@@ -32,14 +35,16 @@
               />
             </div>
             <div class="text-sm leading-6">
-              <label class="font-medium text-gray-900 dark:text-gray-100" for="is_active">Active</label>
+              <label class="font-medium text-gray-900 dark:text-gray-100" for="is_active">
+                Active
+              </label>
               <p class="mt-1 text-gray-600 dark:text-gray-400">active users can log in</p>
             </div>
           </div>
           <div class="relative flex gap-x-3">
             <div class="flex h-6 items-center">
               <input
-                class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-slate-600 dark:text-slate-400 focus:ring-slate-600 dark:focus:ring-slate-300"
+                class="h-4 w-4 rounded border-gray-300 text-slate-600 focus:ring-slate-600 dark:border-gray-600 dark:text-slate-400 dark:focus:ring-slate-300"
                 id="is_superuser"
                 name="is_superuser"
                 type="checkbox"
@@ -50,7 +55,9 @@
               />
             </div>
             <div class="text-sm leading-6">
-              <label class="font-medium text-gray-900 dark:text-gray-100" for="is_superuser">Admin</label>
+              <label class="font-medium text-gray-900 dark:text-gray-100" for="is_superuser">
+                Admin
+              </label>
               <p class="mt-1 text-gray-600 dark:text-gray-400">has admin privileges</p>
             </div>
           </div>
@@ -60,11 +67,11 @@
   </dl>
   <!-- edit button -->
   <div class="px-4 py-6 sm:px-6">
-    <div class="mt-4 sm:ml-16 sm:mt-0 flex justify-end">
+    <div class="mt-4 flex justify-end sm:ml-16 sm:mt-0">
       <a hx-get="/users/detail/{{ user.id }}/edit" hx-target="#user_detail" hx-swap="outerHTML">
         <button
           type="button"
-          class="block rounded-md bg-black dark:bg-white px-3 py-2 text-center text-sm font-semibold text-white dark:text-black shadow-sm hover:bg-slate-500 dark:hover:bg-slate-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600 dark:focus-visible:outline-slate-300"
+          class="block rounded-md bg-black px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600 dark:bg-white dark:text-black dark:hover:bg-slate-400 dark:focus-visible:outline-slate-300"
         >
           Edit
         </button>
@@ -73,8 +80,10 @@
   </div>
 </section>
 <!-- oob swap to update name after edit -->
-<div id="user_name" class="px-4 lg:py-6 sm:flex sm:items-center sm:px-6 sm:py-2" hx-swap-oob="true">
+<div id="user_name" class="px-4 sm:flex sm:items-center sm:px-6 sm:py-2 lg:py-6" hx-swap-oob="true">
   <div class="sm:flex-auto">
-    <h1 class="text-base font-semibold leading-6 text-gray-900 dark:text-gray-100">{{ user.full_name }}</h1>
+    <h1 class="text-base font-semibold leading-6 text-gray-900 dark:text-gray-100">
+      {{ user.full_name }}
+    </h1>
   </div>
 </div>

@@ -1,12 +1,12 @@
 {% extends "layouts/base.html" %}
 {% block layout_content %}
   <body class="h-full" hx-ext="response-targets">
-  {% include "partials/navbar.html" %}
-  <!-- Main content -->
-  <main class="lg:min-w-0 lg:pb-2 lg:pt-2">
-    <!-- page content -->
-    {% block content %}
-    {% endblock content %}
-  </main>
+    {% include "partials/navbar.html" %}
+    <!-- Main content -->
+    <main class="lg:min-w-0 lg:pb-2 lg:pt-2">
+      <!-- page content -->
+      {% block content %}
+      {% endblock content %}
+    </main>
   </body>
 {% endblock layout_content %}

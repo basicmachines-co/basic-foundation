@@ -18,7 +18,10 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
             yield session
         except SQLAlchemyError as e:
             # Handle SQLAlchemy specific exceptions
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database error occurred.")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Database error occurred.",
+            )
         finally:
             # close the session
             await session.close()

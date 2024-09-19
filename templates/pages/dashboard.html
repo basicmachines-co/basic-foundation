@@ -2,8 +2,10 @@
 {% from "macros.html" import svg_loader %}
 
 {% block content %}
-  <div class="pl-2 pr-2 py-6">
-    <h1 class="pl-2 pt-2 text-lg font-semibold leading-6 text-gray-900 dark:text-gray-200">Dashboard</h1>
+  <div class="py-6 pl-2 pr-2">
+    <h1 class="pl-2 pt-2 text-lg font-semibold leading-6 text-gray-900 dark:text-gray-200">
+      Dashboard
+    </h1>
     <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
       <!-- Total Users -->
       <div hx-get="/dashboard/users/count" hx-trigger="load" hx-swap="outerHTML">

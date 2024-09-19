@@ -93,7 +93,7 @@ class UserService:
         create_dict.update(
             {
                 "hashed_password": get_password_hash(create_dict.get("password")),
-                "is_active": True
+                "is_active": True,
             }
         )
         try:
@@ -125,7 +125,7 @@ class UserService:
             return await self.repository.update(user_id, update_dict)
         except IntegrityError as e:
             logger.info(f"error updating user: {e}")
-            raise UserValueError(user_id, update_dict['email']) from e
+            raise UserValueError(user_id, update_dict["email"]) from e
 
     async def delete_user(self, *, user_id: UUID) -> None:
         deleted = await self.repository.delete(user_id)
@@ -172,6 +172,12 @@ class UserPagination:
     def __init__(self, repository: Repository[User]):
         self.repository = repository
 
-    def paginate(self, request: Request, query: Query = None, page_size: int = 10, order_by: str = None,
-                 asc: bool = True):
+    def paginate(
+        self,
+        request: Request,
+        query: Query = None,
+        page_size: int = 10,
+        order_by: str = None,
+        asc: bool = True,
+    ):
         return Paginator(request, self.repository, query, page_size, order_by, asc)

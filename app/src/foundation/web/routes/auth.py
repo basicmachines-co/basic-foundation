@@ -12,7 +12,12 @@ from foundation.users.models import User
 from foundation.users.schemas import AuthTokenPayload, UserCreate
 from foundation.users.services import UserCreateError, UserNotFoundError
 from foundation.web.deps import access_token_security
-from foundation.web.forms import RegisterForm, LoginForm, ForgotPasswordForm, ResetPasswordForm
+from foundation.web.forms import (
+    RegisterForm,
+    LoginForm,
+    ForgotPasswordForm,
+    ResetPasswordForm,
+)
 from foundation.web.templates import templates
 from foundation.web.utils import HTMLRouter
 
@@ -23,18 +28,14 @@ router = HTMLRouter()
 async def register_get(request: Request):
     form = RegisterForm(request)
     return templates.TemplateResponse(
-        "pages/register.html",
-        dict(
-            request=request,
-            form=form
-        )
+        "pages/register.html", dict(request=request, form=form)
     )
 
 
 @router.post("/register")
 async def register_post(
-        request: Request,
-        user_service: UserServiceDep,
+    request: Request,
+    user_service: UserServiceDep,
 ):
     form = await RegisterForm.from_formdata(request)
     error = None
@@ -48,19 +49,18 @@ async def register_post(
             register_form = UserCreate(
                 full_name=full_name, email=email, password=password, is_active=True
             )
-            user = await user_service.create_user(create_dict=register_form.model_dump())
+            user = await user_service.create_user(
+                create_dict=register_form.model_dump()
+            )
             return await login_user(request, user)
         except UserCreateError:
             error = "User already exists"
 
     return templates.TemplateResponse(
         "pages/register.html",
-        dict(
-            request=request,
-            error=error,
-            form=form
-        ),
-        block_name="content")
+        dict(request=request, error=error, form=form),
+        block_name="content",
+    )
 
 
 @router.get("/login")
@@ -71,14 +71,14 @@ async def login(request: Request):
         dict(
             request=request,
             form=form,
-        )
+        ),
     )
 
 
 @router.post("/login")
 async def login_post(
-        request: Request,
-        user_service: UserServiceDep,
+    request: Request,
+    user_service: UserServiceDep,
 ):
     form = await LoginForm.from_formdata(request)
     if await form.validate():
@@ -131,15 +131,12 @@ async def forgot_password(request: Request):
         dict(
             request=request,
             form=form,
-        )
+        ),
     )
 
 
 @router.post("/forgot-password")
-async def forgot_password_post(
-        request: Request,
-        user_service: UserServiceDep
-):
+async def forgot_password_post(request: Request, user_service: UserServiceDep):
     form = await ForgotPasswordForm.from_formdata(request)
     error = None
     success = None
@@ -155,12 +152,7 @@ async def forgot_password_post(
 
     return templates.TemplateResponse(
         "pages/forgot_password.html",
-        dict(
-            request=request,
-            form=form,
-            error=error,
-            success=success
-        ),
+        dict(request=request, form=form, error=error, success=success),
         block_name="content",
     )
 
@@ -177,14 +169,14 @@ async def reset_password(request: Request, token: str):
             token=token,
             error="Invalid token" if not email else None,
             form=form,
-        )
+        ),
     )
 
 
 @router.post("/reset-password")
 async def reset_password_post(
-        request: Request,
-        user_service: UserServiceDep,
+    request: Request,
+    user_service: UserServiceDep,
 ):
     form = await ResetPasswordForm.from_formdata(request)
     error = None
@@ -218,5 +210,5 @@ async def reset_password_post(
             error=error,
             success=success,
         ),
-        block_name="password_reset_form"
+        block_name="password_reset_form",
     )

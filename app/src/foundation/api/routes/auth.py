@@ -23,8 +23,8 @@ router = APIRouter()
 
 @router.post("/login/access-token")
 async def login_access_token(
-        user_service: UserServiceDep,
-        form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    user_service: UserServiceDep,
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> AuthToken:
     """
     OAuth2 compatible token login, get an access token for future requests

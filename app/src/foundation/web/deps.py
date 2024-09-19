@@ -18,10 +18,13 @@ JwtAuthorizationCredentialsDep = Annotated[
 
 
 async def get_current_web_user(
-        user_service: UserServiceDep, credentials: JwtAuthorizationCredentialsDep
+    user_service: UserServiceDep, credentials: JwtAuthorizationCredentialsDep
 ) -> UserPublic:
     if not credentials:
-        raise HTTPException(status_code=status.HTTP_307_TEMPORARY_REDIRECT, headers={"Location": "/login"})
+        raise HTTPException(
+            status_code=status.HTTP_307_TEMPORARY_REDIRECT,
+            headers={"Location": "/login"},
+        )
     user = await get_current_user(user_service, credentials)
     return UserPublic.model_validate(user)
 

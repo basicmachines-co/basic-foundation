@@ -9,11 +9,7 @@
   <!-- REGISTRATION FORM -->
   <form class="space-y-6" hx-post="/register" hx-swap="outerHTML" method="post">
     {% if error %}
-      <div
-        class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-800"
-        id="errors"
-        role="alert"
-      >
+      <div class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-800" id="errors" role="alert">
         {{ error }}
       </div>
     {% endif %}
@@ -21,7 +17,9 @@
     {{ form.csrf_token() }}
     <!-- full_name -->
     <div>
-      <label for="full_name" class="block text-sm font-medium leading-6 text-gray-900"> Full Name </label>
+      <label for="full_name" class="block text-sm font-medium leading-6 text-gray-900">
+        Full Name
+      </label>
       <div class="mt-2">
         <input
           id="full_name"
@@ -39,7 +37,9 @@
     </div>
     <!-- email -->
     <div>
-      <label for="email" class="block text-sm font-medium leading-6 text-gray-900"> Email address </label>
+      <label for="email" class="block text-sm font-medium leading-6 text-gray-900">
+        Email address
+      </label>
       <div class="mt-2">
         <input
           id="email"
@@ -58,7 +58,9 @@
     </div>
     <!-- password -->
     <div>
-      <label for="password" class="block text-sm font-medium leading-6 text-gray-900"> Password </label>
+      <label for="password" class="block text-sm font-medium leading-6 text-gray-900">
+        Password
+      </label>
       <div class="mt-2">
         <input
           id="password"
@@ -85,7 +87,7 @@
   <!-- /REGISTRATION FORM -->
 
   <p class="mt-10 text-center text-sm text-gray-500">
-    Already have an account? <a href="/login"
-    class="font-semibold leading-6 text-slate-600 hover:text-slate-500"> Login </a>
+    Already have an account?
+    <a href="/login" class="font-semibold leading-6 text-slate-600 hover:text-slate-500">Login</a>
   </p>
 {% endblock content %}

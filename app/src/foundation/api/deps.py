@@ -27,7 +27,7 @@ JwtAuthorizationCredentialsDep = Annotated[
 
 
 async def get_current_api_user(
-        user_service: UserServiceDep, credentials: JwtAuthorizationCredentialsDep
+    user_service: UserServiceDep, credentials: JwtAuthorizationCredentialsDep
 ) -> User:
     return await get_current_user(user_service, credentials)
 

@@ -234,7 +234,7 @@ uvicorn app.main:app --reload
         - [x] error handling in services
         - [x] stacked navbar layout
         - [ ] 422 error on page load without token - http://127.0.0.1:8000/reset-password
-        - [ ] fasthx
+        - [-] fasthx
             - [x] redo flash message
                 - [-] edit success
                 - [x] edit error

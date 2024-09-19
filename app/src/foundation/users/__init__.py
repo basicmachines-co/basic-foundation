@@ -5,7 +5,9 @@ from foundation.users.models import User
 from foundation.users.services import UserService, UserNotFoundError
 
 
-async def get_current_user(user_service: UserService, credentials: JwtAuthorizationCredentials) -> User:
+async def get_current_user(
+    user_service: UserService, credentials: JwtAuthorizationCredentials
+) -> User:
     # Notes
     # the jwt contains the id PK for the user in a dict format,
     # e.g. {"id": "<primary-key-uuid>"}

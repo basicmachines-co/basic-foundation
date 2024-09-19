@@ -1,12 +1,15 @@
 <!-- pagination -->
-<div
-  class="flex items-center justify-between bg-white dark:bg-black py-3"
->
+<div class="flex items-center justify-between bg-white py-3 dark:bg-black">
   <!-- pagination info -->
   <div class="hidden sm:block">
     <p class="text-sm text-gray-700 dark:text-gray-200">
-      Showing <span class="font-medium">{{ page.start }}</span> to <span class="font-medium">{{ page.end }}</span> of
-      <span class="font-medium">{{ page.total }}</span> results
+      Showing
+      <span class="font-medium">{{ page.start }}</span>
+      to
+      <span class="font-medium">{{ page.end }}</span>
+      of
+      <span class="font-medium">{{ page.total }}</span>
+      results
     </p>
   </div>
   <!-- Dropdown to select page size -->
@@ -14,11 +17,13 @@
   <div class="flex flex-1 justify-between sm:justify-end">
     <div class="px-2">
       <span class="text-sm text-gray-700 dark:text-gray-200">Rows per page:</span>
-      <select class="border-gray-300 dark:border-gray-600 dark:bg-black dark:text-gray-200 rounded-md"
+      <select
+        class="rounded-md border-gray-300 dark:border-gray-600 dark:bg-black dark:text-gray-200"
         hx-get="/users/list?page={{ page.page }}&page_size={{ page.page_size }}"
         hx-target="#user-list"
         hx-trigger="change"
-        name="page_size">
+        name="page_size"
+      >
         <option value="10" {% if page.page_size == 10 %}selected{% endif %}>10</option>
         <option value="25" {% if page.page_size == 25 %}selected{% endif %}>25</option>
         <option value="50" {% if page.page_size == 50 %}selected{% endif %}>50</option>
@@ -28,10 +33,15 @@
       hx-get="{{ page.previous_page }}"
       hx-target="#user-list"
       class="{{ 'bg-white dark:bg-black text-gray-800 dark:text-gray-100 ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-950' if page.has_previous else 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 ring-gray-200 dark:ring-gray-700 cursor-not-allowed' }} relative inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold ring-1 ring-inset"
-    > Previous </a> <a
-    hx-get="{{ page.next_page }}"
-    hx-target="#user-list"
-    class="{{ 'bg-white dark:bg-black text-gray-800 dark:text-gray-100 ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-950' if page.has_next else 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 ring-gray-200 dark:ring-gray-700 cursor-not-allowed' }} relative ml-3 inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold ring-1 ring-inset"
-  > Next </a>
+    >
+      Previous
+    </a>
+    <a
+      hx-get="{{ page.next_page }}"
+      hx-target="#user-list"
+      class="{{ 'bg-white dark:bg-black text-gray-800 dark:text-gray-100 ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-950' if page.has_next else 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 ring-gray-200 dark:ring-gray-700 cursor-not-allowed' }} relative ml-3 inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold ring-1 ring-inset"
+    >
+      Next
+    </a>
   </div>
 </div>

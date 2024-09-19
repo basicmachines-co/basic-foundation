@@ -4,7 +4,12 @@ import pytest
 from playwright.sync_api import Page, expect
 
 from foundation.core.config import settings
-from .urls import URL_LOGIN_PAGE, URL_DASHBOARD_PAGE, URL_REGISTER_PAGE, URL_FORGOT_PASSWORD_PAGE
+from .urls import (
+    URL_LOGIN_PAGE,
+    URL_DASHBOARD_PAGE,
+    URL_REGISTER_PAGE,
+    URL_FORGOT_PASSWORD_PAGE,
+)
 
 USERNAME = settings.SUPERUSER_EMAIL
 PASSWORD = settings.SUPERUSER_PASSWORD
