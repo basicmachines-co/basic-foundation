@@ -19,7 +19,7 @@ pytestmark = pytest.mark.playwright
 
 def assert_login_page(page: Page) -> dict[str, Any]:
     expect(page).to_have_url(URL_LOGIN_PAGE)
-    expect(page.get_by_role("heading", name="Log in to your account")).to_be_visible()
+    expect(page.get_by_role("heading", name="Log in", exact=True)).to_be_visible()
 
     username_input = page.get_by_label("Email address")
     expect(username_input).to_be_visible()

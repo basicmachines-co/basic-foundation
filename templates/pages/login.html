@@ -1,7 +1,7 @@
 {% extends "layouts/auth.html" %}
 {% set title = "Login" %}
 
-{% block heading_text %}Log in to your account{% endblock heading_text %}
+{% block heading_text %}Log in{% endblock heading_text %}
 
 {% block content %}
   <section id="login_page">
@@ -27,9 +27,7 @@
         <label
           for="username"
           class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
-        >
-          Email address
-        </label>
+        > Email address </label>
         <div class="mt-2">
           <input
             id="username"
@@ -48,16 +46,12 @@
           <label
             for="password"
             class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
-          >
-            Password
-          </label>
+          > Password </label>
           <div class="text-sm">
             <a
               href="/forgot-password"
               class="font-semibold text-slate-600 hover:text-slate-400 hover:text-slate-500 dark:text-slate-300"
-            >
-              Forgot password?
-            </a>
+            > Forgot password? </a>
           </div>
         </div>
         <div class="mt-2">
@@ -83,13 +77,10 @@
       </div>
     </form>
     <p class="mt-10 text-center text-sm text-gray-500 dark:text-gray-400">
-      Don't have an account?
-      <a
-        href="/register"
-        class="font-semibold leading-6 text-slate-600 hover:text-slate-500 dark:text-slate-300 dark:hover:text-slate-400"
-      >
-        Register
-      </a>
+      Don't have an account? <a
+      href="/register"
+      class="font-semibold leading-6 text-slate-600 hover:text-slate-500 dark:text-slate-300 dark:hover:text-slate-400"
+    > Register </a>
     </p>
   </section>
 {% endblock content %}
