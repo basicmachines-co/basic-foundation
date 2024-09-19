@@ -27,21 +27,21 @@ class UserNotFoundError(Exception):
     """Raised when a user is not found."""
 
     def __init__(self, id_val: UUID | str):
-        super().__init__(f"user {id_val} does not exist")
+        super().__init__(f"The user {id_val} does not exist")
 
 
 class UserCreateError(Exception):
     """Raised when a user can not be created."""
 
     def __init__(self, email: str):
-        super().__init__(f"user {email} can not be created")
+        super().__init__(f"A user with email {email} already exists")
 
 
 class UserValueError(Exception):
     """Raised when a user can not be updated."""
 
     def __init__(self, id_val: UUID | str, value: Any = None):
-        super().__init__(f"user can not be updated with value '{value}'")
+        super().__init__(f"The user can not be updated with value '{value}'")
 
 
 class UserService:

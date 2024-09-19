@@ -6,8 +6,9 @@
   <section id="user_create">
     <!-- USER CREATE FORM -->
     <form hx-post="/users/create"
-      hx-swap="outerHTML"
+      hx-swap="innerHTML"
       hx-target="#user_form"
+      hx-target-400="#notification"
     >
       <div class="space-y-12 sm:space-y-16">
         <div class="px-4 lg:py-6 sm:px-6 sm:py-6">

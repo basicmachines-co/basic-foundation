@@ -52,9 +52,12 @@ class RegisterForm(StarletteForm):
     ])
 
 
-class UserForm(RegisterForm):
-    is_active = BooleanField('Active')
+class UserCreateForm(RegisterForm):
     is_superuser = BooleanField('Superuser')
+
+
+class UserEditForm(UserCreateForm):
+    is_active = BooleanField('Active')
     password = PasswordField('Password', [
         password_validator_admin
     ])

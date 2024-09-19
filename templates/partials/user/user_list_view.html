@@ -36,9 +36,11 @@
           </svg>
           Edit </a>
         <!-- Delete Button -->
-        <a href="#"
+        <a hx-get="/users/modal/{{ user_id }}/delete"
+          hx-target="#modal"
+          hx-swap="outerHTML"
           class="block px-4 py-2 text-sm text-red-700 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-950"
-          @click.stop>
+          @click.stop="open = false; modal = true">
           <svg xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"

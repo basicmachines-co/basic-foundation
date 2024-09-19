@@ -6,44 +6,18 @@ from fastapi import Response
 from fastapi import status
 from sqlalchemy import select, desc, asc
 from starlette_wtf import csrf_token
+from starlette_wtf.csrf import get_csrf_token
 
 from foundation.users.deps import UserServiceDep, UserPaginationDep
 from foundation.users.models import User
 from foundation.users.schemas import UserPublic
 from foundation.users.services import UserValueError, UserNotFoundError, UserCreateError
 from foundation.web.deps import CurrentUserDep, LoginRequired, AdminRequired
-from foundation.web.forms import UserForm
+from foundation.web.forms import UserEditForm, UserCreateForm
 from foundation.web.templates import templates
 from foundation.web.utils import HTMLRouter
 
 router = HTMLRouter(dependencies=[LoginRequired])
-
-
-def partial_template(
-        request: Request,
-        user: dict = None,
-        *,
-        partial_template,
-        form: UserForm = None,
-        error: str = None,
-        status_code=status.HTTP_200_OK,
-        block_name=None,
-        headers=None,
-        **kwargs
-) -> templates.TemplateResponse:
-    return templates.TemplateResponse(
-        f"partials/{partial_template}",
-        dict(
-            request=request,
-            user=user,
-            form=form,
-            error=error,
-            **kwargs
-        ),
-        status_code,
-        headers=headers,
-        block_name=block_name,
-    )
 
 
 def template(request: Request,
@@ -54,11 +28,11 @@ def template(request: Request,
     return templates.TemplateResponse(request, name, context, status_code, headers, **kwargs)
 
 
-def error_notification(request, e):
+def error_notification(request, e, status_code=status.HTTP_400_BAD_REQUEST):
     return template(request,
                     "partials/notification.html",
                     {"error": True, "title": "An error occurred", "message": e.args[0]},
-                    status_code=status.HTTP_400_BAD_REQUEST,
+                    status_code=status_code,
                     headers={"HX-Trigger": "notification"})
 
 
@@ -105,7 +79,7 @@ async def user_create(
         request: Request,
         current_user: CurrentUserDep,
 ):
-    form = UserForm(request)
+    form = UserCreateForm(request)
     return template(request, "pages/user_create.html", {"request": request, "current_user": current_user, "form": form})
 
 
@@ -116,7 +90,7 @@ async def user_create_post(
         user_service: UserServiceDep,
         current_user: CurrentUserDep,
 ):
-    form = await UserForm.from_formdata(request)
+    form = await UserCreateForm.from_formdata(request)
     if await form.validate():
         try:
             created_user = await user_service.create_user(
@@ -127,9 +101,8 @@ async def user_create_post(
             response.headers["HX-Redirect"] = router.url_path_for("user_detail_view", user_id=created_user.id)
             return response
         except UserCreateError as e:
-            pass
-            # TODO return error
-            # error = e.args[0]
+            # TODO add notification div to page
+            return error_notification(request, e)
 
     return template(request, "partials/user/user_form.html",
                     {"current_user": current_user, "form": form})
@@ -155,13 +128,10 @@ async def user_detail_edit(
         current_user: CurrentUserDep,
 ):
     edit_user = await user_service.get_user_by_id(user_id=user_id)
-    form = UserForm(request, obj=edit_user)
+    form = UserEditForm(request, obj=edit_user)
     authorize_admin_or_owner(user=edit_user, current_user=current_user)
 
-    response = template(request, "partials/user/user_detail_edit.html", {"user": edit_user, "form": form})
-    # Generate a CSRF token and set it in a cookie, checked on delete
-    response.set_cookie("csrf_token", csrf_token(request))
-    return response
+    return template(request, "partials/user/user_detail_edit.html", {"user": edit_user, "form": form})
 
 
 @router.put("/users/detail/{user_id}")
@@ -172,7 +142,7 @@ async def user_detail_put(
         current_user: CurrentUserDep,
 ):
     user = await user_service.get_user_by_id(user_id=user_id)
-    form = await UserForm.from_formdata(request)
+    form = await UserEditForm.from_formdata(request)
     authorize_admin_or_owner(user=user, current_user=current_user)
 
     if not await form.validate():
@@ -208,7 +178,7 @@ async def user_modal_edit(
         user_service: UserServiceDep,
 ):
     edit_user = await user_service.get_user_by_id(user_id=user_id)
-    form = UserForm(request, obj=edit_user)
+    form = UserEditForm(request, obj=edit_user)
     return template(request, "pages/user_modal.html", {"user": edit_user, "form": form})
 
 
@@ -220,7 +190,7 @@ async def user_modal_put(
         user_service: UserServiceDep,
 ):
     user = await user_service.get_user_by_id(user_id=user_id)
-    form = await UserForm.from_formdata(request)
+    form = await UserEditForm.from_formdata(request)
     if not await form.validate():
         # display the form with errors
         return template(request,
@@ -244,6 +214,20 @@ async def user_modal_put(
                     headers={"HX-Trigger": "refresh"})
 
 
+@router.get("/users/modal/{user_id}/delete", dependencies=[AdminRequired])
+async def user_modal_delete(
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
+):
+    user = await user_service.get_user_by_id(user_id=user_id)
+    token = csrf_token(request)
+
+    return template(request, "partials/user/user_modal_delete.html",
+                    {"user": user, "current_user": current_user, "csrf_token": token})
+
+
 @router.delete("/users/{user_id}",
                dependencies=[AdminRequired])
 async def delete_user(
@@ -256,14 +240,11 @@ async def delete_user(
     """
     Delete a user
     """
-    if not user_id == current_user.id:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admins can not delete their own user")
+    if user_id == current_user.id:
+        error_notification(request, "You can't delete yourself", status_code=status.HTTP_403_FORBIDDEN)
 
-    # Retrieve the CSRF token from the cookie
-    csrf_token_in_cookie = request.cookies.get("csrf_token")
-
-    # Validate the CSRF token directly from the header
-    if not x_csrftoken or x_csrftoken != csrf_token_in_cookie:
+    # Validate the CSRF token from the header
+    if x_csrftoken is None or x_csrftoken != await get_csrf_token(request):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid CSRF token")
 
     try:
@@ -272,7 +253,6 @@ async def delete_user(
     except UserNotFoundError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.args[0])
 
-    # flash(request, f"User {user.full_name} was deleted")
     response = Response(status_code=status.HTTP_307_TEMPORARY_REDIRECT)
-    response.headers["HX-Redirect"] = router.url_path_for("user_list")
+    response.headers["HX-Redirect"] = router.url_path_for("users_page")
     return response

@@ -6,10 +6,15 @@
     <section id="page_content">
       <!-- Modal container -->
       <div id="modal-container" x-data="{ modal: false }">
+        <!-- notification popup -->
+        <div id="notification"></div>
         <!--  page content card -->
         <div class="lg:rounded-lg lg:border lg:border-gray-200 bg-white dark:bg-black lg:dark:border-gray-700 py-5 px-2">
           {% block page_content %}
           {% endblock page_content %}
+        </div>
+        <!-- modal -->
+        <div id="modal">
         </div>
       </div>
     </section>
