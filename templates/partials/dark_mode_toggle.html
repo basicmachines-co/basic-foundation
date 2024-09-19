@@ -1,5 +1,8 @@
 <!-- Dark mode toggle button -->
-<button @click="darkMode = !darkMode" class="p-2">
+<button
+  @click="darkMode = !darkMode"
+  class="relative ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-600 hover:text-gray-700 dark:hover:text-gray-300"
+>
   <span class="sr-only">Toggle dark mode</span>
   <svg
     x-show="!darkMode"
@@ -19,7 +22,7 @@
   <svg
     x-show="darkMode"
     xmlns="http://www.w3.org/2000/svg"
-    class="h-6 w-6 dark:stroke-white"
+    class="h-6 w-6"
     fill="none"
     viewBox="0 0 24 24"
     stroke-width="1.5"

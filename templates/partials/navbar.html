@@ -3,7 +3,7 @@
   x-data="{ mobileMenuOpen: false, darkMode: localStorage.getItem('darkMode') === 'true', currentPath: window.location.pathname }"
   x-init="$watch('darkMode', value => { document.documentElement.classList.toggle('dark', value); localStorage.setItem('darkMode', value); })"
 >
-  <!-- Container for the navbar content -->
+  <!--desktop navbar -->
   <div class="px-4 sm:px-6 lg:px-8">
     <div class="flex h-16 justify-between">
       <!-- Left-aligned section for logo and menu links -->
@@ -17,18 +17,13 @@
             'inline-flex items-center border-b-2 border-slate-500 px-1 pt-1 text-sm font-medium text-gray-900 dark:text-gray-100': currentPath.startsWith('/dashboard'),
             'inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 dark:text-gray-400 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-300': !currentPath.startsWith('/dashboard')
             }"
-          >
-            Dashboard
-          </a>
-          <a
-            href="/users"
-            :class="{
+          > Dashboard </a> <a
+          href="/users"
+          :class="{
             'inline-flex items-center border-b-2 border-slate-500 px-1 pt-1 text-sm font-medium text-gray-900 dark:text-gray-100': currentPath.startsWith('/users'),
             'inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 dark:text-gray-400 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-300': !currentPath.startsWith('/users')
             }"
-          >
-            Users
-          </a>
+        > Users </a>
         </div>
       </div>
       <!-- Right-aligned section for dark mode toggle and profile dropdown -->
@@ -63,15 +58,10 @@
             <a
               href="/profile"
               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-            >
-              Your Profile
-            </a>
-            <a
-              href="/logout"
-              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-            >
-              Log out
-            </a>
+            > Your Profile </a> <a
+            href="/logout"
+            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+          > Log out </a>
           </div>
         </div>
       </div>
@@ -79,9 +69,10 @@
       <div class="-mr-2 flex items-center sm:hidden">
         <button
           @click="mobileMenuOpen = !mobileMenuOpen"
-          class="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 focus:outline-none"
+          class="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 focus:outline-none dark:bg-black dark:text-gray-600"
         >
           <span class="sr-only">Open main menu</span>
+          <!-- Hamburger Menu Icon (shown when menu is closed) -->
           <svg
             class="h-6 w-6"
             x-show="!mobileMenuOpen"
@@ -93,6 +84,7 @@
           >
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M3 12h18m-18 6h18" />
           </svg>
+          <!-- Close Icon (shown when menu is open) -->
           <svg
             class="h-6 w-6"
             x-show="mobileMenuOpen"
@@ -108,30 +100,26 @@
       </div>
     </div>
   </div>
-  <!-- Mobile menu -->
-  <div x-show="mobileMenuOpen" class="sm:hidden">
+  <!-- Mobile navbar -->
+  <div x-show="mobileMenuOpen" class="sm:hidden min-h-screen bg-white dark:bg-black">
     <div class="space-y-1 pb-3 pt-2">
       <a
         href="/dashboard"
         :class="{
             'block border-l-4 border-slate-500 bg-slate-50 py-2 pl-3 pr-4 text-base font-medium text-slate-700 dark:bg-gray-800 dark:text-gray-200': currentPath.startsWith('/dashboard'),
-            'block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium dark:text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800': !currentPath.startsWith('/dashboard')
+            'block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800': !currentPath.startsWith('/dashboard')
             }"
-      >
-        Dashboard
-      </a>
-      <a
-        href="/users"
-        :class="{
+      > Dashboard </a> <a
+      href="/users"
+      :class="{
             'block border-l-4 border-slate-500 bg-slate-50 py-2 pl-3 pr-4 text-base font-medium text-slate-700 dark:bg-gray-800 dark:text-gray-200': currentPath.startsWith('/users'),
-            'block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium dark:text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800': !currentPath.startsWith('/users')
+            'block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50  dark:hover:bg-gray-800': !currentPath.startsWith('/users')
             }"
-      >
-        Users
-      </a>
+    > Users </a>
     </div>
     <div class="border-t border-gray-200 pb-3 pt-4">
       <div class="flex items-center px-4">
+        <!-- avatar -->
         <div class="flex-shrink-0">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -139,7 +127,7 @@
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="h-6 w-6"
+            class="h-6 w-6 stroke-black dark:stroke-white"
           >
             <path
               stroke-linecap="round"
@@ -149,62 +137,21 @@
           </svg>
         </div>
         <div class="ml-3">
-          <div class="text-base font-medium text-gray-800">{{ current_user.full_name }}</div>
-          <div class="text-sm font-medium dark:text-gray-400 dark:text-gray-500">
+          <div class="text-base font-medium text-gray-800 dark:text-gray-200">{{ current_user.full_name }}</div>
+          <div class="text-sm font-medium text-gray-400 dark:text-gray-500">
             {{ current_user.email }}
           </div>
         </div>
-        <button
-          @click="darkMode = !darkMode"
-          class="relative ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-600 hover:text-gray-700 dark:hover:text-gray-300"
-        >
-          <span class="sr-only">Toggle dark mode</span>
-          <svg
-            x-show="!darkMode"
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
-            />
-          </svg>
-          <svg
-            x-show="darkMode"
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 12.79A9 9 0 0111.21 3a7.5 7.5 0 000 15 9 9 0 009.79-5.21z"
-            />
-          </svg>
-        </button>
+        {% include "partials/dark_mode_toggle.html" %}
       </div>
       <div class="mt-3 space-y-1">
         <a
           href="/profile"
-          class="block px-4 py-2 text-base font-medium hover:bg-gray-100 hover:text-gray-800 dark:text-gray-400 dark:text-gray-500"
-        >
-          Profile
-        </a>
-        <a
-          href="/logout"
-          class="block px-4 py-2 text-base font-medium hover:bg-gray-100 hover:text-gray-800 dark:text-gray-400 dark:text-gray-500"
-        >
-          Log out
-        </a>
+          class="block px-4 py-2 text-base font-medium hover:bg-gray-100 hover:text-gray-800 text-gray-400 dark:text-gray-500"
+        > Profile </a> <a
+        href="/logout"
+        class="block px-4 py-2 text-base font-medium hover:bg-gray-100 hover:text-gray-800 text-gray-400 dark:text-gray-500"
+      > Log out </a>
       </div>
     </div>
   </div>

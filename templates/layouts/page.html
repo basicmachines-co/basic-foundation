@@ -4,13 +4,13 @@
   <div class="lg:pl-2 lg:pr-2">
     <!-- page content -->
     <section id="page_content">
+      <!-- notification popup -->
+      <div id="notification"></div>
       <!-- Modal container -->
       <div id="modal-container" x-data="{ modal: false }">
-        <!-- notification popup -->
-        <div id="notification"></div>
         <!--  page content card -->
         <div
-          class="bg-white px-2 py-5 lg:rounded-lg lg:border lg:border-gray-200 dark:bg-black lg:dark:border-gray-700"
+          class="bg-white px-2 py-4 lg:rounded-lg lg:border lg:border-gray-200 dark:bg-black lg:dark:border-gray-700"
         >
           {% block page_content %}
           {% endblock page_content %}

@@ -5,9 +5,7 @@
   <label
     class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5 dark:text-gray-100"
     for="full_name"
-  >
-    Full Name
-  </label>
+  > Full Name </label>
   <div class="mt-2 sm:col-span-2 sm:mt-0">
     <input
       autocomplete="given-name"
@@ -28,9 +26,7 @@
   <label
     class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5 dark:text-gray-100"
     for="email"
-  >
-    Email address
-  </label>
+  > Email address </label>
   <div class="mt-2 sm:col-span-2 sm:mt-0">
     <input
       autocomplete="email"
@@ -51,9 +47,7 @@
   <label
     class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5 dark:text-gray-100"
     for="password"
-  >
-    Password
-  </label>
+  > Password </label>
   <div class="mt-2 sm:col-span-2 sm:mt-0">
     <input
       id="password"
@@ -72,9 +66,7 @@
   <label
     class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5 dark:text-gray-100"
     for="password_2"
-  >
-    Repeat Password
-  </label>
+  > Repeat Password </label>
   <div class="mt-2 sm:col-span-2 sm:mt-0">
     <input
       id="password_2"
@@ -101,25 +93,25 @@
     </div>
     <div class="mt-4 sm:col-span-2 sm:mt-0">
       <div class="max-w-lg space-y-6">
-        <div class="relative flex gap-x-3">
-          <div class="flex h-6 items-center">
-            <input
-              class="h-4 w-4 rounded border-gray-300 text-slate-600 focus:ring-slate-600 dark:border-gray-600 dark:text-slate-400 dark:focus:ring-slate-300"
-              id="is_active"
-              name="is_active"
-              type="checkbox"
-              {% if form.is_active.data %}
-                checked
-              {% endif %}
-            />
+        {% if form.is_active %}
+          <div class="relative flex gap-x-3">
+            <div class="flex h-6 items-center">
+              <input
+                class="h-4 w-4 rounded border-gray-300 text-slate-600 focus:ring-slate-600 dark:border-gray-600 dark:text-slate-400 dark:focus:ring-slate-300"
+                id="is_active"
+                name="is_active"
+                type="checkbox"
+                {% if form.is_active.data %}
+                  checked
+                {% endif %}
+              />
+            </div>
+            <div class="text-sm leading-6">
+              <label class="font-medium text-gray-900 dark:text-gray-100" for="is_active"> Active </label>
+              <p class="mt-1 text-gray-600 dark:text-gray-400">active users can log in</p>
+            </div>
           </div>
-          <div class="text-sm leading-6">
-            <label class="font-medium text-gray-900 dark:text-gray-100" for="is_active">
-              Active
-            </label>
-            <p class="mt-1 text-gray-600 dark:text-gray-400">active users can log in</p>
-          </div>
-        </div>
+        {% endif %}
         <div class="relative flex gap-x-3">
           <div class="flex h-6 items-center">
             <input
@@ -133,9 +125,7 @@
             />
           </div>
           <div class="text-sm leading-6">
-            <label class="font-medium text-gray-900 dark:text-gray-100" for="is_superuser">
-              Admin
-            </label>
+            <label class="font-medium text-gray-900 dark:text-gray-100" for="is_superuser"> Admin </label>
             <p class="mt-1 text-gray-600 dark:text-gray-400">has admin privileges</p>
           </div>
         </div>

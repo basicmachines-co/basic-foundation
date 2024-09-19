@@ -192,15 +192,6 @@ uvicorn app.main:app --reload
 - [ ] remove all print() calls
 - [-] add faastapi-problems for error responses: https://github.com/NRWLDev/fastapi-problem
 - [x] remove fastapi-users
-- [ ] package as separate modules?
-    - core
-    - api
-    - web-htmx
-- [ ] permission checks
-    - [ ] user service with current user
-    - [ ] has to be at least one admin
-    - [ ] only admins can create/edit users
-    - [ ] db: rename is_superuser to is_admin
 - [ ] frontend
     - [x] crud users happy path
     - [x] reset password flow
@@ -217,18 +208,6 @@ uvicorn app.main:app --reload
         - [x] 500 page
         - [-] oob swap for name after updating detail
         - [-] db exception in error message
-    - [ ] playwrite tests for html flow
-        - [ ] login
-        - [ ] password reset
-        - [ ] dashboard
-        - [ ] list users
-        - [ ] view user
-        - [ ] edit user
-        - [ ] add user
-        - [ ] delete user
-        - [ ] edit profile
-        - [ ] logout
-        - [ ] fixup styles for mobile
     - [ ] refactor
         - [x] try/catch/finally in db dep
         - [x] error handling in services
@@ -242,8 +221,42 @@ uvicorn app.main:app --reload
             - [x] edit password
             - [x] fix delete user
             - [-] remove shadow from rounded borders
-            - [ ] clean up tailwind styles
+            - [x] clean up tailwind styles
             - [x] user name update oob on edit success
+    - [x] fixes
+        - [x] fixup styles for mobile
+            - login
+            - mobile menu - use whole page
+        - [x] fix oob display on user detail view
+        - [x] error on admin delete self
+        - [x] dashboard has two active user stats
+        - [-] mobile menu toggle in darkmode
+            - hamburger
+            - close x
+        - [-] mobile menu darkmode svg is in light mode
+- [ ] package as separate modules?
+    - core
+    - api
+    - web-htmx
+- [ ] permission checks
+    - [ ] user service with current user
+    - [ ] has to be at least one admin
+    - [ ] only admins can create/edit users
+    - [ ] db: rename is_superuser to is_admin
+- [ ] playwrite tests for web flow
+    - [ ] register
+    - [ ] login
+    - [ ] password reset
+    - [ ] dashboard
+    - [ ] list users
+    - [ ] view user
+    - [ ] create user
+    - [ ] edit user via detail
+    - [ ] edit user via modal
+    - [ ] delete user via detail
+    - [ ] delete user via list
+    - [ ] edit profile
+    - [ ] logout
 
 ## references
 

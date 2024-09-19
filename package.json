@@ -1,10 +1,11 @@
 {
-  "name": "basic-foundation-frontend",
+  "name": "basic-foundation",
   "version": "1.0.0",
-  "description": "Saas platform api web frontend using tailwind and daisyui",
+  "description": "Saas platform api web frontend using tailwind, alpine.js and htmx",
   "scripts": {
     "build": "tailwindcss -i ./static/src/input.css -o ./static/dist/css/output.css",
-    "build-prod": "tailwindcss -i ./static/src/input.css -o ./static/dist/css/output.css --minify"
+    "build-prod": "tailwindcss -i ./static/src/input.css -o ./static/dist/css/output.css --minify",
+    "watch": "tailwindcss -i ./static/src/input.css -o ./static/dist/css/output.css --watch"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",

@@ -21,23 +21,23 @@ router = HTMLRouter(dependencies=[LoginRequired])
 
 
 def template(
-    request: Request,
-    name: str,
-    context: dict,
-    status_code: int = 200,
-    headers: typing.Optional[typing.Mapping[str, str]] = None,
-    **kwargs,
+        request: Request,
+        name: str,
+        context: dict,
+        status_code: int = 200,
+        headers: typing.Optional[typing.Mapping[str, str]] = None,
+        **kwargs,
 ) -> templates.TemplateResponse:
     return templates.TemplateResponse(
         request, name, context, status_code, headers, **kwargs
     )
 
 
-def error_notification(request, e, status_code=status.HTTP_400_BAD_REQUEST):
+def error_notification(request, message, status_code=status.HTTP_400_BAD_REQUEST):
     return template(
         request,
         "partials/notification.html",
-        {"error": True, "title": "An error occurred", "message": e.args[0]},
+        {"error": True, "title": "An error occurred", "message": message},
         status_code=status_code,
         headers={"HX-Trigger": "notification"},
     )
@@ -57,13 +57,13 @@ async def users_page(request: Request, current_user: CurrentUserDep):
 
 @router.get("/users/list", dependencies=[AdminRequired])
 async def users_list(
-    request: Request,
-    user_pagination: UserPaginationDep,
-    current_user: CurrentUserDep,
-    page: int = 1,
-    page_size: int = 10,
-    order_by: str = "full_name",
-    ascending: bool = True,
+        request: Request,
+        user_pagination: UserPaginationDep,
+        current_user: CurrentUserDep,
+        page: int = 1,
+        page_size: int = 10,
+        order_by: str = "full_name",
+        ascending: bool = True,
 ):
     if order_by not in ["full_name", "email"]:
         order_by = "full_name"
@@ -88,8 +88,8 @@ async def users_list(
 
 @router.get("/users/create", dependencies=[AdminRequired])
 async def user_create(
-    request: Request,
-    current_user: CurrentUserDep,
+        request: Request,
+        current_user: CurrentUserDep,
 ):
     form = UserCreateForm(request)
     return template(
@@ -101,23 +101,25 @@ async def user_create(
 
 @router.post("/users/create", dependencies=[AdminRequired])
 async def user_create_post(
-    request: Request,
-    user_service: UserServiceDep,
-    current_user: CurrentUserDep,
+        request: Request,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
 ):
     form = await UserCreateForm.from_formdata(request)
     if await form.validate():
         try:
             created_user = await user_service.create_user(create_dict=form.data)
             # Because we are handling a post, we do a redirect in the response
-            response = Response(status_code=status.HTTP_307_TEMPORARY_REDIRECT)
-            response.headers["HX-Redirect"] = router.url_path_for(
-                "user_detail_view", user_id=created_user.id
+            return Response(
+                status_code=status.HTTP_307_TEMPORARY_REDIRECT,
+                headers={
+                    "HX-Redirect": router.url_path_for(
+                        "user_detail_view", user_id=created_user.id
+                    )
+                },
             )
-            return response
         except UserCreateError as e:
-            # TODO add notification div to page
-            return error_notification(request, e)
+            return error_notification(request, e.args[0])
 
     return template(
         request,
@@ -128,10 +130,10 @@ async def user_create_post(
 
 @router.get("/users/{user_id}")
 async def user_detail_view(
-    request: Request,
-    user_id: UUID,
-    user_service: UserServiceDep,
-    current_user: CurrentUserDep,
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
 ):
     view_user = await user_service.get_user_by_id(user_id=user_id)
     authorize_admin_or_owner(user=view_user, current_user=current_user)
@@ -144,10 +146,10 @@ async def user_detail_view(
 
 @router.get("/users/detail/{user_id}/edit")
 async def user_detail_edit(
-    request: Request,
-    user_id: UUID,
-    user_service: UserServiceDep,
-    current_user: CurrentUserDep,
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
 ):
     edit_user = await user_service.get_user_by_id(user_id=user_id)
     form = UserEditForm(request, obj=edit_user)
@@ -162,10 +164,10 @@ async def user_detail_edit(
 
 @router.put("/users/detail/{user_id}")
 async def user_detail_put(
-    request: Request,
-    user_id: UUID,
-    user_service: UserServiceDep,
-    current_user: CurrentUserDep,
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
 ):
     user = await user_service.get_user_by_id(user_id=user_id)
     form = await UserEditForm.from_formdata(request)
@@ -195,20 +197,20 @@ async def user_detail_put(
             update_dict=update_dict,
         )
     except UserValueError as e:
-        return error_notification(request, e)
+        return error_notification(request, e.args[0])
 
     return template(
         request,
         "partials/user/user_detail_view.html",
-        {"user": updated_user, "form": form},
+        {"user": updated_user, "form": form, "hx_swap_oob": True},
     )
 
 
 @router.get("/users/modal/{user_id}/edit", dependencies=[AdminRequired])
 async def user_modal_edit(
-    request: Request,
-    user_id: UUID,
-    user_service: UserServiceDep,
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
 ):
     edit_user = await user_service.get_user_by_id(user_id=user_id)
     form = UserEditForm(request, obj=edit_user)
@@ -217,9 +219,9 @@ async def user_modal_edit(
 
 @router.put("/users/modal/{user_id}", dependencies=[AdminRequired])
 async def user_modal_put(
-    request: Request,
-    user_id: UUID,
-    user_service: UserServiceDep,
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
 ):
     user = await user_service.get_user_by_id(user_id=user_id)
     form = await UserEditForm.from_formdata(request)
@@ -237,7 +239,7 @@ async def user_modal_put(
             update_dict=form.data,
         )
     except UserValueError as e:
-        return error_notification(request, e)
+        return error_notification(request, e.args[0])
 
     return template(
         request,
@@ -249,10 +251,10 @@ async def user_modal_put(
 
 @router.get("/users/modal/{user_id}/delete", dependencies=[AdminRequired])
 async def user_modal_delete(
-    request: Request,
-    user_id: UUID,
-    user_service: UserServiceDep,
-    current_user: CurrentUserDep,
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
 ):
     user = await user_service.get_user_by_id(user_id=user_id)
     token = csrf_token(request)
@@ -266,17 +268,17 @@ async def user_modal_delete(
 
 @router.delete("/users/{user_id}", dependencies=[AdminRequired])
 async def delete_user(
-    request: Request,
-    user_id: UUID,
-    user_service: UserServiceDep,
-    current_user: CurrentUserDep,
-    x_csrftoken: str = Header(None),
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
+        x_csrftoken: str = Header(None),
 ):
     """
     Delete a user
     """
     if user_id == current_user.id:
-        error_notification(
+        return error_notification(
             request, "You can't delete yourself", status_code=status.HTTP_403_FORBIDDEN
         )
 

@@ -35,9 +35,7 @@
               />
             </div>
             <div class="text-sm leading-6">
-              <label class="font-medium text-gray-900 dark:text-gray-100" for="is_active">
-                Active
-              </label>
+              <label class="font-medium text-gray-900 dark:text-gray-100" for="is_active"> Active </label>
               <p class="mt-1 text-gray-600 dark:text-gray-400">active users can log in</p>
             </div>
           </div>
@@ -55,9 +53,7 @@
               />
             </div>
             <div class="text-sm leading-6">
-              <label class="font-medium text-gray-900 dark:text-gray-100" for="is_superuser">
-                Admin
-              </label>
+              <label class="font-medium text-gray-900 dark:text-gray-100" for="is_superuser"> Admin </label>
               <p class="mt-1 text-gray-600 dark:text-gray-400">has admin privileges</p>
             </div>
           </div>
@@ -79,11 +75,14 @@
     </div>
   </div>
 </section>
-<!-- oob swap to update name after edit -->
-<div id="user_name" class="px-4 sm:flex sm:items-center sm:px-6 sm:py-2 lg:py-6" hx-swap-oob="true">
-  <div class="sm:flex-auto">
-    <h1 class="text-base font-semibold leading-6 text-gray-900 dark:text-gray-100">
-      {{ user.full_name }}
-    </h1>
+
+{% if hx_swap_oob %}
+  <!-- oob swap to update name after edit -->
+  <div id="user_name" class="px-4 sm:flex sm:items-center sm:px-6 sm:py-2 lg:py-6" hx-swap-oob="true">
+    <div class="sm:flex-auto">
+      <h1 class="text-base font-semibold leading-6 text-gray-900 dark:text-gray-100">
+        {{ user.full_name }}
+      </h1>
+    </div>
   </div>
-</div>
+{% endif %}

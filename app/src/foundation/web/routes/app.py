@@ -11,7 +11,7 @@ router = HTMLRouter()
 
 @router.get("/")
 async def index(
-    current_user: CurrentUserDep,
+        current_user: CurrentUserDep,
 ):
     if current_user.is_superuser:
         return RedirectResponse(url=router.url_path_for("dashboard"))
@@ -21,8 +21,8 @@ async def index(
 
 @router.get("/dashboard", dependencies=[AdminRequired])
 async def dashboard(
-    request: Request,
-    current_user: CurrentUserDep,
+        request: Request,
+        current_user: CurrentUserDep,
 ):
     return templates.TemplateResponse(
         "pages/dashboard.html",
@@ -56,15 +56,15 @@ async def dashboard_admin_users_count(request: Request, user_service: UserServic
     count = await user_service.get_admin_users_count()
     return templates.TemplateResponse(
         "partials/stat.html",
-        {"request": request, "name": "Active Users", "value": count},
+        {"request": request, "name": "Admin Users", "value": count},
     )
 
 
 @router.get("/profile", dependencies=[LoginRequired])
 async def profile(
-    request: Request,
-    user_service: UserServiceDep,
-    current_user: CurrentUserDep,
+        request: Request,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
 ):
     return templates.TemplateResponse(
         "pages/user_view.html",
