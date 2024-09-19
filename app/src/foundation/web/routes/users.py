@@ -1,4 +1,3 @@
-import typing
 from uuid import UUID
 
 from fastapi import Request, Header, HTTPException
@@ -14,23 +13,10 @@ from foundation.users.schemas import UserPublic
 from foundation.users.services import UserValueError, UserNotFoundError, UserCreateError
 from foundation.web.deps import CurrentUserDep, LoginRequired, AdminRequired
 from foundation.web.forms import UserEditForm, UserCreateForm
-from foundation.web.templates import templates
+from foundation.web.templates import template
 from foundation.web.utils import HTMLRouter
 
 router = HTMLRouter(dependencies=[LoginRequired])
-
-
-def template(
-        request: Request,
-        name: str,
-        context: dict,
-        status_code: int = 200,
-        headers: typing.Optional[typing.Mapping[str, str]] = None,
-        **kwargs,
-) -> templates.TemplateResponse:
-    return templates.TemplateResponse(
-        request, name, context, status_code, headers, **kwargs
-    )
 
 
 def error_notification(request, message, status_code=status.HTTP_400_BAD_REQUEST):

@@ -19,8 +19,11 @@ def assert_register_page(page: Page) -> dict[str, Any]:
     email_input = page.get_by_label("Email address")
     expect(email_input).to_be_visible()
 
-    password_input = page.get_by_label("Password")
+    password_input = page.get_by_label("Password", exact=True)
     expect(password_input).to_be_visible()
+
+    password2_input = page.get_by_label("Repeat Password")
+    expect(password2_input).to_be_visible()
 
     register_button = page.get_by_role("button", name="Register")
     expect(register_button).to_be_visible()
@@ -42,6 +45,7 @@ def test_register_success(page: Page) -> None:
     register_page["fullname_input"].fill(f"User {email}")
     register_page["email_input"].fill(email)
     register_page["password_input"].fill(password)
+    register_page["password2_input"].fill(password)
 
     register_page["register_button"].click()
 
@@ -108,3 +112,26 @@ def test_register_password_valid(page: Page) -> None:
     expect(register_page["fullname_input"]).to_have_value(full_name)
     expect(register_page["email_input"]).to_have_value(email)
     expect(register_page["password_input"]).to_have_value("")
+
+
+def test_register_passwords_must_match(page: Page) -> None:
+    page.goto(URL_REGISTER_PAGE)
+
+    # Ensure the registration page loads correctly
+    register_page = assert_register_page(page)
+
+    email = random_email()
+    password = "qbFa&WyQio#85L"
+    mismatched_password = f"{password}_2"
+
+    # Fill in the registration form
+    register_page["fullname_input"].fill(f"User {email}")
+    register_page["email_input"].fill(email)
+    register_page["password_input"].fill(password)
+    register_page["password2_input"].fill(mismatched_password)
+
+    # Submit the form
+    register_page["register_button"].click()
+
+    # Expect an error message that passwords do not match
+    expect(page.locator("#password-error")).to_have_text("Passwords do not match.")

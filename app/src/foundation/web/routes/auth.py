@@ -9,7 +9,7 @@ from foundation.core.config import settings
 from foundation.core.security import verify_password_reset_token
 from foundation.users.deps import UserServiceDep
 from foundation.users.models import User
-from foundation.users.schemas import AuthTokenPayload, UserCreate
+from foundation.users.schemas import AuthTokenPayload
 from foundation.users.services import UserCreateError, UserNotFoundError
 from foundation.web.deps import access_token_security
 from foundation.web.forms import (
@@ -18,7 +18,8 @@ from foundation.web.forms import (
     ForgotPasswordForm,
     ResetPasswordForm,
 )
-from foundation.web.templates import templates
+from foundation.web.routes.users import error_notification
+from foundation.web.templates import templates, template
 from foundation.web.utils import HTMLRouter
 
 router = HTMLRouter()
@@ -34,32 +35,22 @@ async def register_get(request: Request):
 
 @router.post("/register")
 async def register_post(
-    request: Request,
-    user_service: UserServiceDep,
+        request: Request,
+        user_service: UserServiceDep,
 ):
     form = await RegisterForm.from_formdata(request)
-    error = None
 
     if await form.validate():
-        full_name = form.full_name.data
-        email = form.email.data
-        password = form.password.data
-
         try:
-            register_form = UserCreate(
-                full_name=full_name, email=email, password=password, is_active=True
-            )
-            user = await user_service.create_user(
-                create_dict=register_form.model_dump()
-            )
+            user = await user_service.create_user(create_dict=form.data)
             return await login_user(request, user)
-        except UserCreateError:
-            error = "User already exists"
+        except UserCreateError as e:
+            return error_notification(request, e.args[0])
 
-    return templates.TemplateResponse(
-        "pages/register.html",
-        dict(request=request, error=error, form=form),
-        block_name="content",
+    return template(
+        request,
+        "partials/auth/register_form.html",
+        {"form": form},
     )
 
 
@@ -77,8 +68,8 @@ async def login(request: Request):
 
 @router.post("/login")
 async def login_post(
-    request: Request,
-    user_service: UserServiceDep,
+        request: Request,
+        user_service: UserServiceDep,
 ):
     form = await LoginForm.from_formdata(request)
     if await form.validate():
@@ -175,8 +166,8 @@ async def reset_password(request: Request, token: str):
 
 @router.post("/reset-password")
 async def reset_password_post(
-    request: Request,
-    user_service: UserServiceDep,
+        request: Request,
+        user_service: UserServiceDep,
 ):
     form = await ResetPasswordForm.from_formdata(request)
     error = None

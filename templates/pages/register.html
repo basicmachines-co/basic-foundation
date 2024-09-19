@@ -7,74 +7,14 @@
 
 {% block content %}
   <!-- REGISTRATION FORM -->
-  <form class="space-y-6" hx-post="/register" hx-swap="outerHTML" method="post">
-    {% if error %}
-      <div class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-800" id="errors" role="alert">
-        {{ error }}
-      </div>
-    {% endif %}
-
-    {{ form.csrf_token() }}
-    <!-- full_name -->
-    <div>
-      <label for="full_name" class="block text-sm font-medium leading-6 text-gray-900">
-        Full Name
-      </label>
-      <div class="mt-2">
-        <input
-          id="full_name"
-          name="full_name"
-          type="text"
-          placeholder="Full Name"
-          value="{{ form.full_name.data|d('', true) }}"
-          required
-          class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-        />
-        {% if form.full_name.errors %}
-          <p class="mt-2 text-sm text-red-600">{{ form.full_name.errors[0] }}</p>
-        {% endif %}
-      </div>
-    </div>
-    <!-- email -->
-    <div>
-      <label for="email" class="block text-sm font-medium leading-6 text-gray-900">
-        Email address
-      </label>
-      <div class="mt-2">
-        <input
-          id="email"
-          name="email"
-          type="email"
-          autocomplete="email"
-          placeholder="your@email.com"
-          value="{{ form.email.data|d('', true) }}"
-          required
-          class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-        />
-        {% if form.email.errors %}
-          <p class="mt-2 text-sm text-red-600">{{ form.email.errors[0] }}</p>
-        {% endif %}
-      </div>
-    </div>
-    <!-- password -->
-    <div>
-      <label for="password" class="block text-sm font-medium leading-6 text-gray-900">
-        Password
-      </label>
-      <div class="mt-2">
-        <input
-          id="password"
-          name="password"
-          type="password"
-          placeholder="••••••••"
-          required
-          class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-        />
-        {% if form.password.errors %}
-          <p class="mt-2 text-sm text-red-600">{{ form.password.errors[0] }}</p>
-        {% endif %}
-      </div>
-    </div>
+  <form class="space-y-6"
+    hx-post="/register"
+    hx-swap="innerTML"
+    hx-target="#register_form"
+    hx-target-error="#notification">
+    <section id="register_form">
+      {% include "partials/auth/register_form.html" %}
+    </section>
     <div>
       <button
         type="submit"
@@ -87,7 +27,7 @@
   <!-- /REGISTRATION FORM -->
 
   <p class="mt-10 text-center text-sm text-gray-500">
-    Already have an account?
-    <a href="/login" class="font-semibold leading-6 text-slate-600 hover:text-slate-500">Login</a>
+    Already have an account? <a href="/login"
+    class="font-semibold leading-6 text-slate-600 hover:text-slate-500">Login</a>
   </p>
 {% endblock content %}
