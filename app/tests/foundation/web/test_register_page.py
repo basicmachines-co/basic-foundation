@@ -11,7 +11,7 @@ pytestmark = pytest.mark.playwright
 
 def assert_register_page(page: Page) -> dict[str, Any]:
     expect(page).to_have_url(URL_REGISTER_PAGE)
-    expect(page.get_by_role("heading", name="Register for an account")).to_be_visible()
+    expect(page.get_by_role("heading", name="Register", exact=True)).to_be_visible()
 
     fullname_input = page.get_by_label("Full Name")
     expect(fullname_input).to_be_visible()
