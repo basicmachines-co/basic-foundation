@@ -4,7 +4,7 @@ import pytest
 from playwright.sync_api import Page, expect
 
 from utils import random_email
-from .test_utils import URL_REGISTER_PAGE, register_user
+from ..test_utils import URL_REGISTER_PAGE, register_user
 
 pytestmark = pytest.mark.playwright
 
