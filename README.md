@@ -246,6 +246,7 @@ uvicorn app.main:app --reload
 - [ ] playwrite tests for web flow
     - [ ] register
     - [ ] login
+        - login error
     - [ ] password reset
     - [ ] dashboard
     - [ ] list users

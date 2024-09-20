@@ -29,7 +29,7 @@ def password_validator_admin(form, field):
     if form.password.data or form.password_2.data:
         if form.password.data != form.password_2.data:
             form.password.errors.append("Passwords do not match.")
-            form.password_2.errors.append("Passwords do not match.")
+            form.password_2.errors = ["Passwords do not match."]
             raise ValidationError("Passwords do not match.")
 
 

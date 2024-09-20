@@ -11,12 +11,12 @@ templates.env.add_extension(DebugExtension)
 
 
 def template(
-        request: Request,
-        name: str,
-        context: dict,
-        status_code: int = 200,
-        headers: typing.Optional[typing.Mapping[str, str]] = None,
-        **kwargs,
+    request: Request,
+    name: str,
+    context: dict,
+    status_code: int = 200,
+    headers: typing.Optional[typing.Mapping[str, str]] = None,
+    **kwargs,
 ) -> templates.TemplateResponse:
     return templates.TemplateResponse(
         request, name, context, status_code, headers, **kwargs

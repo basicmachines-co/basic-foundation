@@ -67,7 +67,9 @@ def test_login_failed_invalid_password(page: Page) -> None:
     # submit login
     login_page["login_button"].click()
 
-    expect(page.locator("#errors")).to_contain_text("Incorrect Username or Password")
+    expect(page.locator("#notification-message")).to_contain_text(
+        "Incorrect email or password"
+    )
 
     # still on login page
     expect(page).to_have_url(URL_LOGIN_PAGE)

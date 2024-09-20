@@ -9,7 +9,7 @@ install:
 test:
 	poetry run pytest -m "not playwright"
 
-test-playrwight:  # assumes app is running on localhost:8000
+test-playwright:  # assumes app is running on localhost:8000
 	poetry run pytest -m "playwright"
 
 clean:

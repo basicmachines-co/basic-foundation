@@ -30,6 +30,13 @@ class UserNotFoundError(Exception):
         super().__init__(f"The user {id_val} does not exist")
 
 
+class UserNotActiveError(Exception):
+    """Raised when a user is not active."""
+
+    def __init__(self, id_val: UUID | str):
+        super().__init__(f"The user {id_val} is not active")
+
+
 class UserCreateError(Exception):
     """Raised when a user can not be created."""
 
@@ -40,7 +47,7 @@ class UserCreateError(Exception):
 class UserValueError(Exception):
     """Raised when a user can not be updated."""
 
-    def __init__(self, id_val: UUID | str, value: Any = None):
+    def __init__(self, value: Any = None):
         super().__init__(f"The user can not be updated with value '{value}'")
 
 
@@ -125,7 +132,7 @@ class UserService:
             return await self.repository.update(user_id, update_dict)
         except IntegrityError as e:
             logger.info(f"error updating user: {e}")
-            raise UserValueError(user_id, update_dict["email"]) from e
+            raise UserValueError(update_dict["email"]) from e
 
     async def delete_user(self, *, user_id: UUID) -> None:
         deleted = await self.repository.delete(user_id)

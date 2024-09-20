@@ -3,7 +3,7 @@
   id="notification"
   aria-live="assertive"
   class="pointer-events-none fixed inset-0 flex items-start justify-center px-4 py-6 sm:items-start sm:p-6"
-  x-data="{ show: false, timeout: null }"
+  x-data="{ show: true, timeout: null }"
   x-show="show"
   x-transition:enter="transform ease-out duration-300 transition"
   x-transition:enter-start="translate-y-2 opacity-0"
@@ -13,9 +13,11 @@
   x-transition:leave-end="opacity-0"
   x-init="
     clearTimeout(timeout);
-    show = true;
     timeout = setTimeout(() => { show = false }, 3000)
   "
+  {% if hx_swap_oob %}
+    hx-swap-oob="outerHTML"
+  {% endif %}
 >
   <div class="flex w-full flex-col items-center space-y-4 sm:items-center">
     <div
@@ -55,8 +57,8 @@
             {% endif %}
           </div>
           <div class="ml-3 w-0 flex-1 pt-0.5">
-            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ title }}</p>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ message }}</p>
+            <p id="notification-title" class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ title }}</p>
+            <p id="notification-message" class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ message }}</p>
           </div>
           <div class="ml-4 flex flex-shrink-0">
             <button
