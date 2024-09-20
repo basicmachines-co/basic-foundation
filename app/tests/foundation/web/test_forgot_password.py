@@ -3,7 +3,7 @@ import pytest
 from playwright.sync_api import Page, expect
 
 from foundation.core.config import settings
-from .urls import BASE_URL
+from .test_utils import BASE_URL
 
 pytestmark = pytest.mark.playwright
 
@@ -34,7 +34,7 @@ def test_forgot_password_page_email_sent(page: Page):
     email_input.fill(settings.SUPERUSER_EMAIL)
     submit_button.click()
 
-    # Verify success message after form submission (if applicable)
+    # Verify success message
     success_message = page.locator("#notification-message")
     expect(success_message).to_be_visible()
     expect(success_message).to_contain_text(

@@ -4,7 +4,7 @@ import pytest
 from playwright.sync_api import Page, expect
 
 from utils import random_email
-from .urls import URL_REGISTER_PAGE, URL_PROFILE_PAGE
+from .test_utils import URL_REGISTER_PAGE, register_user
 
 pytestmark = pytest.mark.playwright
 
@@ -37,19 +37,8 @@ def assert_register_page(page: Page) -> dict[str, Any]:
 def test_register_success(page: Page) -> None:
     page.goto(URL_REGISTER_PAGE)
 
-    register_page = assert_register_page(page)
-
-    email = random_email()
-    password = "@&ZhfLyCxyca2T"
-
-    register_page["fullname_input"].fill(f"User {email}")
-    register_page["email_input"].fill(email)
-    register_page["password_input"].fill(password)
-    register_page["password2_input"].fill(password)
-
-    register_page["register_button"].click()
-
-    expect(page).to_have_url(URL_PROFILE_PAGE)
+    assert_register_page(page)
+    register_user(page)
 
 
 def test_register_full_name_required(page: Page) -> None:
