@@ -243,7 +243,7 @@ uvicorn app.main:app --reload
     - [ ] has to be at least one admin
     - [ ] only admins can create/edit users
     - [ ] db: rename is_superuser to is_admin
-- [ ] playwrite tests for web flow
+- [ ] playwright tests for web flow
     - [x] register
     - [x] login
     - [x] login error
