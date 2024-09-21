@@ -254,14 +254,17 @@ uvicorn app.main:app --reload
     - [x] view user
     - [x] create user
     - [x] edit user via detail
-    - [ ] edit user via modal
+    - [x] edit user via modal
     - [x] delete user via detail
-    - [ ] delete user via list
-    - [ ] edit profile
-    - [ ] logout
+    - [x] delete user via list
+    - [x] edit profile
+    - [x] logout
 
 - [ ] dashboard stats should link to filtered list
 - [ ] make active/admin colums enums
+- [ ] page_size is appended to url
+- [ ] use fixtures in web tests
+- [ ] delete user after test
 
 ## references
 

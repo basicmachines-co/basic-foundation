@@ -20,12 +20,12 @@ strong_password = "@&ZhfLyCxyca2T"
 
 @dataclass
 class User:
-    id: str
     full_name: str
     email: str
     password: str
     is_active: bool
     is_admin: bool
+    id: str = None
 
 
 admin_email = settings.SUPERUSER_EMAIL
@@ -45,22 +45,27 @@ def assert_user_form(page):
     fullname_input = page.get_by_label("Full Name")
     expect(fullname).to_be_visible()
     expect(fullname_input).to_be_visible()
+
     email = page.get_by_text("Email address")
     email_input = page.get_by_label("Email address")
     expect(email).to_be_visible()
     expect(email_input).to_be_visible()
+
     password = page.get_by_text("Password", exact=True)
     password_input = page.get_by_label("Password", exact=True)
     expect(password).to_be_visible()
     expect(password_input).to_be_visible()
+
     password2 = page.get_by_text("Repeat Password")
     password2_input = page.get_by_label("Repeat Password")
     expect(password2).to_be_visible()
     expect(password2_input).to_be_visible()
-    admin = page.get_by_text("Admin", exact=True)
-    admin_checkbox = page.get_by_label("Admin")
+
+    admin = page.get_by_test_id("admin-label")
+    admin_checkbox = page.get_by_test_id("admin-checkbox")
     expect(admin).to_be_visible()
     expect(admin_checkbox).to_be_visible()
+
     return fullname_input, email_input, password_input, password2_input, admin_checkbox
 
 
