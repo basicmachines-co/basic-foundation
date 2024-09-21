@@ -12,6 +12,9 @@ test:
 test-playwright:  # assumes app is running on localhost:8000
 	poetry run pytest -m "playwright"
 
+playwright-codegen:
+	poetry run playwright codegen http://127.0.0.1:8000/
+
 clean:
 	find . -type f -name '*.pyc' -delete
 	find . -type d -name '__pycache__' -exec rm -r {} +

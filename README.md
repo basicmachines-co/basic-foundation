@@ -244,10 +244,11 @@ uvicorn app.main:app --reload
     - [ ] only admins can create/edit users
     - [ ] db: rename is_superuser to is_admin
 - [ ] playwrite tests for web flow
-    - [ ] register
-    - [ ] login
-        - login error
-    - [ ] password reset
+    - [x] register
+    - [x] login
+    - [x] login error
+    - [x] forgot password
+    - [x] password reset
     - [ ] dashboard
     - [ ] list users
     - [ ] view user
@@ -258,6 +259,8 @@ uvicorn app.main:app --reload
     - [ ] delete user via list
     - [ ] edit profile
     - [ ] logout
+
+- [ ] dashboard stats should link to filtered list
 
 ## references
 
