@@ -1,8 +1,11 @@
+import pytest
 from playwright.sync_api import Page, expect
 
-from ..test_utils import (
+from ..web_test_utils import (
     URL_DASHBOARD_PAGE, admin_login, URL_PROFILE_PAGE, URL_LOGIN_PAGE,
 )
+
+pytestmark = pytest.mark.playwright
 
 
 def test_admin_login_dashboard(page: Page) -> None:

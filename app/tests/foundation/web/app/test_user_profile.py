@@ -1,8 +1,11 @@
+import pytest
 from playwright.sync_api import Page, expect
 
-from ..test_utils import (
-    URL_REGISTER_PAGE, register_user, URL_PROFILE_PAGE, login,
+from ..web_test_utils import (
+    URL_REGISTER_PAGE, register_user, URL_PROFILE_PAGE, login, assert_user_detail_view,
 )
+
+pytestmark = pytest.mark.playwright
 
 
 def test_user_login(page: Page) -> None:
@@ -30,22 +33,4 @@ def test_user_login_profile(page: Page) -> None:
 
     # assert we are on the profile page
     expect(page).to_have_url(URL_PROFILE_PAGE)
-
-    # full name is displayed in heading
-    expect(page.get_by_role("heading", name=full_name)).to_be_visible()
-
-    # details
-    expect(page.get_by_text("Full name")).to_be_visible()
-    expect(page.locator("#full_name")).to_contain_text(full_name)
-
-    expect(page.get_by_text("Email address")).to_be_visible()
-    expect(page.locator("#email")).to_contain_text(email)
-
-    # status values
-    expect(page.get_by_text("Status")).to_be_visible()
-
-    expect(page.get_by_text("Active", exact=True)).to_be_visible()
-    expect(page.get_by_label("Active")).to_be_checked(checked=True)
-
-    expect(page.get_by_text("Admin", exact=True)).to_be_visible()
-    expect(page.get_by_label("Admin")).to_be_checked(checked=False)
+    assert_user_detail_view(page, email=email, full_name=full_name, active=True, admin=False)

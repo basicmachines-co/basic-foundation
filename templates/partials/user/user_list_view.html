@@ -1,6 +1,7 @@
-{% macro edit_delete_popup(user_id) %}
+{% macro edit_delete_popup(user) %}
   <div class="relative inline-block text-left" x-data="{ open: false }">
     <button
+      data-testid="edit-delete-button-{{ user.email }}"
       @click.stop="open = !open"
       class="inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-black dark:text-gray-300 dark:ring-gray-800 dark:hover:bg-gray-800"
     >
@@ -30,7 +31,7 @@
           href="#"
           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
           @click.stop="open = false; modal = true"
-          hx-get="/users/modal/{{ user_id }}/edit"
+          hx-get="/users/modal/{{ user.id }}/edit"
           hx-target="#modal"
           hx-swap="innerHTML"
         >
@@ -51,7 +52,7 @@
           Edit </a>
         <!-- Delete Button -->
         <a
-          hx-get="/users/modal/{{ user_id }}/delete"
+          hx-get="/users/modal/{{ user.id }}/delete"
           hx-target="#modal"
           hx-swap="outerHTML"
           class="block px-4 py-2 text-sm text-red-700 hover:bg-red-100 dark:text-red-400 dark:hover:bg-red-950"
@@ -91,17 +92,25 @@
   </td>
   <td class="whitespace-nowrap px-3 py-4 text-sm">
     <input
+      data-testid="is-active-{{ user.email }}"
       class="h-4 w-4 rounded border-gray-300 text-slate-600 focus:ring-slate-600 dark:border-gray-600 dark:text-slate-400 dark:focus:ring-slate-300"
       type="checkbox"
-      disabled{{ 'checked' if user.is_active }}
+      {% if user.is_active %}
+        checked
+      {% endif %}
+      disabled
     />
   </td>
   <td class="whitespace-nowrap px-3 py-4 text-sm">
     <input
+      data-testid="is-superuser-{{ user.email }}"
       class="h-4 w-4 rounded border-gray-300 text-slate-600 focus:ring-slate-600 dark:border-gray-600 dark:text-slate-400 dark:focus:ring-slate-300"
       type="checkbox"
-      disabled{{ 'checked' if user.is_superuser }}
+      {% if user.is_superuser %}
+        checked
+      {% endif %}
+      disabled
     />
   </td>
-  <td class="whitespace-nowrap px-2 py-4 text-right">{{ edit_delete_popup(user.id) }}</td>
+  <td class="whitespace-nowrap px-2 py-4 text-right">{{ edit_delete_popup(user) }}</td>
 </tr>

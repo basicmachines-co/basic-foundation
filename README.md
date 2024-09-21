@@ -249,18 +249,19 @@ uvicorn app.main:app --reload
     - [x] login error
     - [x] forgot password
     - [x] password reset
-    - [ ] dashboard
-    - [ ] list users
-    - [ ] view user
-    - [ ] create user
-    - [ ] edit user via detail
+    - [x] dashboard
+    - [x] list users
+    - [x] view user
+    - [x] create user
+    - [x] edit user via detail
     - [ ] edit user via modal
-    - [ ] delete user via detail
+    - [x] delete user via detail
     - [ ] delete user via list
     - [ ] edit profile
     - [ ] logout
 
 - [ ] dashboard stats should link to filtered list
+- [ ] make active/admin colums enums
 
 ## references
 
