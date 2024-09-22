@@ -3,8 +3,8 @@ from typing import Any
 import pytest
 from playwright.sync_api import Page, expect
 
-from utils import random_email
-from ..web_test_utils import URL_REGISTER_PAGE
+from test_utils import random_email
+from web_test_utils import URL_REGISTER_PAGE
 
 pytestmark = pytest.mark.playwright
 

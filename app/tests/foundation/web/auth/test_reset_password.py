@@ -2,7 +2,7 @@ import pytest
 from playwright.sync_api import Page, expect
 
 from foundation.core.security import generate_password_reset_token
-from ..web_test_utils import BASE_URL
+from web_test_utils import BASE_URL
 
 pytestmark = pytest.mark.playwright
 

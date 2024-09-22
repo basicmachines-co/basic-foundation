@@ -72,5 +72,5 @@ filterwarnings = [
 ]
 
 markers = [
-    "playwright",
+    "playwright: playwright web tests, requires a running app instance",
 ]

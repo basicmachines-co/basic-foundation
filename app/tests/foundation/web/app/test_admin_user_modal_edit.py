@@ -2,8 +2,8 @@ import pytest
 from playwright.sync_api import Page, expect
 
 from foundation.core.config import settings
-from utils import random_email, random_lower_string
-from ..web_test_utils import (
+from test_utils import random_email, random_lower_string
+from web_test_utils import (
     URL_USERS_PAGE, assert_users_page,
     admin_email, admin_full_name, assert_user_form, User, strong_password
 )

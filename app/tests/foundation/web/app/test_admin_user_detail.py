@@ -1,8 +1,8 @@
 import pytest
 from playwright.sync_api import expect
 
-from utils import random_email
-from ..web_test_utils import (
+from test_utils import random_email
+from web_test_utils import (
     URL_USERS_PAGE, assert_user_detail_view, strong_password, assert_user_form
 )
 

@@ -11,7 +11,7 @@ from foundation.users.services import (
     UserService,
     UserCreateError,
 )
-from utils import random_email, random_lower_string, mock_emails_send
+from test_utils import random_email, random_lower_string, mock_emails_send
 
 pytestmark = pytest.mark.asyncio
 
@@ -61,7 +61,7 @@ async def test_authenticate(user_service, sample_user: User, sample_user_passwor
 
 
 async def test_authenticate_fails(
-    user_service, sample_user: User, sample_user_password: str
+        user_service, sample_user: User, sample_user_password: str
 ):
     authenticated_user = await user_service.authenticate(
         email=sample_user.email, password="bad pass"
@@ -92,8 +92,8 @@ async def test_create_user_fails(user_service, sample_user: User):
         "password": random_lower_string(),
     }
     with pytest.raises(
-        UserCreateError,
-        match=f"A user with email {user_create.get("email")} already exists",
+            UserCreateError,
+            match=f"A user with email {user_create.get("email")} already exists",
     ):
         await user_service.create_user(create_dict=user_create)
 
@@ -143,7 +143,7 @@ async def test_delete_user(user_service, sample_user: User):
     await user_service.delete_user(user_id=sample_user.id)
 
     with pytest.raises(
-        UserNotFoundError, match=f"user {sample_user.id} does not exist"
+            UserNotFoundError, match=f"user {sample_user.id} does not exist"
     ):
         assert await user_service.get_user_by_id(user_id=sample_user.id)
 

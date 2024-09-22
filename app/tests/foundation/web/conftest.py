@@ -4,8 +4,8 @@ from playwright.sync_api import expect, Page
 
 from foundation.core.config import settings
 from foundation.users.schemas import AuthToken
-from utils import random_email
-from .web_test_utils import URL_LOGIN_PAGE, URL_DASHBOARD_PAGE, User, URL_USERS_PAGE, assert_users_page, \
+from test_utils import random_email
+from web_test_utils import URL_LOGIN_PAGE, URL_DASHBOARD_PAGE, User, URL_USERS_PAGE, assert_users_page, \
     assert_create_user_page, is_valid_uuid, BASE_URL, URL_REGISTER_PAGE, strong_password, URL_PROFILE_PAGE
 
 

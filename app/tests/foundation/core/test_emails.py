@@ -8,7 +8,7 @@ from foundation.core.security import (
     generate_password_reset_token,
     verify_password_reset_token,
 )
-from utils import mock_emails_send
+from test_utils import mock_emails_send
 
 
 def test_send_test_email(unstub_mocks):

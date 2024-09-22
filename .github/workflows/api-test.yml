@@ -124,6 +124,14 @@ jobs:
         run: |
           make test-playwright
 
+      - name: Upload HTML Coverage Report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: html-coverage-report
+          path: htmlcov/
+
+      - name: Upload Playwright Traces
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
