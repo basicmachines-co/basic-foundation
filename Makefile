@@ -1,18 +1,21 @@
 include .env
 
-.PHONY: install test clean lint lint-fix format migrate-new migrate-up migrate-down migrate-dump migrate-resetØ
+.PHONY: install test clean lint lint-fix format migrate-new migrate-up migrate-down migrate-dump migrate-reset
 
 install:
 	poetry install
 	npm install
 
-test: test-api test-playwright
+reset-cov:
+	rm -f .coverage
+
+test: reset-cov test-api test-playwright
 
 test-api:
-	poetry run pytest -m "not playwright"
+	poetry run pytest --cov=./app --cov-append --cov-report=term-missing --cov-config=.coveragerc -m "not playwright"
 
-test-playwright:  # assumes app is running on localhost:8000
-	poetry run pytest -m "playwright" --tracing=retain-on-failure
+test-playwright:  # assumes app is running on at API_URL in config
+	poetry run pytest --cov=./app --cov-append --cov-report=term-missing --cov-config=.coveragerc -m "playwright" --tracing=retain-on-failure
 	#poetry run pytest -m "playwright" --headed --slowmo 500
 
 playwright-codegen:
