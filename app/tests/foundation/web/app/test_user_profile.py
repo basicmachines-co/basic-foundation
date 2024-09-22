@@ -2,7 +2,8 @@ import pytest
 from playwright.sync_api import expect
 
 from web_test_utils import (
-    URL_PROFILE_PAGE, assert_user_detail_view,
+    URL_PROFILE_PAGE,
+    assert_user_detail_view,
 )
 from ..conftest import login
 
@@ -28,4 +29,6 @@ def test_user_profile(register_user) -> None:
     # assert we are on the profile page
     expect(page).to_have_url(URL_PROFILE_PAGE)
 
-    assert_user_detail_view(page, email=user.email, full_name=user.full_name, active=True, admin=False)
+    assert_user_detail_view(
+        page, email=user.email, full_name=user.full_name, active=True, admin=False
+    )

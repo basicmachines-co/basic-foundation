@@ -14,7 +14,11 @@ from foundation.core.db import engine
 from foundation.core.repository import Repository
 from foundation.users.deps import get_user_repository
 from foundation.users.models import User
-from test_utils import get_superuser_auth_token_headers, random_lower_string, random_email
+from test_utils import (
+    get_superuser_auth_token_headers,
+    random_lower_string,
+    random_email,
+)
 
 
 @pytest.fixture
@@ -119,7 +123,7 @@ async def user_repository(session) -> Repository[User]:
 
 @pytest_asyncio.fixture
 async def client(
-        user_repository: Repository[User],
+    user_repository: Repository[User],
 ) -> Generator[AsyncClient, None, None]:
     print(f"tclient fixture: user_repository: {user_repository}")
     app.dependency_overrides[get_user_repository] = lambda: user_repository

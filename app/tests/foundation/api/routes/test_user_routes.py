@@ -14,7 +14,7 @@ pytestmark = pytest.mark.asyncio
 
 @pytest_asyncio.fixture
 async def sample_user_auth_token_headers(
-        client: AsyncClient, sample_user: User, sample_user_password: str
+    client: AsyncClient, sample_user: User, sample_user_password: str
 ) -> dict[str, str]:
     login_data = {
         "username": sample_user.email,
@@ -24,7 +24,7 @@ async def sample_user_auth_token_headers(
 
 
 async def test_get_user(
-        client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
+    client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
 ) -> None:
     user_in = await user_repository.create(
         {
@@ -51,7 +51,7 @@ async def test_get_user_unauthorized_401(client: AsyncClient) -> None:
 
 
 async def test_get_user_not_found_404(
-        client: AsyncClient, superuser_auth_token_headers
+    client: AsyncClient, superuser_auth_token_headers
 ) -> None:
     r = await client.get(
         f"/api/users/{uuid.uuid4()}", headers=superuser_auth_token_headers
@@ -61,7 +61,7 @@ async def test_get_user_not_found_404(
 
 
 async def test_get_user_by_email(
-        client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
+    client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
 ) -> None:
     user_email = random_email()
     user_in = await user_repository.create(
@@ -89,7 +89,7 @@ async def test_get_user_by_email_unauthorized_401(client: AsyncClient) -> None:
 
 
 async def test_get_user_by_email_not_found_404(
-        client: AsyncClient, superuser_auth_token_headers
+    client: AsyncClient, superuser_auth_token_headers
 ) -> None:
     r = await client.get(
         f"/api/users/email/email@doesnot.exist", headers=superuser_auth_token_headers
@@ -99,7 +99,7 @@ async def test_get_user_by_email_not_found_404(
 
 
 async def test_get_user_current_user(
-        client: AsyncClient, sample_user: User, sample_user_auth_token_headers
+    client: AsyncClient, sample_user: User, sample_user_auth_token_headers
 ) -> None:
     r = await client.get(
         f"/api/users/{sample_user.id}", headers=sample_user_auth_token_headers
@@ -112,7 +112,7 @@ async def test_get_user_current_user(
 
 
 async def test_get_users(
-        client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
+    client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
 ) -> None:
     user_in = await user_repository.create(
         {
@@ -143,7 +143,7 @@ async def test_get_users_401(client: AsyncClient) -> None:
 
 
 async def test_get_users_403(
-        client: AsyncClient, sample_user_auth_token_headers: dict[str, str]
+    client: AsyncClient, sample_user_auth_token_headers: dict[str, str]
 ) -> None:
     r = await client.get(f"/api/users/", headers=sample_user_auth_token_headers)
     assert r.is_error
@@ -151,7 +151,7 @@ async def test_get_users_403(
 
 
 async def test_create_user(
-        client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
+    client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
 ) -> None:
     user_create = UserCreate.model_validate(
         {
@@ -174,7 +174,7 @@ async def test_create_user(
 
 
 async def test_create_user_400(
-        client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
+    client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
 ) -> None:
     user_in = await user_repository.create(
         {
@@ -215,7 +215,7 @@ async def test_create_user_401(client: AsyncClient) -> None:
 
 
 async def test_create_user_403(
-        client: AsyncClient, sample_user_auth_token_headers: dict[str, str]
+    client: AsyncClient, sample_user_auth_token_headers: dict[str, str]
 ) -> None:
     user_create = UserCreate.model_validate(
         {
@@ -234,7 +234,7 @@ async def test_create_user_403(
 
 
 async def test_update_user(
-        client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
+    client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
 ) -> None:
     user = await user_repository.create(
         {
@@ -265,7 +265,7 @@ async def test_update_user(
 
 
 async def test_update_user_404(
-        client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
+    client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
 ) -> None:
     user = await user_repository.create(
         {
@@ -291,7 +291,7 @@ async def test_update_user_404(
 
 
 async def test_update_user_400(
-        client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
+    client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
 ) -> None:
     """
     the `users/id` update endpoint returns a 400 status code because there is already a user with the supplied email
@@ -327,7 +327,7 @@ async def test_update_user_400(
 
 
 async def test_update_user_401(
-        client: AsyncClient, user_repository: Repository[User]
+    client: AsyncClient, user_repository: Repository[User]
 ) -> None:
     """
     the `users/id` update endpoint returns a 401 status code because no auth header is passed in the request.
@@ -353,9 +353,9 @@ async def test_update_user_401(
 
 
 async def test_update_user_403(
-        client: AsyncClient,
-        sample_user_auth_token_headers: dict[str, str],
-        user_repository: Repository[User],
+    client: AsyncClient,
+    sample_user_auth_token_headers: dict[str, str],
+    user_repository: Repository[User],
 ) -> None:
     """
     the `users/id` update endpoint returns a 403 status code because the user is not a superuser.
@@ -384,10 +384,10 @@ async def test_update_user_403(
 
 
 async def test_update_user_current_user(
-        client: AsyncClient,
-        sample_user: User,
-        sample_user_auth_token_headers: dict[str, str],
-        user_repository: Repository[User],
+    client: AsyncClient,
+    sample_user: User,
+    sample_user_auth_token_headers: dict[str, str],
+    user_repository: Repository[User],
 ) -> None:
     """
     the `users/id` update endpoint is successful because the current_user is updating their own user.
@@ -411,7 +411,7 @@ async def test_update_user_current_user(
 
 
 async def test_delete_user(
-        client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
+    client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
 ) -> None:
     user = await user_repository.create(
         {
@@ -429,7 +429,7 @@ async def test_delete_user(
 
 
 async def test_delete_user_404(
-        client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
+    client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
 ) -> None:
     r = await client.delete(
         f"/api/users/{uuid.uuid4()}", headers=superuser_auth_token_headers
@@ -438,16 +438,16 @@ async def test_delete_user_404(
 
 
 async def test_delete_user_401(
-        client: AsyncClient, user_repository: Repository[User]
+    client: AsyncClient, user_repository: Repository[User]
 ) -> None:
     r = await client.delete(f"/api/users/{uuid.uuid4()}", headers=None)
     assert r.status_code == 401
 
 
 async def test_delete_user_403(
-        client: AsyncClient,
-        sample_user_auth_token_headers: dict[str, str],
-        user_repository: Repository[User],
+    client: AsyncClient,
+    sample_user_auth_token_headers: dict[str, str],
+    user_repository: Repository[User],
 ) -> None:
     user = await user_repository.create(
         {
@@ -463,10 +463,10 @@ async def test_delete_user_403(
 
 
 async def test_delete_user_current_user(
-        client: AsyncClient,
-        sample_user: User,
-        sample_user_auth_token_headers: dict[str, str],
-        user_repository: Repository[User],
+    client: AsyncClient,
+    sample_user: User,
+    sample_user_auth_token_headers: dict[str, str],
+    user_repository: Repository[User],
 ) -> None:
     r = await client.delete(
         f"/api/users/{sample_user.id}", headers=sample_user_auth_token_headers
@@ -477,7 +477,7 @@ async def test_delete_user_current_user(
 
 
 async def test_superuser_cannot_delete_self(
-        client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
+    client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
 ) -> None:
     new_superuser = UserCreate.model_validate(
         {

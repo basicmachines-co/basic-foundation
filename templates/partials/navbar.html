@@ -18,13 +18,18 @@
             'inline-flex items-center border-b-2 border-slate-500 px-1 pt-1 text-sm font-medium text-gray-900 dark:text-gray-100': currentPath.startsWith('/dashboard'),
             'inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 dark:text-gray-400 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-300': !currentPath.startsWith('/dashboard')
             }"
-            > Dashboard </a> <a
-            href="/users"
-            :class="{
+            >
+              Dashboard
+            </a>
+            <a
+              href="/users"
+              :class="{
             'inline-flex items-center border-b-2 border-slate-500 px-1 pt-1 text-sm font-medium text-gray-900 dark:text-gray-100': currentPath.startsWith('/users'),
             'inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 dark:text-gray-400 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-300': !currentPath.startsWith('/users')
             }"
-          > Users </a>
+            >
+              Users
+            </a>
           </div>
         {% endif %}
       </div>
@@ -61,10 +66,15 @@
             <a
               href="/profile"
               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-            > Your Profile </a> <a
-            href="/logout"
-            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-          > Log out </a>
+            >
+              Your Profile
+            </a>
+            <a
+              href="/logout"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+            >
+              Log out
+            </a>
           </div>
         </div>
       </div>
@@ -104,7 +114,7 @@
     </div>
   </div>
   <!-- Mobile navbar -->
-  <div x-show="mobileMenuOpen" class="sm:hidden min-h-screen bg-white dark:bg-black">
+  <div x-show="mobileMenuOpen" class="min-h-screen bg-white sm:hidden dark:bg-black">
     {% if current_user.is_superuser %}
       <div class="space-y-1 pb-3 pt-2">
         <a
@@ -113,13 +123,18 @@
             'block border-l-4 border-slate-500 bg-slate-50 py-2 pl-3 pr-4 text-base font-medium text-slate-700 dark:bg-gray-800 dark:text-gray-200': currentPath.startsWith('/dashboard'),
             'block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800': !currentPath.startsWith('/dashboard')
             }"
-        > Dashboard </a> <a
-        href="/users"
-        :class="{
+        >
+          Dashboard
+        </a>
+        <a
+          href="/users"
+          :class="{
             'block border-l-4 border-slate-500 bg-slate-50 py-2 pl-3 pr-4 text-base font-medium text-slate-700 dark:bg-gray-800 dark:text-gray-200': currentPath.startsWith('/users'),
             'block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50  dark:hover:bg-gray-800': !currentPath.startsWith('/users')
             }"
-      > Users </a>
+        >
+          Users
+        </a>
       </div>
     {% endif %}
     <div class="border-t border-gray-200 pb-3 pt-4">
@@ -142,7 +157,9 @@
           </svg>
         </div>
         <div class="ml-3">
-          <div class="text-base font-medium text-gray-800 dark:text-gray-200">{{ current_user.full_name }}</div>
+          <div class="text-base font-medium text-gray-800 dark:text-gray-200">
+            {{ current_user.full_name }}
+          </div>
           <div class="text-sm font-medium text-gray-400 dark:text-gray-500">
             {{ current_user.email }}
           </div>
@@ -152,11 +169,16 @@
       <div class="mt-3 space-y-1">
         <a
           href="/profile"
-          class="block px-4 py-2 text-base font-medium hover:bg-gray-100 hover:text-gray-800 text-black dark:text-gray-500"
-        > Profile </a> <a
-        href="/logout"
-        class="block px-4 py-2 text-base font-medium hover:bg-gray-100 hover:text-gray-800 text-black dark:text-gray-500"
-      > Log out </a>
+          class="block px-4 py-2 text-base font-medium text-black hover:bg-gray-100 hover:text-gray-800 dark:text-gray-500"
+        >
+          Profile
+        </a>
+        <a
+          href="/logout"
+          class="block px-4 py-2 text-base font-medium text-black hover:bg-gray-100 hover:text-gray-800 dark:text-gray-500"
+        >
+          Log out
+        </a>
       </div>
     </div>
   </div>

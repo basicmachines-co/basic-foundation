@@ -2,7 +2,9 @@ import pytest
 from playwright.sync_api import Page, expect
 
 from web_test_utils import (
-    URL_DASHBOARD_PAGE, URL_PROFILE_PAGE, URL_LOGIN_PAGE,
+    URL_DASHBOARD_PAGE,
+    URL_PROFILE_PAGE,
+    URL_LOGIN_PAGE,
 )
 
 pytestmark = pytest.mark.playwright

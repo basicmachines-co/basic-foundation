@@ -10,7 +10,7 @@ pytestmark = pytest.mark.asyncio
 
 
 async def test_login_access_token(
-        client: AsyncClient, sample_user: User, sample_user_password: str
+    client: AsyncClient, sample_user: User, sample_user_password: str
 ):
     login_data = {
         "username": sample_user.email,
@@ -30,7 +30,7 @@ async def test_login_access_token(
 
 
 async def test_login_access_token_invalid_email(
-        client: AsyncClient, sample_user: User, sample_user_password: str
+    client: AsyncClient, sample_user: User, sample_user_password: str
 ):
     login_data = {
         "username": "bademail@test.com",
@@ -41,7 +41,7 @@ async def test_login_access_token_invalid_email(
 
 
 async def test_login_access_token_invalid_password(
-        client: AsyncClient, sample_user: User
+    client: AsyncClient, sample_user: User
 ):
     login_data = {
         "username": sample_user.email,
@@ -52,7 +52,7 @@ async def test_login_access_token_invalid_password(
 
 
 async def test_recover_password(
-        client: AsyncClient, sample_user: User, sample_user_password: str, unstub_mocks
+    client: AsyncClient, sample_user: User, sample_user_password: str, unstub_mocks
 ):
     # mock sending an email
     mock_emails_send()
@@ -64,14 +64,14 @@ async def test_recover_password(
 
 
 async def test_recover_password_invalid_email_404(
-        client: AsyncClient, sample_user: User
+    client: AsyncClient, sample_user: User
 ):
     r = await client.post("/api/auth/password-recovery/invalid@email.com")
     assert r.status_code == 404
 
 
 async def test_reset_password(
-        client: AsyncClient, sample_user: User, sample_user_password: str
+    client: AsyncClient, sample_user: User, sample_user_password: str
 ):
     new_password = NewPassword.model_validate(
         {
@@ -98,7 +98,7 @@ async def test_reset_password_invalid_email_404(client: AsyncClient):
 
 
 async def test_reset_password_inactive_user_400(
-        client: AsyncClient, inactive_user: User
+    client: AsyncClient, inactive_user: User
 ):
     new_password = NewPassword.model_validate(
         {

@@ -3,7 +3,10 @@ from playwright.sync_api import expect
 
 from test_utils import random_email
 from web_test_utils import (
-    URL_USERS_PAGE, assert_user_detail_view, strong_password, assert_user_form
+    URL_USERS_PAGE,
+    assert_user_detail_view,
+    strong_password,
+    assert_user_form,
 )
 
 pytestmark = pytest.mark.playwright
@@ -23,7 +26,13 @@ def test_admin_user_detail_edit(create_user) -> None:
     edit_button = page.get_by_text("Edit")
     edit_button.click()
 
-    fullname_input, email_input, password_input, password2_input, admin_checkbox = assert_user_form(page)
+    (
+        fullname_input,
+        email_input,
+        password_input,
+        password2_input,
+        admin_checkbox,
+    ) = assert_user_form(page)
 
     # active checkbox is only on edit form
     active = page.get_by_text("Active", exact=True)
@@ -47,7 +56,9 @@ def test_admin_user_detail_edit(create_user) -> None:
     save_button = page.get_by_role("button", name="Save")
     save_button.click()
 
-    assert_user_detail_view(page, full_name=updated_full_name, email=updated_email, admin=True, active=False)
+    assert_user_detail_view(
+        page, full_name=updated_full_name, email=updated_email, admin=True, active=False
+    )
 
 
 def test_admin_user_detail_edit_password(create_user) -> None:
@@ -57,7 +68,13 @@ def test_admin_user_detail_edit_password(create_user) -> None:
     edit_button = page.get_by_text("Edit")
     edit_button.click()
 
-    fullname_input, email_input, password_input, password2_input, admin_checkbox = assert_user_form(page)
+    (
+        fullname_input,
+        email_input,
+        password_input,
+        password2_input,
+        admin_checkbox,
+    ) = assert_user_form(page)
 
     updated_password = strong_password
 
@@ -102,7 +119,9 @@ def test_admin_user_detail_delete(create_user) -> None:
     expect(page.get_by_role("heading", name="Delete user")).to_be_visible()
     expect(page.get_by_text("Are you sure you want to")).to_be_visible()
 
-    expect(page.locator("#modal-content").get_by_role("button", name="Cancel")).to_be_visible()
+    expect(
+        page.locator("#modal-content").get_by_role("button", name="Cancel")
+    ).to_be_visible()
     page.get_by_role("button", name="Yes, Really").click()
 
     # on users page

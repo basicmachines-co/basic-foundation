@@ -39,7 +39,7 @@ format-python:
 format-prettier:
 	npx prettier templates --write
 
-format: format-python
+format: format-python format-prettier
 
 tailwind:
 	npm run build

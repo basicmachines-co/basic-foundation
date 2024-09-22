@@ -83,7 +83,13 @@ def assert_users_page(page):
 def assert_create_user_page(page):
     expect(page).to_have_url(URL_USERS_CREATE_PAGE)
 
-    fullname_input, email_input, password_input, password2_input, admin_checkbox = assert_user_form(page)
+    (
+        fullname_input,
+        email_input,
+        password_input,
+        password2_input,
+        admin_checkbox,
+    ) = assert_user_form(page)
 
     cancel_button = page.get_by_role("button", name="Cancel")
     expect(cancel_button).to_be_visible()
@@ -91,7 +97,15 @@ def assert_create_user_page(page):
     save_button = page.get_by_role("button", name="Save")
     expect(save_button).to_be_visible()
 
-    return fullname_input, email_input, password_input, password2_input, admin_checkbox, cancel_button, save_button
+    return (
+        fullname_input,
+        email_input,
+        password_input,
+        password2_input,
+        admin_checkbox,
+        cancel_button,
+        save_button,
+    )
 
 
 def assert_user_detail_view(page, full_name=None, email=None, active=True, admin=False):

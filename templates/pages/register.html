@@ -7,14 +7,14 @@
 
 {% block content %}
   <!-- REGISTRATION FORM -->
-  <form class="space-y-6"
+  <form
+    class="space-y-6"
     hx-post="/register"
     hx-swap="innerTML"
     hx-target="#register_form"
-    hx-target-error="#notification">
-    <section id="register_form">
-      {% include "partials/auth/register_form.html" %}
-    </section>
+    hx-target-error="#notification"
+  >
+    <section id="register_form">{% include "partials/auth/register_form.html" %}</section>
     <div>
       <button
         type="submit"
@@ -27,7 +27,7 @@
   <!-- /REGISTRATION FORM -->
 
   <p class="mt-10 text-center text-sm text-gray-500">
-    Already have an account? <a href="/login"
-    class="font-semibold leading-6 text-slate-600 hover:text-slate-500">Login</a>
+    Already have an account?
+    <a href="/login" class="font-semibold leading-6 text-slate-600 hover:text-slate-500">Login</a>
   </p>
 {% endblock content %}

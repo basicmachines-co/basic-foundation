@@ -27,7 +27,9 @@ def test_reset_password(register_user):
     password_reset_token = generate_password_reset_token(email=user.email)
     page.goto(f"{BASE_URL}/reset-password?token={password_reset_token}")
 
-    new_password_input, submit_button = assert_reset_password_page(page, password_reset_token)
+    new_password_input, submit_button = assert_reset_password_page(
+        page, password_reset_token
+    )
 
     new_password_input.fill("u$tsUwfy#i9tKm")
     submit_button.click()
@@ -35,9 +37,7 @@ def test_reset_password(register_user):
     # verify success message
     success_message = page.locator("#success")
     expect(success_message).to_be_visible()
-    expect(success_message).to_contain_text(
-        f"Your password has been updated!"
-    )
+    expect(success_message).to_contain_text(f"Your password has been updated!")
 
 
 def test_reset_password_invalid_token(register_user):
@@ -49,9 +49,7 @@ def test_reset_password_invalid_token(register_user):
     # verify error message is displayed
     error_message = page.locator("#error")
     expect(error_message).to_be_visible()
-    expect(error_message).to_contain_text(
-        f"Invalid token"
-    )
+    expect(error_message).to_contain_text(f"Invalid token")
 
 
 def test_reset_password_user_not_found(page: Page):
@@ -59,7 +57,9 @@ def test_reset_password_user_not_found(page: Page):
     password_reset_token = generate_password_reset_token(email=email)
     page.goto(f"{BASE_URL}/reset-password?token={password_reset_token}")
 
-    new_password_input, submit_button = assert_reset_password_page(page, password_reset_token)
+    new_password_input, submit_button = assert_reset_password_page(
+        page, password_reset_token
+    )
 
     new_password_input.fill("u$tsUwfy#i9tKm")
     submit_button.click()
@@ -67,6 +67,4 @@ def test_reset_password_user_not_found(page: Page):
     # verify error message is displayed
     error_message = page.locator("#error")
     expect(error_message).to_be_visible()
-    expect(error_message).to_contain_text(
-        f"The user {email} does not exist"
-    )
+    expect(error_message).to_contain_text(f"The user {email} does not exist")

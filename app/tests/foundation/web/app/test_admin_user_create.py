@@ -3,8 +3,11 @@ from playwright.sync_api import Page, expect
 
 from test_utils import random_email
 from web_test_utils import (
-    URL_USERS_PAGE, URL_USERS_CREATE_PAGE, strong_password, assert_users_page,
-    assert_create_user_page
+    URL_USERS_PAGE,
+    URL_USERS_CREATE_PAGE,
+    strong_password,
+    assert_users_page,
+    assert_create_user_page,
 )
 
 pytestmark = pytest.mark.playwright
@@ -24,8 +27,15 @@ def test_admin_create_user_validate_full_name(do_admin_login: Page) -> None:
     # click create user button
     create_user_button.click()
 
-    fullname_input, email_input, password_input, password2_input, admin_checkbox, cancel_button, save_button = assert_create_user_page(
-        page)
+    (
+        fullname_input,
+        email_input,
+        password_input,
+        password2_input,
+        admin_checkbox,
+        cancel_button,
+        save_button,
+    ) = assert_create_user_page(page)
 
     email = random_email()
     password = "@&ZhfLyCxyca2T"
@@ -52,8 +62,15 @@ def test_admin_create_user_validate_email(do_admin_login: Page) -> None:
     # click create user button
     create_user_button.click()
 
-    fullname_input, email_input, password_input, password2_input, admin_checkbox, cancel_button, save_button = assert_create_user_page(
-        page)
+    (
+        fullname_input,
+        email_input,
+        password_input,
+        password2_input,
+        admin_checkbox,
+        cancel_button,
+        save_button,
+    ) = assert_create_user_page(page)
 
     email = random_email()
     password = "@&ZhfLyCxyca2T"
@@ -80,8 +97,15 @@ def test_admin_create_user_validate_password_required(do_admin_login: Page) -> N
     # click create user button
     create_user_button.click()
 
-    fullname_input, email_input, password_input, password2_input, admin_checkbox, cancel_button, save_button = assert_create_user_page(
-        page)
+    (
+        fullname_input,
+        email_input,
+        password_input,
+        password2_input,
+        admin_checkbox,
+        cancel_button,
+        save_button,
+    ) = assert_create_user_page(page)
 
     email = random_email()
 
@@ -106,8 +130,15 @@ def test_admin_create_user_validate_password_strong(do_admin_login: Page) -> Non
     # click create user button
     create_user_button.click()
 
-    fullname_input, email_input, password_input, password2_input, admin_checkbox, cancel_button, save_button = assert_create_user_page(
-        page)
+    (
+        fullname_input,
+        email_input,
+        password_input,
+        password2_input,
+        admin_checkbox,
+        cancel_button,
+        save_button,
+    ) = assert_create_user_page(page)
 
     email = random_email()
     password = "weak"
@@ -135,8 +166,15 @@ def test_admin_create_user_validate_passwords_match(do_admin_login: Page) -> Non
     # click create user button
     create_user_button.click()
 
-    fullname_input, email_input, password_input, password2_input, admin_checkbox, cancel_button, save_button = assert_create_user_page(
-        page)
+    (
+        fullname_input,
+        email_input,
+        password_input,
+        password2_input,
+        admin_checkbox,
+        cancel_button,
+        save_button,
+    ) = assert_create_user_page(page)
 
     email = random_email()
     password = strong_password
