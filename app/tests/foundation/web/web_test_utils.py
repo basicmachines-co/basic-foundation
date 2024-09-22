@@ -1,7 +1,7 @@
 import uuid
 from dataclasses import dataclass
 
-from playwright.sync_api import expect, Page
+from playwright.sync_api import expect
 
 from foundation.core.config import settings
 from utils import random_email
@@ -95,35 +95,6 @@ def assert_create_user_page(page):
     return fullname_input, email_input, password_input, password2_input, admin_checkbox, cancel_button, save_button
 
 
-def create_user(page) -> (Page, User):
-    page.goto(URL_USERS_PAGE)
-    create_user_button = assert_users_page(page)
-
-    # click create user button
-    create_user_button.click()
-
-    fullname_input, email_input, password_input, password2_input, admin_checkbox, cancel_button, save_button = assert_create_user_page(
-        page)
-
-    email = random_email()
-    password = "@&ZhfLyCxyca2T"
-
-    # submit the form
-    user_name = f"User {email}"
-    fullname_input.fill(user_name)
-    email_input.fill(email)
-    password_input.fill(password)
-    password2_input.fill(password)
-
-    with page.expect_navigation():
-        save_button.click()
-
-    user_id = page.url.split('/')[-1]
-    assert is_valid_uuid(user_id)
-
-    return page, User(id=user_id, full_name=user_name, email=email, password=password, is_active=True, is_admin=False)
-
-
 def register_user(page) -> (str, str):
     page.goto(URL_REGISTER_PAGE)
     email = random_email()
@@ -141,26 +112,6 @@ def register_user(page) -> (str, str):
     register_button.click()
     expect(page).to_have_url(URL_PROFILE_PAGE)
     return email, strong_password
-
-
-def admin_login(page):
-    login(page,
-          email=settings.SUPERUSER_EMAIL,
-          password=settings.SUPERUSER_PASSWORD)
-
-    expect(page).to_have_url(URL_DASHBOARD_PAGE)
-
-
-def login(page, email, password):
-    page.goto(URL_LOGIN_PAGE)
-
-    # login
-    username_input = page.get_by_label("Email address")
-    password_input = page.get_by_label("Password")
-    username_input.fill(email)
-    password_input.fill(password)
-    login_button = page.get_by_role("button", name="Log in")
-    login_button.click()
 
 
 def assert_user_detail_view(page, full_name=None, email=None, active=True, admin=False):

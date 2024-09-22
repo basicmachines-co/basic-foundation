@@ -3,22 +3,19 @@ from playwright.sync_api import Page, expect
 
 from utils import random_email
 from ..web_test_utils import (
-    admin_login, URL_USERS_PAGE, URL_USERS_CREATE_PAGE, strong_password, assert_users_page,
-    create_user, assert_create_user_page
+    URL_USERS_PAGE, URL_USERS_CREATE_PAGE, strong_password, assert_users_page,
+    assert_create_user_page
 )
 
 pytestmark = pytest.mark.playwright
 
 
-def test_admin_create_user(page: Page) -> None:
-    admin_login(page)
-    page, user = create_user(page)
-
-    expect(page).to_have_url(f"{URL_USERS_PAGE}/{user.id}")
+def test_admin_create_user(create_user) -> None:
+    page, user = create_user
 
 
-def test_admin_create_user_validate_full_name(page: Page) -> None:
-    admin_login(page)
+def test_admin_create_user_validate_full_name(do_admin_login: Page) -> None:
+    page = do_admin_login
 
     page.goto(URL_USERS_PAGE)
     create_user_button = assert_users_page(page)
@@ -45,8 +42,8 @@ def test_admin_create_user_validate_full_name(page: Page) -> None:
     expect(page.get_by_text("Field must be between")).to_be_visible()
 
 
-def test_admin_create_user_validate_email(page: Page) -> None:
-    admin_login(page)
+def test_admin_create_user_validate_email(do_admin_login: Page) -> None:
+    page = do_admin_login
 
     page.goto(URL_USERS_PAGE)
     create_user_button = assert_users_page(page)
@@ -73,8 +70,8 @@ def test_admin_create_user_validate_email(page: Page) -> None:
     expect(page.get_by_text("Invalid email address")).to_be_visible()
 
 
-def test_admin_create_user_validate_password_required(page: Page) -> None:
-    admin_login(page)
+def test_admin_create_user_validate_password_required(do_admin_login: Page) -> None:
+    page = do_admin_login
 
     page.goto(URL_USERS_PAGE)
     create_user_button = assert_users_page(page)
@@ -99,8 +96,8 @@ def test_admin_create_user_validate_password_required(page: Page) -> None:
     expect(page.get_by_text("This field is required").nth(1)).to_be_visible()
 
 
-def test_admin_create_user_validate_password_strong(page: Page) -> None:
-    admin_login(page)
+def test_admin_create_user_validate_password_strong(do_admin_login: Page) -> None:
+    page = do_admin_login
 
     page.goto(URL_USERS_PAGE)
     create_user_button = assert_users_page(page)
@@ -128,8 +125,8 @@ def test_admin_create_user_validate_password_strong(page: Page) -> None:
     expect(page.get_by_text("Password must be").nth(1)).to_be_visible()
 
 
-def test_admin_create_user_validate_passwords_match(page: Page) -> None:
-    admin_login(page)
+def test_admin_create_user_validate_passwords_match(do_admin_login: Page) -> None:
+    page = do_admin_login
 
     page.goto(URL_USERS_PAGE)
     create_user_button = assert_users_page(page)

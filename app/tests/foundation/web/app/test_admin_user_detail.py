@@ -1,29 +1,23 @@
 import pytest
-from playwright.sync_api import Page, expect
+from playwright.sync_api import expect
 
 from utils import random_email
 from ..web_test_utils import (
-    admin_login, URL_USERS_PAGE, assert_user_detail_view, strong_password, assert_user_form, create_user
+    URL_USERS_PAGE, assert_user_detail_view, strong_password, assert_user_form
 )
 
 pytestmark = pytest.mark.playwright
 
 
-def test_admin_user_detail_view(page: Page) -> None:
-    admin_login(page)
-
-    # create the user
-    page, user = create_user(page)
+def test_admin_user_detail_view(create_user) -> None:
+    page, user = create_user
     expect(page).to_have_url(f"{URL_USERS_PAGE}/{user.id}")
 
     assert_user_detail_view(page, full_name=user.full_name, email=user.email)
 
 
-def test_admin_user_detail_edit(page: Page) -> None:
-    admin_login(page)
-
-    # create the user
-    page, user = create_user(page)
+def test_admin_user_detail_edit(create_user) -> None:
+    page, user = create_user
     expect(page).to_have_url(f"{URL_USERS_PAGE}/{user.id}")
 
     edit_button = page.get_by_text("Edit")
@@ -56,11 +50,8 @@ def test_admin_user_detail_edit(page: Page) -> None:
     assert_user_detail_view(page, full_name=updated_full_name, email=updated_email, admin=True, active=False)
 
 
-def test_admin_user_detail_edit_password(page: Page) -> None:
-    admin_login(page)
-
-    # create the user
-    page, user = create_user(page)
+def test_admin_user_detail_edit_password(create_user) -> None:
+    page, user = create_user
     expect(page).to_have_url(f"{URL_USERS_PAGE}/{user.id}")
 
     edit_button = page.get_by_text("Edit")
@@ -80,11 +71,8 @@ def test_admin_user_detail_edit_password(page: Page) -> None:
     assert_user_detail_view(page, full_name=user.full_name, email=user.email)
 
 
-def test_admin_user_detail_edit_cancel(page: Page) -> None:
-    admin_login(page)
-
-    # create the user
-    page, user = create_user(page)
+def test_admin_user_detail_edit_cancel(create_user) -> None:
+    page, user = create_user
 
     user_page_url = f"{URL_USERS_PAGE}/{user.id}"
     expect(page).to_have_url(user_page_url)
@@ -99,11 +87,8 @@ def test_admin_user_detail_edit_cancel(page: Page) -> None:
     expect(page).to_have_url(user_page_url)
 
 
-def test_admin_user_detail_delete(page: Page) -> None:
-    admin_login(page)
-
-    # create the user
-    page, user = create_user(page)
+def test_admin_user_detail_delete(create_user) -> None:
+    page, user = create_user
     expect(page).to_have_url(f"{URL_USERS_PAGE}/{user.id}")
 
     edit_button = page.get_by_text("Edit")

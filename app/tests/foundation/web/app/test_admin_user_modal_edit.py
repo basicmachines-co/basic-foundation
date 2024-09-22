@@ -4,8 +4,8 @@ from playwright.sync_api import Page, expect
 from foundation.core.config import settings
 from utils import random_email, random_lower_string
 from ..web_test_utils import (
-    admin_login, URL_USERS_PAGE, assert_users_page,
-    admin_email, admin_full_name, create_user, assert_user_form, User, strong_password
+    URL_USERS_PAGE, assert_users_page,
+    admin_email, admin_full_name, assert_user_form, User, strong_password
 )
 
 pytestmark = pytest.mark.playwright
@@ -38,8 +38,8 @@ def edit_user_in_modal(page, user):
     menu_edit_link.click(timeout=10000)
 
 
-def test_admin_user_list(page: Page) -> None:
-    admin_login(page)
+def test_admin_user_list(do_admin_login: Page) -> None:
+    page = do_admin_login
 
     page.goto(URL_USERS_PAGE)
     assert_users_page(page)
@@ -64,11 +64,8 @@ def test_admin_user_list(page: Page) -> None:
     assert_user_edit_modal(page, admin_user)
 
 
-def test_admin_user_modal_edit(page: Page) -> None:
-    admin_login(page)
-
-    # create a user
-    page, user = create_user(page)
+def test_admin_user_modal_edit(create_user) -> None:
+    page, user = create_user
 
     page.goto(URL_USERS_PAGE)
     assert_users_page(page)
@@ -96,11 +93,8 @@ def test_admin_user_modal_edit(page: Page) -> None:
     expect(page.get_by_role("cell", name=updated_email, exact=True)).to_be_visible()
 
 
-def test_admin_user_modal_edit_password(page: Page) -> None:
-    admin_login(page)
-
-    # create a user
-    page, user = create_user(page)
+def test_admin_user_modal_edit_password(create_user) -> None:
+    page, user = create_user
 
     page.goto(URL_USERS_PAGE)
     assert_users_page(page)
@@ -123,11 +117,8 @@ def test_admin_user_modal_edit_password(page: Page) -> None:
     expect(page.get_by_role("cell", name=user.email, exact=True)).to_be_visible()
 
 
-def test_admin_user_modal_edit_cancel(page: Page) -> None:
-    admin_login(page)
-
-    # create a user
-    page, user = create_user(page)
+def test_admin_user_modal_edit_cancel(create_user) -> None:
+    page, user = create_user
 
     page.goto(URL_USERS_PAGE)
     assert_users_page(page)
@@ -143,11 +134,8 @@ def test_admin_user_modal_edit_cancel(page: Page) -> None:
     expect(page.get_by_role("cell", name=user.email, exact=True)).to_be_visible()
 
 
-def test_admin_user_modal_edit_delete(page: Page) -> None:
-    admin_login(page)
-
-    # create a user
-    page, user = create_user(page)
+def test_admin_user_modal_edit_delete(create_user) -> None:
+    page, user = create_user
 
     page.goto(URL_USERS_PAGE)
     assert_users_page(page)

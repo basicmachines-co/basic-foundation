@@ -1,8 +1,9 @@
 import pytest
 from playwright.sync_api import Page, expect
 
+from ..conftest import login
 from ..web_test_utils import (
-    URL_REGISTER_PAGE, register_user, URL_PROFILE_PAGE, login, assert_user_detail_view,
+    URL_REGISTER_PAGE, register_user, URL_PROFILE_PAGE, assert_user_detail_view,
 )
 
 pytestmark = pytest.mark.playwright

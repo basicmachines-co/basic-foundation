@@ -2,14 +2,14 @@ import pytest
 from playwright.sync_api import Page, expect
 
 from ..web_test_utils import (
-    URL_DASHBOARD_PAGE, admin_login, URL_PROFILE_PAGE, URL_LOGIN_PAGE,
+    URL_DASHBOARD_PAGE, URL_PROFILE_PAGE, URL_LOGIN_PAGE,
 )
 
 pytestmark = pytest.mark.playwright
 
 
-def test_admin_login_dashboard(page: Page) -> None:
-    admin_login(page)
+def test_admin_login_dashboard(do_admin_login: Page) -> None:
+    page = do_admin_login
 
     # assert we are on the dashboard page
     expect(page).to_have_url(URL_DASHBOARD_PAGE)
@@ -37,8 +37,8 @@ def test_admin_login_dashboard(page: Page) -> None:
     expect(admin_user_count_stat).not_to_be_empty()
 
 
-def test_admin_profile(page: Page) -> None:
-    admin_login(page)
+def test_admin_profile(do_admin_login: Page) -> None:
+    page = do_admin_login
 
     # assert we are on the dashboard page
     expect(page).to_have_url(URL_DASHBOARD_PAGE)
@@ -55,8 +55,8 @@ def test_admin_profile(page: Page) -> None:
     expect(page).to_have_url(URL_PROFILE_PAGE)
 
 
-def test_admin_logout(page: Page) -> None:
-    admin_login(page)
+def test_admin_logout(do_admin_login: Page) -> None:
+    page = do_admin_login
 
     # assert we are on the dashboard page
     expect(page).to_have_url(URL_DASHBOARD_PAGE)

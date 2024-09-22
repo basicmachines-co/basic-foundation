@@ -192,7 +192,7 @@ uvicorn app.main:app --reload
 - [ ] remove all print() calls
 - [-] add faastapi-problems for error responses: https://github.com/NRWLDev/fastapi-problem
 - [x] remove fastapi-users
-- [ ] frontend
+- [ ] web htmx frontend
     - [x] crud users happy path
     - [x] reset password flow
     - [x] user profile
@@ -265,6 +265,8 @@ uvicorn app.main:app --reload
 - [ ] page_size is appended to url
 - [ ] use fixtures in web tests
 - [ ] delete user after test
+- [ ] add playwright to github ci
+- [ ] code coverage for ci
 
 ## references
 
