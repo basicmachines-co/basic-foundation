@@ -9,7 +9,7 @@ on:
       - main  # PRs to the main branch
 
 jobs:
-  test:
+  install-migrate-test:
     runs-on: ubuntu-latest
 
     services:
@@ -35,9 +35,38 @@ jobs:
         with:
           python-version: "3.12.1"
 
+      - name: Cache Poetry
+        id: poetry-cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.poetry
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-
+
+      - name: Cache virtualenv
+        id: venv-cache
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: ${{ runner.os }}-venv-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-venv-
+
+      - name: Cache Playwright binaries
+        id: playwright-cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
       - name: Bootstrap poetry
         run: |
-          curl -sSL https://install.python-poetry.org | python - -y
+          if [ ! -x "$(command -v poetry)" ]; then
+            curl -sSL https://install.python-poetry.org | python - -y
+          fi
 
       - name: Configure poetry
         run: poetry config virtualenvs.in-project true
@@ -60,10 +89,12 @@ jobs:
 
       - name: Run api tests
         run: |
-          make test
+          make test-api
 
       - name: Install Playwright and dependencies
         run: |
+          POETRY_CACHE_DIR=~/.cache/pypoetry_cache
+          mkdir -p $POETRY_CACHE_DIR
           poetry run playwright install --with-deps
 
       - name: Start fastapi
@@ -73,7 +104,7 @@ jobs:
             echo "Waiting for FastAPI to start... $i second(s)"
             sleep 1
           done
-          
+
       - name: Run Playwright tests
         run: |
           make test-playwright

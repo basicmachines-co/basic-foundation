@@ -6,7 +6,9 @@ install:
 	poetry install
 	npm install
 
-test:
+test: test-api test-playwright
+
+test-api:
 	poetry run pytest -m "not playwright"
 
 test-playwright:  # assumes app is running on localhost:8000
