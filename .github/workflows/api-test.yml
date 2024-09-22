@@ -132,7 +132,7 @@ jobs:
           path: htmlcov/
 
       - name: Upload Playwright Traces
-      - uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
           name: playwright-traces
