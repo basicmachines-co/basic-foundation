@@ -9,24 +9,8 @@ on:
       - main  # PRs to the main branch
 
 jobs:
-  test:
+  setup:
     runs-on: ubuntu-latest
-
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: api
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s 
-          --health-retries 5
-        ports:
-          - 5432:5432
-
     steps:
       - uses: actions/checkout@v4
 
@@ -46,9 +30,35 @@ jobs:
         run: |
           cp .env.ci .env
 
+  install-dependencies:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - uses: actions/checkout@v4
+
       - name: Install dependencies
         run: |
           make install
+
+  migrate:
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: api
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s 
+          --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+      - uses: actions/checkout@v4
 
       - name: Run dbmate migrations
         run: |
@@ -58,9 +68,21 @@ jobs:
         run: |
           make init-data
 
+  api-tests:
+    runs-on: ubuntu-latest
+    needs: migrate
+    steps:
+      - uses: actions/checkout@v4
+
       - name: Run api tests
         run: |
           make test
+
+  playwright-tests:
+    runs-on: ubuntu-latest
+    needs: migrate
+    steps:
+      - uses: actions/checkout@v4
 
       - name: Install Playwright and dependencies
         run: |
@@ -69,11 +91,15 @@ jobs:
       - name: Start fastapi
         run: |
           make run &
-          sleep 10
+          for i in {1..5}; do
+            echo "Waiting for FastAPI to start... $i second(s)"
+            sleep 1
+          done
 
       - name: Run Playwright tests
         run: |
           make test-playwright
+
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
