@@ -5,7 +5,7 @@ from playwright.sync_api import expect
 
 from foundation.core.config import settings
 
-BASE_URL = "http://localhost:8000"
+BASE_URL = settings.API_URL
 URL_DASHBOARD_PAGE = f"{BASE_URL}/dashboard"
 URL_FORGOT_PASSWORD_PAGE = f"{BASE_URL}/forgot-password"
 URL_LOGIN_PAGE = f"{BASE_URL}/login"

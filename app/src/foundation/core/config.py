@@ -19,23 +19,10 @@ load_dotenv(verbose=True)
 
 class Settings(BaseSettings):
     """
-
     This class represents the settings for the Basic API.
-
-    Attributes:
-        APP_NAME (str): The name of the application.
-        JWT_SECRET (str): The secret key for JSON Web Token (JWT) generation.
-        POSTGRES_USER (str): The username for connecting to the PostgreSQL database.
-        POSTGRES_PASSWORD (str): The password for connecting to the PostgreSQL database.
-        POSTGRES_DB (str): The name of the PostgreSQL database.
-        POSTGRES_HOST (str): The host of the PostgreSQL database.
-        POSTGRES_PORT (int): The port of the PostgreSQL database.
-
-    Properties:
-        postgres_dsn: Property that returns the PostgreSQL database connection URL.
     """
 
-    API_V1_STR: str = "/api/v1"
+    API_URL: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
     DOMAIN: str = "localhost"
     ENVIRONMENT: Literal["local", "staging", "production"] = "local"

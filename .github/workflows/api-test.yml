@@ -68,7 +68,7 @@ jobs:
 
       - name: Start fastapi
         run: |
-          make run
+          make run &
           sleep 10
 
       - name: Run Playwright tests
