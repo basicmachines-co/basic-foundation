@@ -35,41 +35,41 @@ jobs:
         with:
           python-version: "3.12.1"
 
-      - name: Cache Poetry
-        id: poetry-cache
-        uses: actions/cache@v3
-        with:
-          path: ~/.poetry
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-poetry-
-
-      - name: Cache virtualenv
-        id: venv-cache
-        uses: actions/cache@v3
-        with:
-          path: .venv
-          key: ${{ runner.os }}-venv-${{ hashFiles('**/poetry.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-venv-
-
-      - name: Cache Playwright binaries
-        id: playwright-cache
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('**/poetry.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-
-
-      - name: Cache Node.js modules
-        id: node-modules-cache
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+      #      - name: Cache Poetry
+      #        id: poetry-cache
+      #        uses: actions/cache@v3
+      #        with:
+      #          path: ~/.poetry
+      #          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+      #          restore-keys: |
+      #            ${{ runner.os }}-poetry-
+      #
+      #      - name: Cache virtualenv
+      #        id: venv-cache
+      #        uses: actions/cache@v3
+      #        with:
+      #          path: .venv
+      #          key: ${{ runner.os }}-venv-${{ hashFiles('**/poetry.lock') }}
+      #          restore-keys: |
+      #            ${{ runner.os }}-venv-
+      #
+      #      - name: Cache Playwright binaries
+      #        id: playwright-cache
+      #        uses: actions/cache@v3
+      #        with:
+      #          path: ~/.cache/ms-playwright
+      #          key: ${{ runner.os }}-playwright-${{ hashFiles('**/poetry.lock') }}
+      #          restore-keys: |
+      #            ${{ runner.os }}-playwright-
+      #
+      #      - name: Cache Node.js modules
+      #        id: node-modules-cache
+      #        uses: actions/cache@v3
+      #        with:
+      #          path: node_modules
+      #          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+      #          restore-keys: |
+      #            ${{ runner.os }}-node-
 
       - name: Bootstrap poetry
         run: |
