@@ -4,7 +4,7 @@ import pytest
 from playwright.sync_api import Page, expect
 
 from utils import random_email
-from ..web_test_utils import URL_REGISTER_PAGE, register_user
+from ..web_test_utils import URL_REGISTER_PAGE
 
 pytestmark = pytest.mark.playwright
 
@@ -34,11 +34,9 @@ def assert_register_page(page: Page) -> dict[str, Any]:
     return locals()
 
 
-def test_register_success(page: Page) -> None:
+def test_register_page(page: Page) -> None:
     page.goto(URL_REGISTER_PAGE)
-
     assert_register_page(page)
-    register_user(page)
 
 
 def test_register_full_name_required(page: Page) -> None:

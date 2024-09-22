@@ -2,7 +2,7 @@ import pytest
 from playwright.sync_api import Page, expect
 
 from foundation.core.security import generate_password_reset_token
-from ..web_test_utils import BASE_URL, register_user, URL_REGISTER_PAGE
+from ..web_test_utils import BASE_URL
 
 pytestmark = pytest.mark.playwright
 
@@ -21,12 +21,10 @@ def assert_reset_password_page(page, token):
     return new_password_input, submit_button
 
 
-def test_reset_password(page: Page):
-    # register a user so we can use their email
-    page.goto(URL_REGISTER_PAGE)
-    email, password = register_user(page)
+def test_reset_password(register_user):
+    page, user = register_user
 
-    password_reset_token = generate_password_reset_token(email=email)
+    password_reset_token = generate_password_reset_token(email=user.email)
     page.goto(f"{BASE_URL}/reset-password?token={password_reset_token}")
 
     new_password_input, submit_button = assert_reset_password_page(page, password_reset_token)
@@ -42,10 +40,8 @@ def test_reset_password(page: Page):
     )
 
 
-def test_reset_password_invalid_token(page: Page):
-    # register a user so we can use their email
-    page.goto(URL_REGISTER_PAGE)
-    email, password = register_user(page)
+def test_reset_password_invalid_token(register_user):
+    page, user = register_user
 
     password_reset_token = "not-a-real-token"
     page.goto(f"{BASE_URL}/reset-password?token={password_reset_token}")

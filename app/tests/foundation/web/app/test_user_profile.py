@@ -1,37 +1,31 @@
 import pytest
-from playwright.sync_api import Page, expect
+from playwright.sync_api import expect
 
 from ..conftest import login
 from ..web_test_utils import (
-    URL_REGISTER_PAGE, register_user, URL_PROFILE_PAGE, assert_user_detail_view,
+    URL_PROFILE_PAGE, assert_user_detail_view,
 )
 
 pytestmark = pytest.mark.playwright
 
 
-def test_user_login(page: Page) -> None:
-    # register a user so we can use their email
-    page.goto(URL_REGISTER_PAGE)
-    email, password = register_user(page)
-
-    login(page, email, password)
+def test_user_login(register_user) -> None:
+    page, user = register_user
+    login(page, user.email, user.password)
 
     # assert we are on the user profile page
     expect(page).to_have_url(URL_PROFILE_PAGE)
 
-    # nav
+    # nav should not contain the admin only links
     expect(page.get_by_role("link", name="Dashboard")).to_be_visible(visible=False)
     expect(page.get_by_role("link", name="Users")).to_be_visible(visible=False)
 
 
-def test_user_login_profile(page: Page) -> None:
-    # register a user so we can use their email
-    page.goto(URL_REGISTER_PAGE)
-    email, password = register_user(page)
-    full_name = f"User {email}"
-
-    login(page, email, password)
+def test_user_profile(register_user) -> None:
+    page, user = register_user
+    login(page, user.email, user.password)
 
     # assert we are on the profile page
     expect(page).to_have_url(URL_PROFILE_PAGE)
-    assert_user_detail_view(page, email=email, full_name=full_name, active=True, admin=False)
+    
+    assert_user_detail_view(page, email=user.email, full_name=user.full_name, active=True, admin=False)

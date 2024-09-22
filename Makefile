@@ -10,7 +10,7 @@ test:
 	poetry run pytest -m "not playwright"
 
 test-playwright:  # assumes app is running on localhost:8000
-	poetry run pytest -m "playwright" --slowmo 500
+	poetry run pytest -m "playwright" --tracing=retain-on-failure
 	#poetry run pytest -m "playwright" --headed --slowmo 500
 
 playwright-codegen:

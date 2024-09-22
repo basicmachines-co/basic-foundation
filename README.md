@@ -260,6 +260,8 @@ uvicorn app.main:app --reload
     - [x] edit profile
     - [x] logout
 
+fix
+
 - [ ] dashboard stats should link to filtered list
 - [ ] make active/admin colums enums
 - [ ] page_size is appended to url
@@ -267,6 +269,9 @@ uvicorn app.main:app --reload
 - [ ] delete user after test
 - [ ] add playwright to github ci
 - [ ] code coverage for ci
+- [ ] Api docs say FASTAPI
+- [ ] responsive tests for playwright
+- [ ] mypy, pywright
 
 ## references
 

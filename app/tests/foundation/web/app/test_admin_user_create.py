@@ -11,6 +11,7 @@ pytestmark = pytest.mark.playwright
 
 
 def test_admin_create_user(create_user) -> None:
+    # we can create a user via the admin flow
     page, user = create_user
 
 

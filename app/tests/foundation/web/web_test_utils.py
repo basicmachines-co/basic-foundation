@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from playwright.sync_api import expect
 
 from foundation.core.config import settings
-from utils import random_email
 
 BASE_URL = "http://localhost:8000"
 URL_DASHBOARD_PAGE = f"{BASE_URL}/dashboard"
@@ -93,25 +92,6 @@ def assert_create_user_page(page):
     expect(save_button).to_be_visible()
 
     return fullname_input, email_input, password_input, password2_input, admin_checkbox, cancel_button, save_button
-
-
-def register_user(page) -> (str, str):
-    page.goto(URL_REGISTER_PAGE)
-    email = random_email()
-
-    fullname_input = page.get_by_label("Full Name")
-    email_input = page.get_by_label("Email address")
-    password_input = page.get_by_label("Password", exact=True)
-    password2_input = page.get_by_label("Repeat Password")
-    register_button = page.get_by_role("button", name="Register")
-
-    fullname_input.fill(f"User {email}")
-    email_input.fill(email)
-    password_input.fill(strong_password)
-    password2_input.fill(strong_password)
-    register_button.click()
-    expect(page).to_have_url(URL_PROFILE_PAGE)
-    return email, strong_password
 
 
 def assert_user_detail_view(page, full_name=None, email=None, active=True, admin=False):

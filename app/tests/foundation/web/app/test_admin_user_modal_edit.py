@@ -29,6 +29,7 @@ def assert_user_edit_modal(page, user):
 
 
 def edit_user_in_modal(page, user):
+    expect(page).to_have_url(f"{URL_USERS_PAGE}")
     # click the edit button on the row
     row_button = page.get_by_test_id(f"edit-delete-button-{user.email}")
     row_button.click(timeout=10000)
@@ -149,6 +150,7 @@ def test_admin_user_modal_edit_delete(create_user) -> None:
     menu_delete_link.click(timeout=10000)
 
     # assert modal confirmation
+    expect(page.locator("#modal")).to_be_visible()
     expect(page.get_by_role("heading", name="Delete user")).to_be_visible()
     expect(page.get_by_text("Are you sure you want to")).to_be_visible()
 

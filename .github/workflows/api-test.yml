@@ -7,7 +7,7 @@ on:
   pull_request:
     branches:
       - main  # PRs to the main branch
-      
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -64,7 +64,7 @@ jobs:
 
       - name: Install Playwright and dependencies
         run: |
-          playwright install --with-deps
+          python -m playwright install --with-deps
 
       - name: Run Playwright tests
         run: |
