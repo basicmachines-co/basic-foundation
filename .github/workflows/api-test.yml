@@ -2,10 +2,12 @@ name: basic-api-test
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - '*'  # all branches
   pull_request:
-    branches: [ main ]
-
+    branches:
+      - main  # PRs to the main branch
+      
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -56,6 +58,14 @@ jobs:
         run: |
           make init-data
 
-      - name: Run tests
+      - name: Run api tests
         run: |
           make test
+
+      - name: Install Playwright and dependencies
+        run: |
+          playwright install --with-deps
+
+      - name: Run Playwright tests
+        run: |
+          make test-playwright
