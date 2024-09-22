@@ -64,8 +64,13 @@ jobs:
 
       - name: Install Playwright and dependencies
         run: |
-          python -m playwright install --with-deps
+          poetry run playwright install --with-deps
 
       - name: Run Playwright tests
         run: |
           make test-playwright
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-traces
+          path: test-results/
