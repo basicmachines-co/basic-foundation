@@ -128,29 +128,9 @@ jobs:
         run: |
           make test-playwright
 
-      - name: Upload HTML Coverage Report
-        uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: html-coverage-report
-          path: htmlcov/
-
       - name: Upload Playwright Traces
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
           name: playwright-traces
           path: test-results/
-
-      - name: Create GitHub Pages deployment for coverage reports
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: ./htmlcov
-          cname: your-custom-domain.com
-
-      - name: Summary Report
-        run: |
-          echo "## Test Coverage Report" >> $GITHUB_STEP_SUMMARY
-          echo "[View Coverage Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
