@@ -1,22 +1,23 @@
 from typing import Type, Optional, Any, Sequence
 from uuid import UUID
 
-from sqlalchemy import select, func, Select, Executable, inspect, Result
+from sqlalchemy import select, func, Select, Executable, inspect, Result, Column
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import declarative_base
+
+from foundation.core.models import BaseWithId
 
 
-class Repository[T: (declarative_base())]:
+class Repository[T: BaseWithId]:
     def __init__(self, session: AsyncSession, Model: Type[T]):
         """
         Repository is supposed to work with your entity objects.
         :param session: SQLAlchemy session
-        :param Model: SQLAlchemy model class
+        :param Model: SQLAlchemy model class type
         """
         self.session = session
         self.Model = Model
-        self.primary_key = inspect(self.Model).mapper.primary_key[0]
+        self.primary_key: Column[Any] = inspect(self.Model).mapper.primary_key[0]
         self.valid_columns = [column.key for column in inspect(self.Model).columns]
 
     async def find_all(self, skip: int = 0, limit: int = 100) -> Sequence[T]:
@@ -58,9 +59,10 @@ class Repository[T: (declarative_base())]:
         """
         Updates an entity by id with the provided data.
         """
+        id_column: Column[Any] = self.Model.id  # pyright: ignore [reportAssignmentType]
         try:
             result = await self.session.execute(
-                select(self.Model).filter(self.Model.id == entity_id)
+                select(self.Model).filter(id_column == entity_id)
             )
             entity = result.scalars().one()
             for key, value in entity_data.items():
@@ -77,7 +79,7 @@ class Repository[T: (declarative_base())]:
         """
         try:
             result = await self.session.execute(
-                select(self.Model).filter(entity_id == self.primary_key)
+                select(self.Model).filter(self.primary_key == entity_id)
             )
             entity = result.scalars().one()
             await self.session.delete(entity)
@@ -93,7 +95,8 @@ class Repository[T: (declarative_base())]:
         if query is None:
             query = select(func.count()).select_from(self.Model)
         result = await self.session.execute(query)
-        return result.scalar()
+        scalar = result.scalar()
+        return scalar if scalar is not None else 0
 
     async def execute_query(self, query: Executable) -> Result[Any]:
         """

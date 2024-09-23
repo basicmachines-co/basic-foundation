@@ -48,14 +48,14 @@ class ResetTokenSubject(TypedDict):
 
 def generate_password_reset_token(email: str) -> str:
     delta = timedelta(hours=settings.EMAIL_RESET_TOKEN_EXPIRE_HOURS)
-    subject: ResetTokenSubject = {"email": email}
+    subject = {"email": email}
     return reset_token.create_access_token(subject=subject, expires_delta=delta)
 
 
 def verify_password_reset_token(token: str) -> str | None:
     try:
         decoded_token = reset_token.jwt_backend.decode(token, settings.JWT_SECRET)
-
+        assert decoded_token is not None
         subject: ResetTokenSubject = decoded_token["subject"]
         return subject.get("email")
     except (InvalidTokenError, BackendException, BadSignatureError):

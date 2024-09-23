@@ -33,13 +33,13 @@ async def users_page(request: Request, current_user: CurrentUserDep):
 
 @router.get("/users/list", dependencies=[AdminRequired])
 async def users_list(
-    request: Request,
-    user_pagination: UserPaginationDep,
-    current_user: CurrentUserDep,
-    page: int = 1,
-    page_size: int = 10,
-    order_by: str = "full_name",
-    ascending: bool = True,
+        request: Request,
+        user_pagination: UserPaginationDep,
+        current_user: CurrentUserDep,
+        page_num: int = 1,
+        page_size: int = 10,
+        order_by: str = "full_name",
+        ascending: bool = True,
 ):
     if order_by not in ["full_name", "email"]:
         order_by = "full_name"
@@ -54,7 +54,7 @@ async def users_list(
     pagination = user_pagination.paginate(
         request, query, page_size=page_size, order_by=order_by, asc=ascending
     )
-    page = await pagination.page(page=page)
+    page = await pagination.page(page=page_num)
     return template(
         request,
         "partials/user/user_list.html",
@@ -64,8 +64,8 @@ async def users_list(
 
 @router.get("/users/create", dependencies=[AdminRequired])
 async def user_create(
-    request: Request,
-    current_user: CurrentUserDep,
+        request: Request,
+        current_user: CurrentUserDep,
 ):
     form = UserCreateForm(request)
     return template(
@@ -77,9 +77,9 @@ async def user_create(
 
 @router.post("/users/create", dependencies=[AdminRequired])
 async def user_create_post(
-    request: Request,
-    user_service: UserServiceDep,
-    current_user: CurrentUserDep,
+        request: Request,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
 ):
     form = await UserCreateForm.from_formdata(request)
     if await form.validate():
@@ -106,10 +106,10 @@ async def user_create_post(
 
 @router.get("/users/{user_id}")
 async def user_detail_view(
-    request: Request,
-    user_id: UUID,
-    user_service: UserServiceDep,
-    current_user: CurrentUserDep,
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
 ):
     view_user = await user_service.get_user_by_id(user_id=user_id)
     authorize_admin_or_owner(user=view_user, current_user=current_user)
@@ -122,10 +122,10 @@ async def user_detail_view(
 
 @router.get("/users/detail/{user_id}/edit")
 async def user_detail_edit(
-    request: Request,
-    user_id: UUID,
-    user_service: UserServiceDep,
-    current_user: CurrentUserDep,
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
 ):
     edit_user = await user_service.get_user_by_id(user_id=user_id)
     form = UserEditForm(request, obj=edit_user)
@@ -140,10 +140,10 @@ async def user_detail_edit(
 
 @router.put("/users/detail/{user_id}")
 async def user_detail_put(
-    request: Request,
-    user_id: UUID,
-    user_service: UserServiceDep,
-    current_user: CurrentUserDep,
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
 ):
     user = await user_service.get_user_by_id(user_id=user_id)
     form = await UserEditForm.from_formdata(request)
@@ -184,9 +184,9 @@ async def user_detail_put(
 
 @router.get("/users/modal/{user_id}/edit", dependencies=[AdminRequired])
 async def user_modal_edit(
-    request: Request,
-    user_id: UUID,
-    user_service: UserServiceDep,
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
 ):
     edit_user = await user_service.get_user_by_id(user_id=user_id)
     form = UserEditForm(request, obj=edit_user)
@@ -195,9 +195,9 @@ async def user_modal_edit(
 
 @router.put("/users/modal/{user_id}", dependencies=[AdminRequired])
 async def user_modal_put(
-    request: Request,
-    user_id: UUID,
-    user_service: UserServiceDep,
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
 ):
     user = await user_service.get_user_by_id(user_id=user_id)
     form = await UserEditForm.from_formdata(request)
@@ -227,10 +227,10 @@ async def user_modal_put(
 
 @router.get("/users/modal/{user_id}/delete", dependencies=[AdminRequired])
 async def user_modal_delete(
-    request: Request,
-    user_id: UUID,
-    user_service: UserServiceDep,
-    current_user: CurrentUserDep,
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
 ):
     user = await user_service.get_user_by_id(user_id=user_id)
     token = csrf_token(request)
@@ -244,11 +244,11 @@ async def user_modal_delete(
 
 @router.delete("/users/{user_id}", dependencies=[AdminRequired])
 async def delete_user(
-    request: Request,
-    user_id: UUID,
-    user_service: UserServiceDep,
-    current_user: CurrentUserDep,
-    x_csrftoken: str = Header(None),
+        request: Request,
+        user_id: UUID,
+        user_service: UserServiceDep,
+        current_user: CurrentUserDep,
+        x_csrftoken: str = Header(None),
 ):
     """
     Delete a user

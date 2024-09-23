@@ -1,5 +1,6 @@
 import re
 import uuid
+from typing import Sequence
 
 from pydantic import BaseModel, EmailStr, ConfigDict, field_validator
 
@@ -60,7 +61,6 @@ class UserRegister(BaseModel):
 
 
 class UserUpdate(UserBase):
-    email: EmailStr | None
     password: str | None
 
 
@@ -81,7 +81,7 @@ class UserPublic(UserBase):
 
 
 class UsersPublic(BaseModel):
-    data: list[UserPublic]
+    data: Sequence[UserPublic]
     count: int
 
     model_config = ConfigDict(from_attributes=True)

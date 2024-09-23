@@ -8,16 +8,14 @@ install:
 
 reset-cov:
 	rm -f .coverage
-	rm -rf htmlcov
 
 test: reset-cov test-api test-playwright
 
 test-api:
-	poetry run pytest --cov=./app --cov-append --cov-report=term-missing -cov-report=xml --cov-report=html --cov-config=.coveragerc -m "not playwright"
+	poetry run pytest --cov=./app --cov-append --cov-report=term-missing  --cov-config=.coveragerc -m "not playwright"
 
 test-playwright:  # assumes app is running on at API_URL in config
-	#poetry run pytest --cov=./app --cov-append --cov-report=term-missing --cov-config=.coveragerc -m "playwright" --tracing=retain-on-failure
-	poetry run pytest --cov=./app --cov-append --cov-report=term-missing -cov-report=xml --cov-report=html --cov-config=.coveragerc -m "playwright" --tracing=retain-on-failure
+	poetry run pytest --cov=./app --cov-append --cov-report=term-missing --cov-config=.coveragerc -m "playwright" --tracing=retain-on-failure
 	#poetry run pytest -m "playwright" --headed --slowmo 500
 
 playwright-codegen:
@@ -40,6 +38,9 @@ format-prettier:
 	npx prettier templates --write
 
 format: format-python format-prettier
+
+type-check:
+	poetry run pyright
 
 tailwind:
 	npm run build

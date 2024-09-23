@@ -4,7 +4,7 @@ from typing import Literal
 
 from dotenv import load_dotenv
 from loguru import logger
-from pydantic import PostgresDsn, computed_field
+from pydantic import computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # get the current working directory
@@ -35,7 +35,7 @@ class Settings(BaseSettings):
     POSTGRES_DB: str
     POSTGRES_HOST: str
     POSTGRES_PORT: int
-    env_file: str = None
+    env_file: str
 
     SUPERUSER_NAME: str
     SUPERUSER_EMAIL: str
@@ -52,16 +52,16 @@ class Settings(BaseSettings):
     EMAIL_FROM_NAME: str | None = None
     EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = 48
 
-    def postgres_url(self, *, is_async: bool = True) -> PostgresDsn:
+    def postgres_url(self, *, is_async: bool = True) -> str:
         asyncpg = "+asyncpg" if is_async else ""
         return f"postgresql{asyncpg}://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
 
     @property
-    def postgres_dsn(self) -> PostgresDsn:
+    def postgres_dsn(self) -> str:
         return self.postgres_url(is_async=True)
 
     @property
-    def postgres_dsn_sync(self) -> PostgresDsn:
+    def postgres_dsn_sync(self) -> str:
         return self.postgres_url(is_async=False)
 
     @computed_field  # type: ignore[misc]
@@ -83,4 +83,4 @@ class Settings(BaseSettings):
 
 # Note:
 # * The `.env` file is assumed to be located in the directory above the project.
-settings = Settings(env_file=f"{CWD}/../.env")
+settings = Settings(env_file=f"{CWD}/../.env")  # pyright: ignore [reportCallIssue]

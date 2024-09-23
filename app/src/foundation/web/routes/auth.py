@@ -1,4 +1,5 @@
 from datetime import timedelta
+from typing import Optional
 
 from fastapi import Request, Response
 from fastapi import status
@@ -34,8 +35,8 @@ async def register_get(request: Request):
 
 @router.post("/register")
 async def register_post(
-    request: Request,
-    user_service: UserServiceDep,
+        request: Request,
+        user_service: UserServiceDep,
 ):
     form = await RegisterForm.from_formdata(request)
 
@@ -61,14 +62,16 @@ async def login(request: Request):
 
 @router.post("/login")
 async def login_post(
-    request: Request,
-    user_service: UserServiceDep,
+        request: Request,
+        user_service: UserServiceDep,
 ):
     form = await LoginForm.from_formdata(request)
     if not await form.validate():
         return template(request, "partials/auth/login_form.html", {"form": form})
 
     message = None
+    assert form.username.data is not None
+    assert form.password.data is not None
     user = await user_service.authenticate(
         email=form.username.data, password=form.password.data
     )
@@ -132,6 +135,7 @@ async def forgot_password_post(request: Request, user_service: UserServiceDep):
             request, "partials/auth/forgot_password_form.html", {"form": form}
         )
 
+    assert form.email.data is not None
     try:
         await user_service.recover_password(email=form.email.data)
     except UserNotFoundError as e:
@@ -153,7 +157,7 @@ async def forgot_password_post(request: Request, user_service: UserServiceDep):
 
 
 @router.get("/reset-password")
-async def reset_password(request: Request, token: str = None):
+async def reset_password(request: Request, token: Optional[str] = None):
     form = ResetPasswordForm(request)
     form.token.data = token
 
@@ -174,8 +178,8 @@ async def reset_password(request: Request, token: str = None):
 
 @router.post("/reset-password")
 async def reset_password_post(
-    request: Request,
-    user_service: UserServiceDep,
+        request: Request,
+        user_service: UserServiceDep,
 ):
     form = await ResetPasswordForm.from_formdata(request)
 
@@ -185,6 +189,7 @@ async def reset_password_post(
         )
 
     # get the users email by verifying the token
+    assert form.token.data is not None
     email = verify_password_reset_token(token=form.token.data)
     if not email:
         return template(

@@ -11,13 +11,13 @@ templates.env.add_extension(DebugExtension)
 
 
 def template(
-    request: Request,
-    name: str,
-    context: dict,
-    status_code: int = 200,
-    headers: typing.Optional[typing.Mapping[str, str]] = None,
-    **kwargs,
-) -> templates.TemplateResponse:
+        request: Request,
+        name: str,
+        context: dict,
+        status_code: int = 200,
+        headers: typing.Optional[typing.Mapping[str, str]] = None,
+        **kwargs,
+) -> templates.TemplateResponse:  # pyright: ignore [reportInvalidTypeForm]
     return templates.TemplateResponse(
         request, name, context, status_code, headers, **kwargs
     )

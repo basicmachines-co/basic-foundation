@@ -23,8 +23,8 @@ router = APIRouter()
 
 @router.post("/login/access-token")
 async def login_access_token(
-    user_service: UserServiceDep,
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+        user_service: UserServiceDep,
+        form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> AuthToken:
     """
     OAuth2 compatible token login, get an access token for future requests
@@ -96,7 +96,7 @@ async def reset_password(user_service: UserServiceDep, body: NewPassword) -> Mes
             "password": body.new_password,
         },
     )
-
+    assert updated_user is not None
     return Message(
         message=f"Password updated successfully for user {updated_user.email}"
     )

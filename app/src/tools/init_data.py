@@ -28,7 +28,7 @@ def main():
 
     engine = create_engine(settings.postgres_dsn_sync)
     with Session(engine) as session:
-        statement = select(User).where(settings.SUPERUSER_EMAIL == User.email)
+        statement = select(User).where(User.email == settings.SUPERUSER_EMAIL)
         admin_user = session.scalars(statement).one_or_none()
         if admin_user is None:
             logger.info(

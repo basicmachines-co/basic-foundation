@@ -1,8 +1,7 @@
 from dataclasses import dataclass
-from typing import Type, Any, List
+from typing import Type, Any, Tuple, Sequence
 
-from sqlalchemy import select, func
-from sqlalchemy.orm import Query
+from sqlalchemy import select, func, Select
 from starlette.datastructures import URL
 from starlette.requests import Request
 
@@ -12,14 +11,14 @@ from foundation.core.repository import Repository
 @dataclass
 class Page:
     def __init__(
-        self,
-        url: URL,
-        items: List[Type[Any]],
-        page: int,
-        page_size: int,
-        total: int,
-        order_by: str,
-        ascending: bool,
+            self,
+            url: URL,
+            items: Sequence[Type[Any]],
+            page: int,
+            page_size: int,
+            total: int,
+            order_by: str | None,
+            ascending: bool,
     ):
         self.url = url
         self.items = items
@@ -63,26 +62,26 @@ class Page:
 
 class Paginator:
     def __init__(
-        self,
-        request: Request,
-        repository: Repository,
-        query: Query = None,
-        page_size: int = 10,
-        order_by: str = None,
-        ascending: bool = True,
+            self,
+            request: Request,
+            repository: Repository,
+            query: Select[Tuple[Any]],
+            order_by: str | None = None,
+            ascending: bool = True,
+            page_size: int = 10,
     ):
         self.request = request
         self.repository = repository
         self.query = query
         self.page_size = page_size
-        self._total = None
         self.order_by = order_by
         self.ascending = ascending
+        self._total = None
 
     @property
     async def total(self) -> int:
         if self._total is None:
-            count_query = select(func.count()).select_from(self.query)
+            count_query = select(func.count()).select_from(self.query)  # pyright: ignore [reportArgumentType]
             self._total = await self.repository.count(count_query)
         return self._total
 

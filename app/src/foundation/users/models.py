@@ -4,10 +4,10 @@ from uuid import UUID
 from sqlalchemy import func, String
 from sqlalchemy.orm import Mapped, mapped_column
 
-from foundation.core.models import Base
+from foundation.core.models import BaseWithId
 
 
-class User(Base):
+class User(BaseWithId):
     __tablename__ = "user"
     __table_args__ = {"schema": "public"}
 

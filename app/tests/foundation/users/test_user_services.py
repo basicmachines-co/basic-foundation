@@ -61,7 +61,7 @@ async def test_authenticate(user_service, sample_user: User, sample_user_passwor
 
 
 async def test_authenticate_fails(
-    user_service, sample_user: User, sample_user_password: str
+        user_service, sample_user: User, sample_user_password: str
 ):
     authenticated_user = await user_service.authenticate(
         email=sample_user.email, password="bad pass"
@@ -82,7 +82,7 @@ async def test_create_user(user_service):
     assert created_user.email == user_create.get("email")
     assert created_user.is_active is True
     assert created_user.is_superuser is False
-    assert verify_password(user_create.get("password"), created_user.hashed_password)
+    assert verify_password(user_create["password"], created_user.hashed_password)
 
 
 async def test_create_user_fails(user_service, sample_user: User):
@@ -92,8 +92,8 @@ async def test_create_user_fails(user_service, sample_user: User):
         "password": random_lower_string(),
     }
     with pytest.raises(
-        UserCreateError,
-        match=f"A user with email {user_create.get("email")} already exists",
+            UserCreateError,
+            match=f"A user with email {user_create.get("email")} already exists",
     ):
         await user_service.create_user(create_dict=user_create)
 
@@ -115,7 +115,7 @@ async def test_update_user(user_service, sample_user: User):
     assert updated_user.email == user_update.get("email")
     assert updated_user.is_active == user_update.get("is_active")
     assert updated_user.is_superuser == user_update.get("is_superuser")
-    assert verify_password(user_update.get("password"), updated_user.hashed_password)
+    assert verify_password(user_update["password"], updated_user.hashed_password)
 
 
 async def test_update_user_fails(user_service, sample_user: User):
@@ -143,7 +143,7 @@ async def test_delete_user(user_service, sample_user: User):
     await user_service.delete_user(user_id=sample_user.id)
 
     with pytest.raises(
-        UserNotFoundError, match=f"user {sample_user.id} does not exist"
+            UserNotFoundError, match=f"user {sample_user.id} does not exist"
     ):
         assert await user_service.get_user_by_id(user_id=sample_user.id)
 

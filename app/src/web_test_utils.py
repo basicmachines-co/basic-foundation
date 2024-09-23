@@ -1,5 +1,6 @@
 import uuid
 from dataclasses import dataclass
+from typing import Optional
 
 from playwright.sync_api import expect
 
@@ -24,7 +25,7 @@ class User:
     password: str
     is_active: bool
     is_admin: bool
-    id: str = None
+    id: Optional[str] = None
 
 
 admin_email = settings.SUPERUSER_EMAIL

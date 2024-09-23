@@ -1,10 +1,9 @@
-from typing import Any, List
+from typing import Any, Sequence, Tuple
 from uuid import UUID
 
 from loguru import logger
-from sqlalchemy import select, func
+from sqlalchemy import select, func, Select
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Query
 from starlette.requests import Request
 
 from foundation.core.config import settings
@@ -63,12 +62,12 @@ class UserService:
         self.repository = repository
         self.current_user = current_user
 
-    async def get_users(self, *, skip: int, limit: int) -> (int, List[User]):
+    async def get_users(self, *, skip: int, limit: int) -> tuple[int, Sequence[User]]:
         count = await self.repository.count()
         users = await self.repository.find_all(skip, limit)
         return count, users
 
-    async def get_user_by_id(self, *, user_id: UUID) -> User | None:
+    async def get_user_by_id(self, *, user_id: UUID) -> User:
         user = await self.repository.find_by_id(user_id)
         if not user:
             error = UserNotFoundError(user_id)
@@ -76,8 +75,8 @@ class UserService:
             raise error
         return user
 
-    async def get_user_by_email(self, *, email: str) -> User | None:
-        stmt = select(User).where(email == User.email)
+    async def get_user_by_email(self, *, email: str) -> User:
+        stmt = select(User).where(User.email == email)
         user = await self.repository.find_one(stmt)
         if not user:
             error = UserNotFoundError(email)
@@ -89,17 +88,17 @@ class UserService:
         return await self.repository.count()
 
     async def get_active_users_count(self) -> int:
-        query = select(func.count()).select_from(User).filter(True == User.is_active)
+        query = select(func.count()).select_from(User).filter(User.is_active == True)
         return await self.repository.count(query)
 
     async def get_admin_users_count(self) -> int:
-        query = select(func.count()).select_from(User).filter(True == User.is_superuser)
+        query = select(func.count()).select_from(User).filter(User.is_superuser == True)
         return await self.repository.count(query)
 
     async def create_user(self, *, create_dict: dict[str, Any]) -> User:
         create_dict.update(
             {
-                "hashed_password": get_password_hash(create_dict.get("password")),
+                "hashed_password": get_password_hash(create_dict["password"]),
                 "is_active": True,
             }
         )
@@ -107,13 +106,13 @@ class UserService:
             user = await self.repository.create(create_dict)
         except IntegrityError as e:
             logger.info(f"error creating user: {e}")
-            raise UserCreateError(create_dict.get("email")) from e
+            raise UserCreateError(create_dict["email"]) from e
 
         if settings.EMAIL_ENABLED and user.email:
             email_data = generate_new_account_email(
                 email_to=user.email,
                 username=user.email,
-                password=create_dict.get("password"),
+                password=create_dict["password"],
             )
             send_email(
                 email_to=user.email,
@@ -123,10 +122,10 @@ class UserService:
 
         return user
 
-    async def update_user(self, *, user_id: UUID, update_dict: dict[str, Any]) -> User:
+    async def update_user(self, *, user_id: UUID, update_dict: dict[str, Any]) -> User | None:
         if update_dict.get("password"):
             update_dict.update(
-                {"hashed_password": get_password_hash(update_dict.get("password"))}
+                {"hashed_password": get_password_hash(update_dict["password"])}
             )
         try:
             return await self.repository.update(user_id, update_dict)
@@ -180,11 +179,11 @@ class UserPagination:
         self.repository = repository
 
     def paginate(
-        self,
-        request: Request,
-        query: Query = None,
-        page_size: int = 10,
-        order_by: str = None,
-        asc: bool = True,
+            self,
+            request: Request,
+            query: Select[Tuple[Any]],
+            order_by: str,
+            asc: bool = True,
+            page_size: int = 10,
     ):
-        return Paginator(request, self.repository, query, page_size, order_by, asc)
+        return Paginator(request, self.repository, query, page_size=page_size, order_by=order_by, ascending=asc)

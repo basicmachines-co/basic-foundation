@@ -1,6 +1,6 @@
 import httpx
 import pytest
-from playwright.sync_api import expect, Page
+from playwright.sync_api import expect
 
 from foundation.core.config import settings
 from foundation.users.schemas import AuthToken
@@ -41,7 +41,7 @@ def login(page, email, password):
 
 
 @pytest.fixture
-def register_user(page) -> (str, str):
+def register_user(page):
     page.goto(URL_REGISTER_PAGE)
     email = random_email()
 
@@ -90,7 +90,7 @@ def register_user(page) -> (str, str):
 
 
 @pytest.fixture
-def create_user(do_admin_login) -> (Page, User):
+def create_user(do_admin_login):
     page = do_admin_login
     page.goto(URL_USERS_PAGE)
     create_user_button = assert_users_page(page)

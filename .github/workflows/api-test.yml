@@ -102,9 +102,9 @@ jobs:
         run: |
           make init-data
 
-      #      - name: Run type checks
-      #        run: |
-      #          make type-check
+      - name: Run type checks
+        run: |
+          make type-check
 
       - name: Run api tests
         run: |
