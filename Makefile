@@ -94,4 +94,4 @@ init-data:
 	poetry run python app/src/tools/init_data.py
 
 run:
-	poetry run fastapi run app/src/foundation/app.py  --port 10000
+	poetry run fastapi run foundation/app.py  --port 10000
