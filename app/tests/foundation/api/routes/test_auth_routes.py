@@ -30,14 +30,16 @@ async def test_login_access_token(
 
 
 async def test_login_access_token_invalid_email(
-    client: AsyncClient, sample_user: User, sample_user_password: str
+    client: AsyncClient, sample_user: User,
 ):
     login_data = {
         "username": "bademail@test.com",
-        "password": sample_user_password,
+        "password": "bad-password",
     }
     r = await client.post(f"/api/auth/login/access-token", data=login_data)
     assert r.status_code == 400
+    content = r.json()
+    assert content["detail"] == "Incorrect email or password"
 
 
 async def test_login_access_token_invalid_password(
@@ -46,6 +48,16 @@ async def test_login_access_token_invalid_password(
     login_data = {
         "username": sample_user.email,
         "password": "bad-password",
+    }
+    r = await client.post(f"/api/auth/login/access-token", data=login_data)
+    assert r.status_code == 400
+
+async def test_login_access_token_inactive_user(
+    client: AsyncClient, inactive_user: User, sample_user_password: str
+):
+    login_data = {
+        "username": inactive_user.email,
+        "password": sample_user_password,
     }
     r = await client.post(f"/api/auth/login/access-token", data=login_data)
     assert r.status_code == 400
@@ -87,14 +99,29 @@ async def test_reset_password(
 
 
 async def test_reset_password_invalid_email_404(client: AsyncClient):
+    invalid_email = "invalid-email@test.com"
     new_password = NewPassword.model_validate(
         {
-            "token": generate_password_reset_token(email="invalid-email@test.com"),
+            "token": generate_password_reset_token(email=invalid_email),
             "new_password": random_lower_string(),
         }
     )
     r = await client.post("/api/auth/password-reset/", json=new_password.model_dump())
     assert r.status_code == 404
+    content = r.json()
+    assert content["detail"] == f"The user {invalid_email} does not exist"
+
+async def test_reset_password_invalid_token(client: AsyncClient):
+    new_password = NewPassword.model_validate(
+        {
+            "token": "invalid-token",
+            "new_password": random_lower_string(),
+        }
+    )
+    r = await client.post("/api/auth/password-reset/", json=new_password.model_dump())
+    assert r.status_code == 400
+    content = r.json()
+    assert content["detail"] == "Invalid token"
 
 
 async def test_reset_password_inactive_user_400(

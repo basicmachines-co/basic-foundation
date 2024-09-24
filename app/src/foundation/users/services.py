@@ -108,7 +108,7 @@ class UserService:
             logger.info(f"error creating user: {e}")
             raise UserCreateError(create_dict["email"]) from e
 
-        if settings.EMAIL_ENABLED and user.email:
+        if settings.EMAIL_ENABLED and user.email:   # pragma: no cover
             email_data = generate_new_account_email(
                 email_to=user.email,
                 username=user.email,

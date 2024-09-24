@@ -1,2 +1,9 @@
 [run]
+dynamic_context = test_function
+branch = true
+source =
+    app/src
+
 omit = app/tests/*
+
+concurrency=greenlet

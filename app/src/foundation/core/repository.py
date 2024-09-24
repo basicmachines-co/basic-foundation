@@ -4,6 +4,7 @@ from uuid import UUID
 from sqlalchemy import select, func, Select, Executable, inspect, Result, Column
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Mapped
 
 from foundation.core.models import BaseWithId
 
@@ -59,7 +60,7 @@ class Repository[T: BaseWithId]:
         """
         Updates an entity by id with the provided data.
         """
-        id_column: Column[Any] = self.Model.id  # pyright: ignore [reportAssignmentType]
+        id_column: Mapped[UUID] = self.Model.id  # pyright: ignore [reportAssignmentType]
         try:
             result = await self.session.execute(
                 select(self.Model).filter(id_column == entity_id)

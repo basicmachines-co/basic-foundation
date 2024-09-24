@@ -41,7 +41,7 @@ app.include_router(html_auth_router)
 
 
 @app.on_event("startup")
-async def on_startup():
+async def on_startup(): # pragma: no cover
     """
     Set up tasks to be executed on application startup.
 
@@ -65,7 +65,7 @@ from fastapi.exception_handlers import (
 async def custom_http_exception_handler(request, exc):
     accept_header = request.headers.get("accept", "")
 
-    if "text/html" in accept_header:
+    if "text/html" in accept_header: # pragma: no cover
         if exc.status_code == 403:
             return templates.TemplateResponse(
                 "pages/403.html", {"request": request}, status_code=403
@@ -74,7 +74,7 @@ async def custom_http_exception_handler(request, exc):
             return templates.TemplateResponse(
                 "pages/404.html", {"request": request}, status_code=404
             )
-        elif exc.status_code == 500:
+        elif exc.status_code == 500: # pragma: no cover
             return templates.TemplateResponse(
                 "pages/500.html", {"request": request}, status_code=500
             )

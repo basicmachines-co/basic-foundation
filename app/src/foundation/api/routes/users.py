@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from foundation.api.deps import (
     get_current_superuser,
     validate_is_superuser,
-    CurrentUserDep,
+    CurrentUserDep, AdminRequired,
 )
 from foundation.users.deps import UserServiceDep
 from foundation.users.schemas import (
@@ -23,7 +23,7 @@ router = APIRouter()
 
 @router.get(
     "/",
-    dependencies=[Depends(get_current_superuser)],
+    dependencies=[AdminRequired],
     response_model=UsersPublic,
 )
 async def get_users(
@@ -88,7 +88,7 @@ async def get_user_by_email(
 
 @router.post(
     "/",
-    dependencies=[Depends(get_current_superuser)],
+    dependencies=[AdminRequired],
     response_model=UserPublic,
     status_code=status.HTTP_201_CREATED,
 )

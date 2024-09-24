@@ -8,7 +8,7 @@ from starlette import status
 from foundation.core.db import async_sessionmaker
 
 
-async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
+async def get_async_session() -> AsyncGenerator[AsyncSession, None]: # pragma: no cover
     """
     :return: An asynchronous generator that yields an AsyncSession object.
     :rtype: AsyncGenerator[AsyncSession, None]
