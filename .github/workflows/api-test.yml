@@ -108,7 +108,7 @@ jobs:
 
       - name: Run api tests
         run: |
-          make test-api COV_REPORT=html
+          make test-api
 
       - name: Install Playwright and dependencies
         run: |
@@ -126,7 +126,7 @@ jobs:
 
       - name: Run Playwright tests
         run: |
-          make test-playwright COV_REPORT=html
+          make test-playwright
 
       - name: Upload Playwright Traces
         uses: actions/upload-artifact@v4
@@ -137,10 +137,15 @@ jobs:
 
       - name: Run coverage check
         run: |
-          poetry run coverage report --fail-under=100
+          poetry run coverage report --fail-under=100 > coverage.txt
           poetry run coverage html
         continue-on-error: true
 
+      - name: Display coverage report in job summary
+        run: |
+          echo "## Coverage Report" >> $GITHUB_STEP_SUMMARY
+          cat coverage.txt >> $GITHUB_STEP_SUMMARY
+          
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v4
         with:
