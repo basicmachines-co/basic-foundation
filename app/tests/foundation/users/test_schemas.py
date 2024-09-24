@@ -10,8 +10,8 @@ from foundation.users.schemas import validate_password
         "nouppercase1!",  # No uppercase letter
         "NOLOWERCASE1!",  # No lowercase letter
         "NoDigits!",  # No digit
-        "NoSpecialchars1"  # No special character
-    ]
+        "NoSpecialchars1",  # No special character
+    ],
 )
 def test_validate_password(password: str):
     if password == "ValidPass1!":
@@ -28,8 +28,8 @@ def test_validate_password(password: str):
         ("nouppercase1!", "Password must contain at least one uppercase letter."),
         ("NOLOWERCASE1!", "Password must contain at least one lowercase letter."),
         ("NoDigits!", "Password must contain at least one digit."),
-        ("NoSpecialchars1", "Password must contain at least one special character.")
-    ]
+        ("NoSpecialchars1", "Password must contain at least one special character."),
+    ],
 )
 def test_validate_password_exceptions(password: str, expected_exception: str):
     with pytest.raises(ValueError) as excinfo:

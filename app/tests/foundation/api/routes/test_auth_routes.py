@@ -30,7 +30,8 @@ async def test_login_access_token(
 
 
 async def test_login_access_token_invalid_email(
-    client: AsyncClient, sample_user: User,
+    client: AsyncClient,
+    sample_user: User,
 ):
     login_data = {
         "username": "bademail@test.com",
@@ -51,6 +52,7 @@ async def test_login_access_token_invalid_password(
     }
     r = await client.post(f"/api/auth/login/access-token", data=login_data)
     assert r.status_code == 400
+
 
 async def test_login_access_token_inactive_user(
     client: AsyncClient, inactive_user: User, sample_user_password: str
@@ -110,6 +112,7 @@ async def test_reset_password_invalid_email_404(client: AsyncClient):
     assert r.status_code == 404
     content = r.json()
     assert content["detail"] == f"The user {invalid_email} does not exist"
+
 
 async def test_reset_password_invalid_token(client: AsyncClient):
     new_password = NewPassword.model_validate(

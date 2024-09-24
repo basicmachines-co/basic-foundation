@@ -29,7 +29,6 @@ class UserNotFoundError(Exception):
         super().__init__(f"The user {id_val} does not exist")
 
 
-
 class UserCreateError(Exception):
     """Raised when a user can not be created."""
 
@@ -102,7 +101,7 @@ class UserService:
             logger.info(f"error creating user: {e}")
             raise UserCreateError(create_dict["email"]) from e
 
-        if settings.EMAIL_ENABLED and user.email:   # pragma: no cover
+        if settings.EMAIL_ENABLED and user.email:  # pragma: no cover
             email_data = generate_new_account_email(
                 email_to=user.email,
                 username=user.email,
@@ -116,12 +115,12 @@ class UserService:
 
         return user
 
-    async def update_user(self, *, user_id: UUID, update_dict: dict[str, Any]) -> User | None:
+    async def update_user(
+        self, *, user_id: UUID, update_dict: dict[str, Any]
+    ) -> User | None:
         password = update_dict.get("password")
         if password:
-            update_dict.update(
-                {"hashed_password": get_password_hash(password)}
-            )
+            update_dict.update({"hashed_password": get_password_hash(password)})
         try:
             return await self.repository.update(user_id, update_dict)
         except IntegrityError as e:
@@ -174,11 +173,18 @@ class UserPagination:
         self.repository = repository
 
     def paginate(
-            self,
-            request: Request,
-            query: Select[Tuple[Any]],
-            order_by: str,
-            asc: bool = True,
-            page_size: int = 10,
+        self,
+        request: Request,
+        query: Select[Tuple[Any]],
+        order_by: str,
+        asc: bool = True,
+        page_size: int = 10,
     ):
-        return Paginator(request, self.repository, query, page_size=page_size, order_by=order_by, ascending=asc)
+        return Paginator(
+            request,
+            self.repository,
+            query,
+            page_size=page_size,
+            order_by=order_by,
+            ascending=asc,
+        )

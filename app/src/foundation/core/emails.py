@@ -24,7 +24,7 @@ def render_email_template(*, template_name: str, context: dict[str, Any]) -> str
     return html_content
 
 
-def send_email( # pragma: no cover
+def send_email(  # pragma: no cover
     *,
     email_to: str,
     subject: str = "",

@@ -22,6 +22,7 @@ async def test_get_current_user_no_id_found():
     assert excinfo.value.status_code == 401
     assert excinfo.value.detail == "No id found in authorization token"
 
+
 @pytest.mark.asyncio
 async def test_get_current_user_raises_user_not_found():
     # Arrange

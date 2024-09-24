@@ -11,7 +11,8 @@ from foundation.users.services import (
     UserNotFoundError,
     UserValueError,
     UserService,
-    UserCreateError, UserPagination,
+    UserCreateError,
+    UserPagination,
 )
 from foundation.web.pagination import Paginator
 from test_utils import random_email, random_lower_string, mock_emails_send
@@ -64,7 +65,7 @@ async def test_authenticate(user_service, sample_user: User, sample_user_passwor
 
 
 async def test_authenticate_fails(
-        user_service, sample_user: User, sample_user_password: str
+    user_service, sample_user: User, sample_user_password: str
 ):
     authenticated_user = await user_service.authenticate(
         email=sample_user.email, password="bad pass"
@@ -95,8 +96,8 @@ async def test_create_user_fails(user_service, sample_user: User):
         "password": random_lower_string(),
     }
     with pytest.raises(
-            UserCreateError,
-            match=f"A user with email {user_create.get("email")} already exists",
+        UserCreateError,
+        match=f"A user with email {user_create.get("email")} already exists",
     ):
         await user_service.create_user(create_dict=user_create)
 
@@ -117,15 +118,14 @@ async def test_update_user(user_service, sample_user: User):
     assert updated_user.email == user_update.get("email")
     assert updated_user.is_active == user_update.get("is_active")
     assert updated_user.is_superuser == user_update.get("is_superuser")
-    
+
+
 async def test_update_user_password(user_service, sample_user: User):
     new_password = "my voice is my password"
     user_update = {
         "password": new_password,
     }
-    await user_service.update_user(
-        user_id=sample_user.id, update_dict=user_update
-    )
+    await user_service.update_user(user_id=sample_user.id, update_dict=user_update)
 
     user = await user_service.get_user_by_id(user_id=sample_user.id)
     assert verify_password(new_password, user.hashed_password)
@@ -156,7 +156,7 @@ async def test_delete_user(user_service, sample_user: User):
     await user_service.delete_user(user_id=sample_user.id)
 
     with pytest.raises(
-            UserNotFoundError, match=f"user {sample_user.id} does not exist"
+        UserNotFoundError, match=f"user {sample_user.id} does not exist"
     ):
         assert await user_service.get_user_by_id(user_id=sample_user.id)
 
@@ -174,8 +174,10 @@ async def test_get_users_count(user_service):
 async def test_get_active_users_count(user_service):
     assert await user_service.get_active_users_count() > 0
 
+
 async def test_get_admin_users_count(user_service):
     assert await user_service.get_admin_users_count() > 0
+
 
 async def test_user_pagination(user_repository):
     # Arrange
@@ -188,11 +190,7 @@ async def test_user_pagination(user_repository):
 
     # Act
     paginator = pagination.paginate(
-        request=request,
-        query=query,
-        order_by=order_by,
-        asc=False,
-        page_size=page_size
+        request=request, query=query, order_by=order_by, asc=False, page_size=page_size
     )
 
     # Assert

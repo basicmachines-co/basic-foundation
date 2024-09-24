@@ -43,6 +43,7 @@ async def test_update_user(user_repository, sample_user, session):
     # assert updated_at is also changed
     assert updated_at_orig <= sample_user.updated_at
 
+
 @pytest.mark.asyncio
 async def test_update_user_not_found(user_repository, sample_user, session):
     updated = await user_repository.update(uuid.uuid4(), {"full_name": "Updated?"})

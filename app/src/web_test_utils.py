@@ -32,7 +32,7 @@ admin_email = settings.SUPERUSER_EMAIL
 admin_full_name = settings.SUPERUSER_NAME
 
 
-def is_valid_uuid(value):   # pragma: no cover
+def is_valid_uuid(value):  # pragma: no cover
     try:
         uuid.UUID(str(value))
         return True

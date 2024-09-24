@@ -15,7 +15,9 @@ class Base(DeclarativeBase):
 
 
 class UUIDPrimaryKey:
-    id: Mapped[UUID] = mapped_column(primary_key=True, server_default=func.gen_random_uuid())
+    id: Mapped[UUID] = mapped_column(
+        primary_key=True, server_default=func.gen_random_uuid()
+    )
 
 
 class BaseWithId(Base, UUIDPrimaryKey):

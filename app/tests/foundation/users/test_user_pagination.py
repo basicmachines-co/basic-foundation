@@ -53,7 +53,7 @@ async def test_page_size_less_than_one(mock_request, user_repository: Repository
 
 
 async def test_page(
-        mock_request, user_repository: Repository, sample_user, inactive_user
+    mock_request, user_repository: Repository, sample_user, inactive_user
 ):
     users = await user_repository.find_all(limit=10)
     pagination = Paginator(
@@ -83,7 +83,7 @@ async def test_page(
 
 
 async def test_page_query(
-        mock_request, user_repository: Repository, sample_user, inactive_user
+    mock_request, user_repository: Repository, sample_user, inactive_user
 ):
     query = select(User).filter(User.is_active == True)
     query_result = await user_repository.execute_query(query)

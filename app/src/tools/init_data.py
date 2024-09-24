@@ -17,7 +17,7 @@ logger.remove()
 logger.add(sys.stderr, colorize=True, backtrace=True, diagnose=True)
 
 
-def main(): # pragma: no cover
+def main():  # pragma: no cover
     user = User(
         full_name=settings.SUPERUSER_NAME,
         email=settings.SUPERUSER_EMAIL,
@@ -49,5 +49,5 @@ def main(): # pragma: no cover
             )
 
 
-if __name__ == "__main__": # pragma: no cover
+if __name__ == "__main__":  # pragma: no cover
     typer.run(main)
