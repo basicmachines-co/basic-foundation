@@ -11,11 +11,13 @@ reset-cov:
 
 test: reset-cov test-api test-playwright
 
+COV_REPORT ?= term-missing
+
 test-api:
-	poetry run pytest --cov=./app --cov-append --cov-report=term-missing  --cov-config=.coveragerc -m "not playwright"
+	poetry run pytest --cov=./app --cov-append --cov-report=$(COV_REPORT) --cov-config=.coveragerc -m "not playwright"
 
 test-playwright:  # assumes app is running on at API_URL in config
-	poetry run pytest --cov=./app --cov-append --cov-report=term-missing --cov-config=.coveragerc -m "playwright" --tracing=retain-on-failure
+	poetry run pytest --cov=./app --cov-append --cov-report=$(COV_REPORT) --cov-config=.coveragerc -m "playwright" --tracing=retain-on-failure
 	#poetry run pytest -m "playwright" --headed --slowmo 500
 
 playwright-codegen:
