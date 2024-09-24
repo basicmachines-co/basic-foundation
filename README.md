@@ -274,6 +274,8 @@ fix
 - [x] pywright
 - [ ] form includes
 - [ ] users page refresh
+- [ ] github actions - pr, push?
+- [ ] codecov - how to work with gh org
 
 ## references
 

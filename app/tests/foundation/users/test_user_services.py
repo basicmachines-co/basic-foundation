@@ -1,16 +1,19 @@
 import uuid
+from unittest.mock import Mock
 
 import pytest
 import pytest_asyncio
-
-from foundation.core.security import verify_password
+from sqlalchemy import select
+from fastapi import Request
+from foundation.core.security import verify_password, get_password_hash
 from foundation.users.models import User
 from foundation.users.services import (
     UserNotFoundError,
     UserValueError,
     UserService,
-    UserCreateError,
+    UserCreateError, UserPagination,
 )
+from foundation.web.pagination import Paginator
 from test_utils import random_email, random_lower_string, mock_emails_send
 
 pytestmark = pytest.mark.asyncio
@@ -102,7 +105,6 @@ async def test_update_user(user_service, sample_user: User):
     user_update = {
         "full_name": "New name",
         "email": random_email(),
-        "password": random_lower_string(),
         "is_active": True,
         "is_superuser": True,
     }
@@ -115,7 +117,18 @@ async def test_update_user(user_service, sample_user: User):
     assert updated_user.email == user_update.get("email")
     assert updated_user.is_active == user_update.get("is_active")
     assert updated_user.is_superuser == user_update.get("is_superuser")
-    assert verify_password(user_update["password"], updated_user.hashed_password)
+    
+async def test_update_user_password(user_service, sample_user: User):
+    new_password = "my voice is my password"
+    user_update = {
+        "password": new_password,
+    }
+    await user_service.update_user(
+        user_id=sample_user.id, update_dict=user_update
+    )
+
+    user = await user_service.get_user_by_id(user_id=sample_user.id)
+    assert verify_password(new_password, user.hashed_password)
 
 
 async def test_update_user_fails(user_service, sample_user: User):
@@ -152,3 +165,41 @@ async def test_delete_user_not_found(user_service):
     user_id = uuid.uuid4()
     with pytest.raises(UserNotFoundError, match=f"user {user_id} does not exist"):
         assert await user_service.delete_user(user_id=user_id)
+
+
+async def test_get_users_count(user_service):
+    assert await user_service.get_users_count() > 0
+
+
+async def test_get_active_users_count(user_service):
+    assert await user_service.get_active_users_count() > 0
+
+async def test_get_admin_users_count(user_service):
+    assert await user_service.get_admin_users_count() > 0
+
+async def test_user_pagination(user_repository):
+    # Arrange
+    query = select(User)
+    request = Mock(spec=Request)
+    order_by = "id"
+    page_size = 20
+
+    pagination = UserPagination(repository=user_repository)
+
+    # Act
+    paginator = pagination.paginate(
+        request=request,
+        query=query,
+        order_by=order_by,
+        asc=False,
+        page_size=page_size
+    )
+
+    # Assert
+    assert isinstance(paginator, Paginator)
+    assert paginator.query == query
+    assert paginator.page_size == page_size
+    assert paginator.order_by == order_by
+    assert paginator.ascending == False
+    assert paginator.repository == user_repository
+    assert paginator.request == request

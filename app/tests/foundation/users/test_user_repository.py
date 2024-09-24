@@ -43,6 +43,11 @@ async def test_update_user(user_repository, sample_user, session):
     # assert updated_at is also changed
     assert updated_at_orig <= sample_user.updated_at
 
+@pytest.mark.asyncio
+async def test_update_user_not_found(user_repository, sample_user, session):
+    updated = await user_repository.update(uuid.uuid4(), {"full_name": "Updated?"})
+    assert updated is None
+
 
 @pytest.mark.asyncio
 async def test_delete_user(user_repository, sample_user, session):
@@ -52,7 +57,7 @@ async def test_delete_user(user_repository, sample_user, session):
 
 
 @pytest.mark.asyncio
-async def test_delete_user_not_exits(user_repository, sample_user, session):
+async def test_delete_user_not_found(user_repository, sample_user, session):
     result = await user_repository.delete(uuid.uuid4())
     assert result is False
 

@@ -29,12 +29,6 @@ class UserNotFoundError(Exception):
         super().__init__(f"The user {id_val} does not exist")
 
 
-class UserNotActiveError(Exception):
-    """Raised when a user is not active."""
-
-    def __init__(self, id_val: UUID | str):
-        super().__init__(f"The user {id_val} is not active")
-
 
 class UserCreateError(Exception):
     """Raised when a user can not be created."""
@@ -123,9 +117,10 @@ class UserService:
         return user
 
     async def update_user(self, *, user_id: UUID, update_dict: dict[str, Any]) -> User | None:
-        if update_dict.get("password"):
+        password = update_dict.get("password")
+        if password:
             update_dict.update(
-                {"hashed_password": get_password_hash(update_dict["password"])}
+                {"hashed_password": get_password_hash(password)}
             )
         try:
             return await self.repository.update(user_id, update_dict)
