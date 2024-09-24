@@ -1,16 +1,21 @@
 # basic-foundation
 
+![Build Status](https://github.com/basicmachines-co/basic-foundation/actions/workflows/basic-foundation-test.yml/badge.svg)
+
 Opinionated Foundation Boilerplate for a SaaS Platform
 
 - Boring tech
 - Reproducible builds
 - Development flow
+    - easy deployment
+    - preview builds
 - 100% test coverage
 - Easy to extend
 
 tech
 
 - fastapi
+- postgresql
 - htmx
 - tailwind.css
 
@@ -18,7 +23,7 @@ tech
 
 - Requires a python installation (recommend python [3.12](https://docs.python.org/release/3.12.1/whatsnew/3.12.html))
 - Github access https://docs.github.com/en/get-started/quickstart/set-up-git
-- IDE (.idea) file is included
+- Docker/Docker compose
 
 ## Getting started
 
@@ -79,24 +84,56 @@ Set the virtual env to be local to the project
 poetry config virtualenvs.in-project true
 ```
 
+## Configure project
+
 cd basic-foundation
 
+Install dependencies for python and npm (tailwind)
+
 ```bash
-poetry init
+make install 
 ```
 
-enter the poetry shell
+Setup the environment
 
 ```bash
-poetry shell
+cp .env.ci .env
+```
+
+Run docker-compose (postgres)
+
+```bash
+docker compose up
+```
+
+Setup database
+
+```bash
+make migrate
 ```
 
 ## start service
 
-cd basic-app/src
+```bash
+make run 
+```
+
+Run api tests
+
+```bash 
+make test-api
+```
+
+Run playwright tests (assume fastapi instance is running on localhost:8000)
+
+```bash 
+make test-playwright
+```
+
+Enter the poetry shell
 
 ```bash
-uvicorn app.main:app --reload
+poetry shell
 ```
 
 ## deploy to render.com
@@ -106,176 +143,8 @@ uvicorn app.main:app --reload
 - Choose the basic-foundation repo from the list and click the "Connect" button
 - View the service on the [dashboard](https://dashboard.render.com/)
 
-## todo
-
-- [x] deploy to render
-- [x] add fastapi-users
-- [x] transactional tests
-- [x] add fastapi-users endpoint tests
-- [x] cleanup app.py - split users into module/apirouter
-- [x] add htmx
-- [-] jinjaX - https://jinjax.scaletti.dev/
-- [x] makefile
-- [x] upgrade to pydantic v2 (newer fastapi?)
-- [x] .env for config
-- [x] code linting/formatting: ruff
-- [x] postgres instead of sqlite
-- [x] fix registration flow
-- [x] fix tests
-- [x] logging
-- [x] configure postgres on gitlab actions
-- [x] configure postgres on render.com
-- [x] db migrations
-- [x] add styling - tailwind/flowbite
-    - [x] alpine
-    - [x] tailwind plugins
-    - [x] login
-    - [x] register
-- [x] replace auth
-    - remove fastapi-users
-    - replace with vanilla auth
-- [-] shadcn components
-- [x] crud users
-- [ ] test coverage
-    - codecov https://github.com/marketplace/codecov/plan/MDIyOk1hcmtldHBsYWNlTGlzdGluZ1BsYW4xNg==#plan-16
-- [x] csrf - https://github.com/simonw/asgi-csrf
-- [x] view profile
-- [x] app user management
-    - click to edit forms: https://htmx.org/examples/click-to-edit/
-    - icons: https://github.com/sirvan3tr/jinja-primer-icons
-    - example: render.com dashboard
-    - https://devdojo.com/wave#demo
-- [x] forgot password flow
-- [ ] mailapi - sendgrid? or mailgun?
-    - https://sabuhish.github.io/fastapi-mail/example/
-    - https://pramod4040.medium.com/fastapi-forget-password-api-setup-632ab90ba958
-- [ ] branch deploys (preview environments)
-- [ ] stripe integration
-- [ ] webhooks
-- [ ] queueing
-- [x] dependabot
-- [-] sentry
-- [x] codecov
-- [ ] static object storage
-    - https://docs.render.com/deploy-minio
-    - run minio
-      locally https://ktyptorio.medium.com/simple-openweather-api-service-using-fastapi-and-minio-object-storage-docker-version-f3587f7eb3de
-- [ ] multi tenant
-- [ ] postgres row level security
-- [-] web components
-    - [-] lit
-    - [-] shoelace
-- [ ] dockerfile - https://inboard.bws.bio/?
-- [ ] deploy docker to render
-    - https://docs.render.com/docker
-- [x] install fastapi-jwt (https://github.com/k4black/fastapi-jwt/)
-- [x] implement examples from fastapi-jwt:
-    - https://k4black.github.io/fastapi-jwt/user_guide/examples/
-    - https://k4black.github.io/fastapi-jwt/
-- [x] clone https://github.com/tiangolo/full-stack-fastapi-template
-- [x] implement user db schema, models, tests
-- [x] add initial super user via init with hashed password
-- [x] implement users routes, tests
-- [x] implement auth api routes, tests
-- [x] implement emails
-- [x] refactor to app.core
-- [x] refactor to app.users
-- [x] refactor to app.auth
-- [x] recover password routes
-- [x] refactor app base package to foundation
-- [x] use fastapi cli command
-- [x] refactor service code
-    - send emails
-    - reset pass
-    - return Errors from service
-- [x] modify frontend routes
-- [x] remove all print() calls
-- [-] add faastapi-problems for error responses: https://github.com/NRWLDev/fastapi-problem
-- [x] remove fastapi-users
-- [ ] web htmx frontend
-    - [x] crud users happy path
-    - [x] reset password flow
-    - [x] user profile
-    - [x] pagination for users list
-    - [x] dashboard page
-    - [x] use pydantic models for form
-        - use ids in form post
-        - use one route for get/post for html pages
-    - [x] refactor web route files for cleanup
-    - [-] daisyui
-    - [x] htmx
-        - [x] 404 page
-        - [x] 500 page
-        - [-] oob swap for name after updating detail
-        - [-] db exception in error message
-    - [x] refactor
-        - [x] try/catch/finally in db dep
-        - [x] error handling in services
-        - [x] stacked navbar layout
-        - [x] 422 error on page load without token - http://127.0.0.1:8000/reset-password
-        - [-] fasthx
-            - [x] redo flash message
-                - [-] edit success
-                - [x] edit error
-            - [x] remove Jinja2Blocks
-            - [x] edit password
-            - [x] fix delete user
-            - [-] remove shadow from rounded borders
-            - [x] clean up tailwind styles
-            - [x] user name update oob on edit success
-    - [x] fixes
-        - [x] fixup styles for mobile
-            - login
-            - mobile menu - use whole page
-        - [x] fix oob display on user detail view
-        - [x] error on admin delete self
-        - [x] dashboard has two active user stats
-        - [-] mobile menu toggle in darkmode
-            - hamburger
-            - close x
-        - [-] mobile menu darkmode svg is in light mode
-- [ ] package as separate modules?
-    - core
-    - api
-    - web-htmx
-- [ ] permission checks
-    - [ ] user service with current user
-    - [ ] has to be at least one admin
-    - [ ] only admins can create/edit users
-    - [ ] db: rename is_superuser to is_admin
-- [x] playwright tests for web flow
-    - [x] register
-    - [x] login
-    - [x] login error
-    - [x] forgot password
-    - [x] password reset
-    - [x] dashboard
-    - [x] list users
-    - [x] view user
-    - [x] create user
-    - [x] edit user via detail
-    - [x] edit user via modal
-    - [x] delete user via detail
-    - [x] delete user via list
-    - [x] edit profile
-    - [x] logout
-
-fix
-
-- [ ] dashboard stats should link to filtered list
-- [ ] make active/admin colums enums
-- [ ] page_size is appended to url
-- [ ] use fixtures in web tests
-- [ ] delete user after test
-- [ ] add playwright to github ci
-- [ ] code coverage for ci
-- [ ] Api docs say FASTAPI
-- [ ] responsive tests for playwright
-- [x] pywright
-- [ ] form includes
-- [ ] users page refresh
-
 ## references
 
+- https://github.com/fastapi/full-stack-fastapi-template
 - https://github.com/mjhea0/awesome-fastapi
 - https://github.com/whythawk/full-stack-fastapi-postgresql/blob/master/docs/development-guide.md
