@@ -67,6 +67,8 @@ MIGRATIONS_DIR="$(DB_DIR)/migrations"
 migrate-new:
 	npx dbmate new $(name)
 
+migrate: migrate-up
+
 # Run all pending migrations
 migrate-up:
 	@npx dbmate -d $(MIGRATIONS_DIR) -s "$(DB_DIR)/schema.sql" -u $(DATABASE_URL) up

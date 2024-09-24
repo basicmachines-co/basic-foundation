@@ -160,4 +160,9 @@ cython_debug/
 /.idea/
 /node_modules/
 !/templates/email/build/
+<<<<<<< HEAD
 /coverage.txt
+=======
+
+coverage.txt
+>>>>>>> bea77b7

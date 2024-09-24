@@ -1,4 +1,4 @@
-name: basic-api-test
+name: basic-foundation-test
 
 on:
   push:
