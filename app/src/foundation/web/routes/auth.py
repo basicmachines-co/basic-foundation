@@ -35,8 +35,8 @@ async def register_get(request: Request):
 
 @router.post("/register")
 async def register_post(
-        request: Request,
-        user_service: UserServiceDep,
+    request: Request,
+    user_service: UserServiceDep,
 ):
     form = await RegisterForm.from_formdata(request)
 
@@ -62,8 +62,8 @@ async def login(request: Request):
 
 @router.post("/login")
 async def login_post(
-        request: Request,
-        user_service: UserServiceDep,
+    request: Request,
+    user_service: UserServiceDep,
 ):
     form = await LoginForm.from_formdata(request)
     if not await form.validate():
@@ -178,8 +178,8 @@ async def reset_password(request: Request, token: Optional[str] = None):
 
 @router.post("/reset-password")
 async def reset_password_post(
-        request: Request,
-        user_service: UserServiceDep,
+    request: Request,
+    user_service: UserServiceDep,
 ):
     form = await ResetPasswordForm.from_formdata(request)
 

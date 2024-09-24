@@ -37,3 +37,6 @@ CurrentUserDep = Annotated[User, Depends(get_current_api_user)]
 
 async def get_current_superuser(current_user: CurrentUserDep) -> User:
     return validate_is_superuser(current_user)
+
+
+AdminRequired = Depends(get_current_superuser)

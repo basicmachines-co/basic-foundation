@@ -7,6 +7,7 @@ from foundation.api.deps import (
     get_current_superuser,
     validate_is_superuser,
     CurrentUserDep,
+    AdminRequired,
 )
 from foundation.users.deps import UserServiceDep
 from foundation.users.schemas import (
@@ -23,11 +24,11 @@ router = APIRouter()
 
 @router.get(
     "/",
-    dependencies=[Depends(get_current_superuser)],
+    dependencies=[AdminRequired],
     response_model=UsersPublic,
 )
 async def get_users(
-        user_service: UserServiceDep, skip: int = 0, limit: int = 100
+    user_service: UserServiceDep, skip: int = 0, limit: int = 100
 ) -> Any:
     """
     Get all users.
@@ -42,7 +43,7 @@ async def get_users(
     response_model=UserPublic,
 )
 async def get_user(
-        user_service: UserServiceDep, user_id: UUID, current_user: CurrentUserDep
+    user_service: UserServiceDep, user_id: UUID, current_user: CurrentUserDep
 ) -> Any:
     """
     Get a user.
@@ -68,7 +69,7 @@ async def get_user(
     response_model=UserPublic,
 )
 async def get_user_by_email(
-        user_service: UserServiceDep, email: str, current_user: CurrentUserDep
+    user_service: UserServiceDep, email: str, current_user: CurrentUserDep
 ) -> Any:
     """
     Get a user.
@@ -88,7 +89,7 @@ async def get_user_by_email(
 
 @router.post(
     "/",
-    dependencies=[Depends(get_current_superuser)],
+    dependencies=[AdminRequired],
     response_model=UserPublic,
     status_code=status.HTTP_201_CREATED,
 )
@@ -108,11 +109,11 @@ async def create_user(*, user_service: UserServiceDep, user_in: UserCreate) -> A
     response_model=UserPublic,
 )
 async def update_user(
-        *,
-        user_service: UserServiceDep,
-        user_id: UUID,
-        user_in: UserUpdate,
-        current_user: CurrentUserDep,
+    *,
+    user_service: UserServiceDep,
+    user_id: UUID,
+    user_in: UserUpdate,
+    current_user: CurrentUserDep,
 ) -> Any:
     """
     Update a user.
@@ -146,7 +147,7 @@ async def update_user(
     "/{user_id}",
 )
 async def delete_user(
-        *, user_service: UserServiceDep, user_id: UUID, current_user: CurrentUserDep
+    *, user_service: UserServiceDep, user_id: UUID, current_user: CurrentUserDep
 ) -> Message:
     """
     Delete a user.

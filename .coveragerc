@@ -1,2 +1,11 @@
 [run]
-omit = app/tests/*
+dynamic_context = test_function
+branch = true
+source =
+    app/src
+
+omit =
+    app/tests/foundation/conftest.py
+    app/src/foundation/web/*
+
+concurrency=greenlet

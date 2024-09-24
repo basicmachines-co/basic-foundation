@@ -61,7 +61,7 @@ class Settings(BaseSettings):
         return self.postgres_url(is_async=True)
 
     @property
-    def postgres_dsn_sync(self) -> str:
+    def postgres_dsn_sync(self) -> str:  # pragma: no cover
         return self.postgres_url(is_async=False)
 
     @computed_field  # type: ignore[misc]
@@ -74,7 +74,7 @@ class Settings(BaseSettings):
 
     @computed_field  # type: ignore[misc]
     @property
-    def server_host(self) -> str:
+    def server_host(self) -> str:  # pragma: no cover
         # Use HTTPS for anything other than local development
         if self.ENVIRONMENT == "local":
             return f"http://{self.DOMAIN}:8000"

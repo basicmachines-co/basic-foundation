@@ -8,11 +8,16 @@ from foundation.users.services import UserService, UserNotFoundError
 async def get_current_user(
     user_service: UserService, credentials: JwtAuthorizationCredentials
 ) -> User:
-    # Notes
-    # the jwt contains the id PK for the user in a dict format,
-    # e.g. {"id": "<primary-key-uuid>"}
-    # the subject (sub) field of the jwt is called "subject"
-    # https://github.com/k4black/fastapi-jwt/issues/13
+    """
+    The jwt contains the id PK for the user in a dict format from schemas.AuthTokenPayload
+    e.g. {"id": "<primary-key-uuid>"}
+    the subject (sub) field of the jwt is called "subject"
+    https://github.com/k4black/fastapi-jwt/issues/13
+
+    :param user_service:
+    :param credentials:
+    :return:
+    """
     subject = credentials.subject
     user_id = subject.get("id")
     if not user_id:
@@ -21,7 +26,7 @@ async def get_current_user(
         )
 
     try:
-        user: User | None = await user_service.get_user_by_id(user_id=user_id)
+        user: User = await user_service.get_user_by_id(user_id=user_id)
     except UserNotFoundError:
         raise HTTPException(status_code=404, detail="User not found")
     if not user.is_active:

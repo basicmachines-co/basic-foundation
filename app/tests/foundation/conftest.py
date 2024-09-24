@@ -44,7 +44,7 @@ AsyncTestingSessionLocal = sessionmaker(
 )
 
 
-@pytest.yield_fixture(scope="session")
+@pytest.fixture(scope="session")
 def event_loop(request):
     """Create an instance of the default event loop for each test case."""
     # see https://github.com/pytest-dev/pytest-asyncio/issues/38
@@ -155,12 +155,12 @@ async def sample_user(user_repository: Repository[User], sample_user_password: s
 
 
 @pytest_asyncio.fixture
-async def inactive_user(user_repository: Repository[User]):
+async def inactive_user(user_repository: Repository[User], sample_user_password: str):
     sample_user = await user_repository.create(
         {
             "full_name": "Lazy John Doe",
             "email": random_email(),
-            "hashed_password": security.get_password_hash(random_lower_string()),
+            "hashed_password": security.get_password_hash(sample_user_password),
             "is_active": False,
         }
     )
