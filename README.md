@@ -153,9 +153,9 @@ uvicorn app.main:app --reload
 - [ ] stripe integration
 - [ ] webhooks
 - [ ] queueing
-- [ ] dependabot
-- [ ] sentry
-- [ ] codecov
+- [x] dependabot
+- [-] sentry
+- [x] codecov
 - [ ] static object storage
     - https://docs.render.com/deploy-minio
     - run minio
@@ -189,7 +189,7 @@ uvicorn app.main:app --reload
     - reset pass
     - return Errors from service
 - [x] modify frontend routes
-- [ ] remove all print() calls
+- [x] remove all print() calls
 - [-] add faastapi-problems for error responses: https://github.com/NRWLDev/fastapi-problem
 - [x] remove fastapi-users
 - [ ] web htmx frontend
@@ -208,11 +208,11 @@ uvicorn app.main:app --reload
         - [x] 500 page
         - [-] oob swap for name after updating detail
         - [-] db exception in error message
-    - [ ] refactor
+    - [x] refactor
         - [x] try/catch/finally in db dep
         - [x] error handling in services
         - [x] stacked navbar layout
-        - [ ] 422 error on page load without token - http://127.0.0.1:8000/reset-password
+        - [x] 422 error on page load without token - http://127.0.0.1:8000/reset-password
         - [-] fasthx
             - [x] redo flash message
                 - [-] edit success
@@ -243,7 +243,7 @@ uvicorn app.main:app --reload
     - [ ] has to be at least one admin
     - [ ] only admins can create/edit users
     - [ ] db: rename is_superuser to is_admin
-- [ ] playwright tests for web flow
+- [x] playwright tests for web flow
     - [x] register
     - [x] login
     - [x] login error
@@ -271,7 +271,9 @@ fix
 - [ ] code coverage for ci
 - [ ] Api docs say FASTAPI
 - [ ] responsive tests for playwright
-- [ ] mypy, pywright
+- [x] pywright
+- [ ] form includes
+- [ ] users page refresh
 
 ## references
 

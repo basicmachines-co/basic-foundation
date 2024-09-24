@@ -1,0 +1,10 @@
+version: 2
+updates:
+  - package-ecosystem: "poetry"                        # The ecosystem for your Python packages using Poetry
+    directory: "/"                                     # The directory containing your main package file (pyproject.toml should be in the root directory)
+    schedule:
+      interval: "weekly"                               # Check for updates weekly. Options: daily, weekly, monthly
+  - package-ecosystem: "npm"                           # The ecosystem for your Node.js packages
+    directory: "/"                                     # The directory containing your main package file (e.g., package.json should be in the root directory)
+    schedule:
+      interval: "weekly"                               # Check for updates weekly. Options: daily, weekly, monthly
