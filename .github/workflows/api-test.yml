@@ -137,17 +137,17 @@ jobs:
 
       - name: Run coverage check
         run: |
-          poetry run coverage report --fail-under=100 > coverage.txt
+          make test-coverage > coverage.txt
           echo "## Coverage Report" > coverage.md
           echo "" >> coverage.md
-          echo "| File | Statements | Missed | Coverage |" >> coverage.md
-          echo "| --- | --- | --- | --- |" >> coverage.md
+          echo "| Name | Statements | Missed | Branch | BrPart | Coverage | Missing |" >> coverage.md
+          echo "| ---- | ---------- | ------ | ------ | ------ | -------- | ------- |" >> coverage.md
           tail -n +3 coverage.txt | sed -e 's/^|/||/;s/$/|/' | awk 'BEGIN{OFS="|"} {NF=NF + 1; $1=$1} 1' | sed 's/|/ | /g' >> coverage.md
 
       - name: Display coverage report in job summary
         run: cat coverage.md >> $GITHUB_STEP_SUMMARY
 
-          
+
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v4
         with:
