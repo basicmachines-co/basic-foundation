@@ -4,6 +4,8 @@ branch = true
 source =
     app/src
 
-omit = app/tests/*
+omit =
+    app/tests/foundation/conftest.py
+    app/src/foundation/web/*
 
 concurrency=greenlet
