@@ -1,4 +1,4 @@
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Generator
 
 import pytest
 from foundation.app import app
@@ -6,11 +6,10 @@ from fastapi.testclient import TestClient
 
 
 @pytest.fixture(scope="module")
-def test_app() -> AsyncGenerator[TestClient, None, None]:
-    client = TestClient(app)
-    yield client  # testing happens here
+def test_client():
+    return TestClient(app)
 
 
-def test_read_root(test_app):
-    response = test_app.get("/")
+def test_read_root(test_client):
+    response = test_client.get("/")
     assert response.status_code == 200

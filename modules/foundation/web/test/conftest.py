@@ -2,9 +2,9 @@ import httpx
 import pytest
 from playwright.sync_api import expect
 
-from foundation.core import settings
-from foundation.users import AuthToken
+from foundation.core.config import settings
 from foundation.test_utils import random_email
+from foundation.users.schemas import AuthToken
 from modules.foundation.web.web_test_utils import (
     URL_LOGIN_PAGE,
     URL_DASHBOARD_PAGE,

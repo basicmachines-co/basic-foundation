@@ -5,16 +5,14 @@ import pytest
 import pytest_asyncio
 from sqlalchemy import select
 from fastapi import Request
-from foundation.core import verify_password
+from foundation.core.security import verify_password
 from foundation.users.models import User
 from foundation.users.services import (
     UserNotFoundError,
     UserValueError,
     UserService,
     UserCreateError,
-    UserPagination,
 )
-from foundation.web.pagination import Paginator
 from foundation.test_utils import random_email, random_lower_string, mock_emails_send
 
 pytestmark = pytest.mark.asyncio
@@ -179,25 +177,3 @@ async def test_get_admin_users_count(user_service):
     assert await user_service.get_admin_users_count() > 0
 
 
-async def test_user_pagination(user_repository):
-    # Arrange
-    query = select(User)
-    request = Mock(spec=Request)
-    order_by = "id"
-    page_size = 20
-
-    pagination = UserPagination(repository=user_repository)
-
-    # Act
-    paginator = pagination.paginate(
-        request=request, query=query, order_by=order_by, asc=False, page_size=page_size
-    )
-
-    # Assert
-    assert isinstance(paginator, Paginator)
-    assert paginator.query == query
-    assert paginator.page_size == page_size
-    assert paginator.order_by == order_by
-    assert paginator.ascending == False
-    assert paginator.repository == user_repository
-    assert paginator.request == request

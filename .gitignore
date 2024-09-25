@@ -159,7 +159,7 @@ cython_debug/
 .DS_Store
 /.idea/
 /node_modules/
-!/modules/foundation/web/templates/email/build/
+!/foundation/templates/email/build/
 <<<<<<< HEAD
 /coverage.txt
 =======

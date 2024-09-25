@@ -9,7 +9,7 @@ from foundation.core.repository import Repository
 from foundation.users import validate_is_superuser, get_current_user, User
 from foundation.users.deps import UserServiceDep, UserRepositoryDep
 from foundation.users.schemas import UserPublic
-from modules.foundation.web.pagination import Paginator
+from foundation.core.pagination import Paginator
 
 access_token_security = JwtAccessCookie(
     secret_key=settings.JWT_SECRET, auto_error=False
@@ -43,34 +43,3 @@ async def get_current_superuser(current_user: CurrentUserDep) -> UserPublic:
 
 AdminRequired = Depends(get_current_superuser)
 
-class UserPagination:
-    repository: Repository[User]
-
-    def __init__(self, repository: Repository[User]):
-        self.repository = repository
-
-    def paginate(
-            self,
-            request: Request,
-            query: Select[Tuple[Any]],
-            order_by: str,
-            asc: bool = True,
-            page_size: int = 10,
-    ):
-        return Paginator(
-            request,
-            self.repository,
-            query,
-            page_size=page_size,
-            order_by=order_by,
-            ascending=asc,
-        )
-
-
-def get_user_pagination(
-        repository: UserRepositoryDep,
-) -> UserPagination:  # pragma: no cover
-    return UserPagination(repository)
-
-
-UserPaginationDep = Annotated[UserPagination, Depends(get_user_pagination)]

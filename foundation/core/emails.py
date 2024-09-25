@@ -18,7 +18,7 @@ class EmailData:
 
 def render_email_template(*, template_name: str, context: dict[str, Any]) -> str:
     template_str = (
-        BASE_DIR / "templates" / "email" / "build" / template_name
+        BASE_DIR / "foundation" / "templates"  / "email" / "build" / template_name
     ).read_text()
     html_content = Template(template_str).render(context)
     return html_content

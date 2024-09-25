@@ -2,7 +2,7 @@
 import pytest
 from playwright.sync_api import Page, expect
 
-from foundation.core import settings
+from foundation.core.config import settings
 from modules.foundation.web.web_test_utils import BASE_URL
 
 pytestmark = pytest.mark.playwright

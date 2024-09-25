@@ -7,11 +7,11 @@ from sqlalchemy import select, desc, asc
 from starlette_wtf import csrf_token
 from starlette_wtf.csrf import get_csrf_token
 
-from foundation.users.deps import UserServiceDep
+from foundation.users.deps import UserServiceDep, UserPaginationDep
 from foundation.users.models import User
 from foundation.users.schemas import UserPublic
 from foundation.users.services import UserValueError, UserNotFoundError, UserCreateError
-from modules.foundation.web.deps import CurrentUserDep, LoginRequired, AdminRequired, UserPaginationDep
+from modules.foundation.web.deps import CurrentUserDep, LoginRequired, AdminRequired
 from modules.foundation.web.forms import UserEditForm, UserCreateForm
 from modules.foundation.web.templates import template
 from modules.foundation.web.utils import HTMLRouter, error_notification

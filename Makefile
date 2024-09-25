@@ -9,15 +9,18 @@ install:
 reset-cov:
 	rm -f .coverage
 
-test: reset-cov test-api test-playwright
+test: reset-cov test-foundation test-modules-api test-modules-web
 
-COV_REPORT ?= term-missing
+COVERAGE_ARGS ?= --cov-append --cov-report=term-missing --cov-config=.coveragerc
 
-test-api:
-	poetry run pytest --cov=./app --cov-append  --cov-config=.coveragerc -m "not playwright"
+test-foundation:
+	poetry run pytest foundation --cov=./foundation $(COVERAGE_ARGS)
 
-test-playwright:  # assumes app is running on at API_URL in config
-	poetry run pytest --cov=./app --cov-append  --cov-config=.coveragerc -m "playwright" --tracing=retain-on-failure
+test-modules-api:
+	poetry run pytest modules/foundation/api --cov=./modules/foundation/api $(COVERAGE_ARGS)
+
+test-modules-web:  # runs playwright tests: assumes app is running on at API_URL in config
+	poetry run pytest modules/foundation/web --cov=./modules/foundation/web $(COVERAGE_ARGS) -m "playwright" --tracing=retain-on-failure
 	#poetry run pytest -m "playwright" --headed --slowmo 500
 
 test-coverage:

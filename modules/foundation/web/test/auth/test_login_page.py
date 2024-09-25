@@ -3,7 +3,7 @@ from typing import Any
 import pytest
 from playwright.sync_api import Page, expect
 
-from foundation.core import settings
+from foundation.core.config import settings
 from modules.foundation.web.web_test_utils import (
     URL_LOGIN_PAGE,
     URL_DASHBOARD_PAGE,

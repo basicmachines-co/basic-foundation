@@ -1,3 +1,13 @@
+import uuid
+from unittest.mock import Mock
+
+import pytest
+import pytest_asyncio
+from sqlalchemy import select
+from fastapi import Request
+from foundation.users.deps import UserPagination
+from foundation.users.models import User
+from foundation.core.pagination import Paginator
 import pytest
 import pytest_asyncio
 from mockito import when, mock
@@ -5,12 +15,14 @@ from sqlalchemy import select
 from starlette import requests
 from starlette.datastructures import URL
 
-from foundation.core import Repository
+from foundation.core.repository import Repository
 from foundation.users.models import User
-from foundation.web.pagination import Paginator
+from foundation.core.pagination import Paginator
 
 pytestmark = pytest.mark.asyncio
 
+
+pytestmark = pytest.mark.asyncio
 
 @pytest_asyncio.fixture
 def mock_request():  # pyright: ignore
@@ -19,6 +31,29 @@ def mock_request():  # pyright: ignore
     when(requests).Request(scope="http").thenReturn(request)
     return request
 
+
+async def test_user_pagination(user_repository):
+    # Arrange
+    query = select(User)
+    request = Mock(spec=Request)
+    order_by = "id"
+    page_size = 20
+
+    pagination = UserPagination(repository=user_repository)
+
+    # Act
+    paginator = pagination.paginate(
+        request=request, query=query, order_by=order_by, asc=False, page_size=page_size
+    )
+
+    # Assert
+    assert isinstance(paginator, Paginator)
+    assert paginator.query == query
+    assert paginator.page_size == page_size
+    assert paginator.order_by == order_by
+    assert paginator.ascending == False
+    assert paginator.repository == user_repository
+    assert paginator.request == request
 
 async def test_total(mock_request, user_repository: Repository):
     user_count = await user_repository.count()
@@ -53,7 +88,7 @@ async def test_page_size_less_than_one(mock_request, user_repository: Repository
 
 
 async def test_page(
-    mock_request, user_repository: Repository, sample_user, inactive_user
+        mock_request, user_repository: Repository, sample_user, inactive_user
 ):
     users = await user_repository.find_all(limit=10)
     pagination = Paginator(
@@ -83,7 +118,7 @@ async def test_page(
 
 
 async def test_page_query(
-    mock_request, user_repository: Repository, sample_user, inactive_user
+        mock_request, user_repository: Repository, sample_user, inactive_user
 ):
     query = select(User).filter(User.is_active == True)
     query_result = await user_repository.execute_query(query)

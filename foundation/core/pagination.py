@@ -3,7 +3,7 @@ from typing import Type, Any, Tuple, Sequence
 
 from sqlalchemy import select, func, Select
 from starlette.datastructures import URL
-from starlette.requests import Request
+from fastapi import Request
 
 from foundation.core.repository import Repository
 
