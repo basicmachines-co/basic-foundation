@@ -2,22 +2,29 @@ include .env
 
 .PHONY: install test clean lint lint-fix format migrate-new migrate-up migrate-down migrate-dump migrate-reset
 
-install:
+install: install-python install-node
+
+install-python:
 	poetry install
-	npm install
+
+install-node:
+	cd modules/foundation/web && npm install
 
 reset-cov:
 	rm -f .coverage
 
-test: reset-cov test-api test-playwright
+test: reset-cov test-foundation test-modules-api test-modules-web
 
-COV_REPORT ?= term-missing
+COVERAGE_ARGS ?= --cov-append --cov-report=term-missing --cov-config=.coveragerc
 
-test-api:
-	poetry run pytest --cov=./app --cov-append  --cov-config=.coveragerc -m "not playwright"
+test-foundation:
+	poetry run pytest foundation --cov=./foundation $(COVERAGE_ARGS)
 
-test-playwright:  # assumes app is running on at API_URL in config
-	poetry run pytest --cov=./app --cov-append  --cov-config=.coveragerc -m "playwright" --tracing=retain-on-failure
+test-modules-api:
+	poetry run pytest modules/foundation/api --cov=./modules/foundation/api $(COVERAGE_ARGS)
+
+test-modules-web:  # runs playwright tests: assumes app is running on at API_URL in config
+	poetry run pytest modules/foundation/web --cov=./modules/foundation/web $(COVERAGE_ARGS) -m "playwright" --tracing=retain-on-failure
 	#poetry run pytest -m "playwright" --headed --slowmo 500
 
 test-coverage:
@@ -40,7 +47,7 @@ format-python:
 	poetry run ruff format .
 
 format-prettier:
-	npx prettier templates --write
+	cd modules/foundation/web && npx prettier templates --write
 
 format: format-python format-prettier
 
@@ -48,10 +55,10 @@ type-check:
 	poetry run pyright
 
 tailwind:
-	npm run build
+	cd modules/foundation/web && npm run build
 
 tailwind-prod:
-	npm run build-prod
+	cd modules/foundation/web && npm run build-prod
 
 # Database migrations
 
@@ -91,7 +98,7 @@ migrate-reset:
 # You might need to adjust this depending on your Docker setup and database location.
 
 init-data:
-	poetry run python app/src/tools/init_data.py
+	poetry run python foundation/tools/init_data.py
 
 run:
-	poetry run fastapi run app/src/foundation/app.py  --port 10000
+	poetry run fastapi run foundation/app.py  --port 10000

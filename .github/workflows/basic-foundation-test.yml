@@ -35,42 +35,6 @@ jobs:
         with:
           python-version: "3.12.1"
 
-      #      - name: Cache Poetry
-      #        id: poetry-cache
-      #        uses: actions/cache@v3
-      #        with:
-      #          path: ~/.poetry
-      #          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
-      #          restore-keys: |
-      #            ${{ runner.os }}-poetry-
-      #
-      #      - name: Cache virtualenv
-      #        id: venv-cache
-      #        uses: actions/cache@v3
-      #        with:
-      #          path: .venv
-      #          key: ${{ runner.os }}-venv-${{ hashFiles('**/poetry.lock') }}
-      #          restore-keys: |
-      #            ${{ runner.os }}-venv-
-      #
-      #      - name: Cache Playwright binaries
-      #        id: playwright-cache
-      #        uses: actions/cache@v3
-      #        with:
-      #          path: ~/.cache/ms-playwright
-      #          key: ${{ runner.os }}-playwright-${{ hashFiles('**/poetry.lock') }}
-      #          restore-keys: |
-      #            ${{ runner.os }}-playwright-
-      #
-      #      - name: Cache Node.js modules
-      #        id: node-modules-cache
-      #        uses: actions/cache@v3
-      #        with:
-      #          path: node_modules
-      #          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-      #          restore-keys: |
-      #            ${{ runner.os }}-node-
-
       - name: Bootstrap poetry
         run: |
           if [ ! -x "$(command -v poetry)" ]; then
@@ -88,12 +52,6 @@ jobs:
         run: |
           make install
 
-      - name: Install Node.js dependencies
-        run: |
-          if [ ! -d "node_modules" ]; then
-            npm install
-          fi
-
       - name: Run dbmate migrations
         run: |
           make migrate-up
@@ -106,9 +64,13 @@ jobs:
         run: |
           make type-check
 
-      - name: Run api tests
+      - name: Run foundation tests
         run: |
-          make test-api
+          make test-foundation
+
+      - name: Run foundation tests
+        run: |
+          make test-modules-api
 
       - name: Install Playwright and dependencies
         run: |
@@ -126,7 +88,7 @@ jobs:
 
       - name: Run Playwright tests
         run: |
-          make test-playwright
+          make test-modules-web
 
       - name: Upload Playwright Traces
         uses: actions/upload-artifact@v4
@@ -146,7 +108,6 @@ jobs:
 
       - name: Display coverage report in job summary
         run: cat coverage.md >> $GITHUB_STEP_SUMMARY
-
 
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v4

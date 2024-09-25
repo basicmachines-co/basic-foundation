@@ -2,10 +2,10 @@
 dynamic_context = test_function
 branch = true
 source =
-    app/src
+    foundation
 
 omit =
-    app/tests/foundation/conftest.py
-    app/src/foundation/web/*
+    foundation/conftest.py
+    modules/foundation/web/*
 
 concurrency=greenlet

@@ -1,13 +1,15 @@
 [tool.poetry]
-name = "basic-foundation"
+name = "foundation"
 version = "0.1.0"
-description = "Opinionated python based Saas platform"
+description = "Opinionated Python based SaaS foundation using FastAPI"
 authors = ["phernandez <phernandez@basicmachines.co>"]
 license = "Apache-2.0"
 readme = "README.md"
 
 packages = [
-    { include = "foundation", from = "app/src" },
+    { include = "foundation" }, # Core components
+    { include = "modules/foundation/api" }, # API module from modules/foundation/api
+    { include = "modules/foundation/web" }      # Web module from modules/foundation/web
 ]
 
 [tool.poetry.dependencies]
@@ -77,13 +79,19 @@ markers = [
 ]
 
 [tool.pyright]
-include = ["app"]
-exclude = ["**/node_modules",
+include = [
+    "foundation",
+    "modules"
+]
+exclude = [
+    "**/node_modules",
     "**/__pycache__",
 ]
-ignore = ["./app/tests"]
+ignore = [
+    "**/test/",
+    "conftest.py"
+]
 defineConstant = { DEBUG = true }
-stubPath = "app/src/stubs"
 
 reportMissingImports = "error"
 reportMissingTypeStubs = false

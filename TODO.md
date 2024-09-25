@@ -8,12 +8,12 @@
     - web-htmx
 - [ ] uv
 - [ ] permission checks
-    - [ ] user service with current user
     - [x] has to be at least one admin
     - [x] only admins can create/edit users
-    - [ ] db: rename is_superuser to is_admin
 - [ ] dashboard stats should link to filtered list
+- [ ] user service with current user
 - [ ] make active/admin colums enums
+- [ ] db: rename is_superuser to is_admin
 - [ ] page_size is appended to url
 - [x] use fixtures in web tests
 - [x] delete user after test
