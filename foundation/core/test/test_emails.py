@@ -1,3 +1,9 @@
+from unittest.mock import Mock
+
+from authlib.jose.errors import BadSignatureError
+from fastapi_jwt.jwt_backends.abstract_backend import BackendException
+from jwt import InvalidTokenError
+
 from foundation.core.emails import (
     generate_test_email,
     send_email,
@@ -6,7 +12,7 @@ from foundation.core.emails import (
 )
 from foundation.core.security import (
     generate_password_reset_token,
-    verify_password_reset_token,
+    verify_password_reset_token, reset_token,
 )
 from foundation.test_utils import mock_emails_send
 
@@ -55,3 +61,30 @@ def test_password_reset_token():
     token_subject = verify_password_reset_token(reset_token)
     assert token_subject is not None
     assert token_subject == email
+
+
+def test_verify_password_reset_token_invalid_token_error():
+    token = "invalid_token"
+
+    reset_token.jwt_backend.decode = Mock(side_effect=InvalidTokenError)
+
+    email = verify_password_reset_token(token)
+    assert email is None
+
+
+def test_verify_password_reset_token_backend_exception():
+    token = "invalid_token"
+
+    reset_token.jwt_backend.decode = Mock(side_effect=BackendException)
+
+    email = verify_password_reset_token(token)
+    assert email is None
+
+
+def test_verify_password_reset_token_bad_signature_error():
+    token = "invalid_token"
+
+    reset_token.jwt_backend.decode = Mock(side_effect=BadSignatureError("result"))
+
+    email = verify_password_reset_token(token)
+    assert email is None

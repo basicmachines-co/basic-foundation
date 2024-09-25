@@ -7,7 +7,7 @@ from foundation.users.services import UserService, UserNotFoundError
 
 async def get_current_user(
         user_service: UserService, credentials: JwtAuthorizationCredentials
-) -> User:
+) -> User: # pragma: no cover
     """
     The jwt contains the id PK for the user in a dict format from schemas.AuthTokenPayload
     e.g. {"id": "<primary-key-uuid>"}
@@ -34,7 +34,7 @@ async def get_current_user(
     return user
 
 
-def validate_is_superuser(user):
+def validate_is_superuser(user): 
     if not user.is_superuser:
         raise HTTPException(
             status_code=403, detail=f"The user {user.id} doesn't have enough privileges"

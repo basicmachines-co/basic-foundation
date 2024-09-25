@@ -3,8 +3,12 @@ from unittest.mock import Mock
 
 import pytest
 import pytest_asyncio
+from mockito import mock, when, unstub
 from sqlalchemy import select
 from fastapi import Request
+
+from foundation.core import emails
+from foundation.core.emails import send_email
 from foundation.core.security import verify_password
 from foundation.users.models import User
 from foundation.users.services import (
@@ -61,6 +65,13 @@ async def test_authenticate(user_service, sample_user: User, sample_user_passwor
     assert authenticated_user is not None
     assert authenticated_user.email == sample_user.email
 
+async def test_authenticate_user_not_found(
+        user_service, sample_user: User, sample_user_password: str
+):
+    authenticated_user = await user_service.authenticate(
+        email="not@real.email", password=sample_user_password
+    )
+    assert authenticated_user is None
 
 async def test_authenticate_fails(
     user_service, sample_user: User, sample_user_password: str
@@ -177,3 +188,6 @@ async def test_get_admin_users_count(user_service):
     assert await user_service.get_admin_users_count() > 0
 
 
+async def test_recover_password(user_service, sample_user: User):
+    # doesn't fail
+    await user_service.recover_password(email=sample_user.email)

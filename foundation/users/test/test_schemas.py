@@ -1,5 +1,7 @@
 import pytest
-from foundation.users.schemas import validate_password
+from pydantic import ValidationError
+
+from foundation.users.schemas import validate_password, UserCreate
 
 
 @pytest.mark.parametrize(
@@ -35,3 +37,30 @@ def test_validate_password_exceptions(password: str, expected_exception: str):
     with pytest.raises(ValueError) as excinfo:
         validate_password(password)
     assert str(excinfo.value) == expected_exception
+
+
+def test_user_create_valid_password():
+    # Arrange
+    user_data = {
+        "full_name": "full name",
+        "email": "some@email.com",
+        "password": "@&ZhfLyCxyca2T"
+    }
+
+    # Act
+    user = UserCreate(**user_data)  # pyright: ignore [reportArgumentType]
+
+    # Assert
+    assert user.password == user_data["password"]
+
+
+def test_user_create_invalid_password():
+    # Arrange
+    user_data = {"password": "short"}
+
+    # Act & Assert
+    with pytest.raises(ValidationError) as exc_info:
+        UserCreate(**user_data)  # pyright: ignore [reportArgumentType]
+
+    errors = exc_info.value.errors()
+    assert len(errors) > 1

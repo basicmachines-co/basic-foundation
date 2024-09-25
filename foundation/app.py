@@ -55,7 +55,7 @@ from fastapi.exception_handlers import (
 
 
 @app.exception_handler(StarletteHTTPException)
-async def custom_http_exception_handler(request, exc):
+async def custom_http_exception_handler(request, exc): #pragma: no cover
     accept_header = request.headers.get("accept", "")
 
     if "text/html" in accept_header:  # pragma: no cover

@@ -28,6 +28,8 @@ pytestmark = pytest.mark.asyncio
 def mock_request():  # pyright: ignore
     request = mock(requests.Request)
     request.url = mock(URL)  # pyright: ignore [reportAttributeAccessIssue]
+    when(request.url).include_query_params(page=2, page_size=1).thenReturn(mock(URL))
+    when(request.url).include_query_params(page=1, page_size=1).thenReturn(mock(URL))
     when(requests).Request(scope="http").thenReturn(request)
     return request
 
@@ -133,10 +135,15 @@ async def test_page_query(
     assert page_1.page == 1
     assert page_1.page_size == 1
     assert page_1.total == await pagination.total
-
+    assert page_1.has_previous is False
+    assert page_1.has_next is True
+    assert page_1.next_page is not None
+    
     page_2 = await pagination.page(2)
-
     assert page_2.items == [users[1]]
     assert page_2.page == 2
     assert page_2.page_size == 1
     assert page_2.total == await pagination.total
+    
+    assert page_2.has_previous is True
+    assert page_2.previous_page is not None

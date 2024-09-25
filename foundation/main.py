@@ -1,9 +1,9 @@
-import uvicorn
+import uvicorn # pragma: no cover
 
 
-def run():
+def run(): # pragma: no cover
     uvicorn.run("foundation.app:app", host="0.0.0.0", log_level="info", reload=True)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     run()
