@@ -35,7 +35,7 @@ def test_admin_user_detail_edit(create_user) -> None:
     ) = assert_user_form(page)
 
     # active checkbox is only on edit form
-    active = page.get_by_text("Active", exact=True)
+    page.get_by_text("Active", exact=True)
     active_checkbox = page.get_by_label("Active")
 
     expect(fullname_input).to_have_value(user.full_name)

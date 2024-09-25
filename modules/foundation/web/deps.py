@@ -1,15 +1,12 @@
-from typing import Annotated, Tuple, Any
+from typing import Annotated
 
-from fastapi import Security, HTTPException, Depends, status, Request
+from fastapi import Security, HTTPException, Depends, status
 from fastapi_jwt import JwtAccessCookie, JwtAuthorizationCredentials
-from sqlalchemy import Select
 
 from foundation.core.config import settings
-from foundation.core.repository import Repository
-from foundation.users import validate_is_superuser, get_current_user, User
-from foundation.users.deps import UserServiceDep, UserRepositoryDep
+from foundation.users import validate_is_superuser, get_current_user
+from foundation.users.deps import UserServiceDep
 from foundation.users.schemas import UserPublic
-from foundation.core.pagination import Paginator
 
 access_token_security = JwtAccessCookie(
     secret_key=settings.JWT_SECRET, auto_error=False

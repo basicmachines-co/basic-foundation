@@ -16,7 +16,7 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:  # pragma: 
     async with async_sessionmaker() as session:
         try:
             yield session
-        except SQLAlchemyError as e:
+        except SQLAlchemyError:
             # Handle SQLAlchemy specific exceptions
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

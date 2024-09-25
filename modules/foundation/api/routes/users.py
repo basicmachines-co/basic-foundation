@@ -1,10 +1,9 @@
 from typing import Any
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 
 from modules.foundation.api.deps import (
-    get_current_superuser,
     validate_is_superuser,
     CurrentUserDep,
     AdminRequired,
@@ -135,7 +134,7 @@ async def update_user(
         user_updated = await user_service.update_user(
             user_id=user_id, update_dict=user_in.model_dump()
         )
-    except UserValueError as e:
+    except UserValueError:
         raise HTTPException(
             status_code=400,
             detail=f"unable to update user with id {user_id}",

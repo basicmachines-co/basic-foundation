@@ -1,14 +1,8 @@
 import uuid
-from unittest.mock import Mock
 
 import pytest
 import pytest_asyncio
-from mockito import mock, when, unstub
-from sqlalchemy import select
-from fastapi import Request
 
-from foundation.core import emails
-from foundation.core.emails import send_email
 from foundation.core.security import verify_password
 from foundation.users.models import User
 from foundation.users.services import (
@@ -157,7 +151,7 @@ async def test_update_user_fails(user_service, sample_user: User):
         "is_active": True,
         "is_superuser": True,
     }
-    with pytest.raises(UserValueError, match=f"user can not be updated"):
+    with pytest.raises(UserValueError, match="user can not be updated"):
         await user_service.update_user(user_id=created_user.id, update_dict=user_update)
 
 

@@ -15,6 +15,9 @@ from modules.foundation.web.templates import templates
 
 from modules.foundation.api.routes import api_router  # Import the router from api module
 from modules.foundation.web.routes import html_router  # Import the router from web module
+from fastapi.exception_handlers import (
+    http_exception_handler,
+)
 
 # delete all existing default loggers
 logger.remove()
@@ -49,9 +52,6 @@ async def on_startup():  # pragma: no cover
     init_data.main()
 
 
-from fastapi.exception_handlers import (
-    http_exception_handler,
-)
 
 
 @app.exception_handler(StarletteHTTPException)

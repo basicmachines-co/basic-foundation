@@ -41,7 +41,7 @@ def test_admin_create_user_validate_full_name(do_admin_login: Page) -> None:
     password = "@&ZhfLyCxyca2T"
 
     # submit the form
-    user_name = f"A"  # username too short
+    user_name = "A"  # username too short
     fullname_input.fill(user_name)
     email_input.fill(email)
     password_input.fill(password)

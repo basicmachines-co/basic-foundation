@@ -20,7 +20,7 @@ async def test_login_access_token(
 
     assert auth_token.access_token is not None
     r = await client.post(
-        f"/api/auth/login/test-token",
+        "/api/auth/login/test-token",
         headers={"Authorization": f"Bearer {auth_token.access_token}"},
     )
 
@@ -37,7 +37,7 @@ async def test_login_access_token_invalid_email(
         "username": "bademail@test.com",
         "password": "bad-password",
     }
-    r = await client.post(f"/api/auth/login/access-token", data=login_data)
+    r = await client.post("/api/auth/login/access-token", data=login_data)
     assert r.status_code == 400
     content = r.json()
     assert content["detail"] == "Incorrect email or password"
@@ -50,7 +50,7 @@ async def test_login_access_token_invalid_password(
         "username": sample_user.email,
         "password": "bad-password",
     }
-    r = await client.post(f"/api/auth/login/access-token", data=login_data)
+    r = await client.post("/api/auth/login/access-token", data=login_data)
     assert r.status_code == 400
 
 
@@ -61,7 +61,7 @@ async def test_login_access_token_inactive_user(
         "username": inactive_user.email,
         "password": sample_user_password,
     }
-    r = await client.post(f"/api/auth/login/access-token", data=login_data)
+    r = await client.post("/api/auth/login/access-token", data=login_data)
     assert r.status_code == 400
 
 

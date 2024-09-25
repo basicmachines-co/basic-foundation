@@ -1,21 +1,17 @@
 import asyncio
-from typing import AsyncGenerator, Generator
+from typing import AsyncGenerator
 
 import pytest
 import pytest_asyncio
-from httpx import AsyncClient
 from sqlalchemy import event
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
 
-from foundation.app import app
 from foundation.core import security
 from foundation.core.db import engine
 from foundation.core.repository import Repository
-from foundation.users.deps import get_user_repository
 from foundation.users.models import User
 from foundation.test_utils import (
-    get_superuser_auth_token_headers,
     random_email,
 )
 

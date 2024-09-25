@@ -1,8 +1,8 @@
-from typing import Any, Sequence, Tuple
+from typing import Any, Sequence
 from uuid import UUID
 
 from loguru import logger
-from sqlalchemy import select, func, Select
+from sqlalchemy import select, func
 from sqlalchemy.exc import IntegrityError
 
 from foundation.core.config import settings

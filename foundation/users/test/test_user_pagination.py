@@ -1,4 +1,3 @@
-import uuid
 from unittest.mock import Mock
 
 import pytest
@@ -8,16 +7,11 @@ from fastapi import Request
 from foundation.users.deps import UserPagination
 from foundation.users.models import User
 from foundation.core.pagination import Paginator
-import pytest
-import pytest_asyncio
 from mockito import when, mock
-from sqlalchemy import select
 from starlette import requests
 from starlette.datastructures import URL
 
 from foundation.core.repository import Repository
-from foundation.users.models import User
-from foundation.core.pagination import Paginator
 
 pytestmark = pytest.mark.asyncio
 
@@ -53,7 +47,7 @@ async def test_user_pagination(user_repository):
     assert paginator.query == query
     assert paginator.page_size == page_size
     assert paginator.order_by == order_by
-    assert paginator.ascending == False
+    assert paginator.ascending is False
     assert paginator.repository == user_repository
     assert paginator.request == request
 

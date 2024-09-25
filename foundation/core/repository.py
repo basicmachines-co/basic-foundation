@@ -86,7 +86,7 @@ class Repository[T: BaseWithId]:
             await self.session.delete(entity)
             await self.session.commit()
             return True
-        except NoResultFound as e:
+        except NoResultFound:
             return False
 
     async def count(self, query: Executable | None = None) -> int:

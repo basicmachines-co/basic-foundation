@@ -37,7 +37,7 @@ def test_reset_password(register_user):
     # verify success message
     success_message = page.locator("#success")
     expect(success_message).to_be_visible()
-    expect(success_message).to_contain_text(f"Your password has been updated!")
+    expect(success_message).to_contain_text("Your password has been updated!")
 
 
 def test_reset_password_invalid_token(register_user):
@@ -49,7 +49,7 @@ def test_reset_password_invalid_token(register_user):
     # verify error message is displayed
     error_message = page.locator("#error")
     expect(error_message).to_be_visible()
-    expect(error_message).to_contain_text(f"Invalid token")
+    expect(error_message).to_contain_text("Invalid token")
 
 
 def test_reset_password_user_not_found(page: Page):

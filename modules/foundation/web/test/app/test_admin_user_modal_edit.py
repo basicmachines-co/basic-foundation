@@ -32,7 +32,7 @@ def assert_user_edit_modal(page, user):
     expect(admin_checkbox).to_be_checked(checked=user.is_admin)
 
     # active checkbox is only on edit form
-    active = page.get_by_text("Active", exact=True)
+    page.get_by_text("Active", exact=True)
     active_checkbox = page.get_by_label("Active")
     expect(active_checkbox).to_be_checked(checked=user.is_active)
 

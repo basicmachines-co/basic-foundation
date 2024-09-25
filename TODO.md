@@ -36,7 +36,9 @@
     - https://docs.render.com/docker
 - [ ] multi tenant
 - [ ] postgres row level security
-- [ ] stripe integration
+- [ ] subscriptions
+    - stripe integration
+    - lago
 - [ ] webhooks
 - [ ] queueing
 - [ ] static object storage
