@@ -98,7 +98,7 @@ migrate-reset:
 # You might need to adjust this depending on your Docker setup and database location.
 
 init-data:
-	poetry run python app/src/tools/init_data.py
+	poetry run python foundation/tools/init_data.py
 
 run:
 	poetry run fastapi run foundation/app.py  --port 10000
