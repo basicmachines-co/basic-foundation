@@ -7,9 +7,9 @@ license = "Apache-2.0"
 readme = "README.md"
 
 packages = [
-    { include = "basic_foundation" }, # core components
-    { include = "modules.basic_foundation.api", from = "modules" }, # API module
-    { include = "modules.basic_foundation.web", from = "modules" }   # Web module
+    { include = "foundation" }, # core components
+    { include = "foundation/api", from = "modules" }, # API module
+    { include = "foundation/web", from = "modules" }   # Web module
 ]
 
 [tool.poetry.dependencies]

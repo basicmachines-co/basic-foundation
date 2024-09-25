@@ -2,9 +2,13 @@ include .env
 
 .PHONY: install test clean lint lint-fix format migrate-new migrate-up migrate-down migrate-dump migrate-reset
 
-install:
+install: install-python install-node
+
+install-python:
 	poetry install
-	npm install
+
+install-node:
+	cd modules/foundation/web && npm install
 
 reset-cov:
 	rm -f .coverage
@@ -43,7 +47,7 @@ format-python:
 	poetry run ruff format .
 
 format-prettier:
-	npx prettier templates --write
+	cd modules/foundation/web && npx prettier templates --write
 
 format: format-python format-prettier
 
@@ -51,10 +55,10 @@ type-check:
 	poetry run pyright
 
 tailwind:
-	npm run build
+	cd modules/foundation/web && npm run build
 
 tailwind-prod:
-	npm run build-prod
+	cd modules/foundation/web && npm run build-prod
 
 # Database migrations
 

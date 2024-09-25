@@ -157,12 +157,7 @@ cython_debug/
 
 
 .DS_Store
-/.idea/
-/node_modules/
+.idea/
+modules/foundation/web/node_modules/
 !/foundation/templates/email/build/
-<<<<<<< HEAD
-/coverage.txt
-=======
-
 coverage.txt
->>>>>>> bea77b7
