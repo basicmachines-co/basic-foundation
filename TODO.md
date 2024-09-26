@@ -2,7 +2,7 @@
 
 ## todo
 
-- [ ] package as separate modules?
+- [x] package as separate modules?
     - core
     - api
     - web-htmx
@@ -22,7 +22,7 @@
 - [ ] Api docs say FASTAPI
 - [ ] responsive tests for playwright
 - [x] pywright
-- [ ] form includes
+- [x] form includes
 - [ ] users page refresh
 - [ ] mailapi - sendgrid? or mailgun?
     - https://sabuhish.github.io/fastapi-mail/example/
