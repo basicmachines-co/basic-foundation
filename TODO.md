@@ -11,22 +11,19 @@
     - [x] has to be at least one admin
     - [x] only admins can create/edit users
 - [ ] dashboard stats should link to filtered list
-- [ ] user service with current user
 - [ ] make active/admin colums enums
 - [ ] db: rename is_superuser to is_admin
-- [ ] page_size is appended to url
+- [-] page_size is appended to url
 - [x] use fixtures in web tests
 - [x] delete user after test
 - [x] add playwright to github ci
 - [x] code coverage for ci
-- [ ] Api docs say FASTAPI
+- [x] Api docs say FASTAPI
 - [ ] responsive tests for playwright
 - [x] pywright
 - [x] form includes
-- [ ] users page refresh
+- [x] users page refresh
 - [ ] mailapi - sendgrid? or mailgun?
-    - https://sabuhish.github.io/fastapi-mail/example/
-    - https://pramod4040.medium.com/fastapi-forget-password-api-setup-632ab90ba958
 - [ ] automate github releases on merge to main
 
 ## feature

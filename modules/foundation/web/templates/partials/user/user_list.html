@@ -32,64 +32,62 @@
   <!-- Table Layout -->
   <table class="min-w-full divide-y divide-gray-300 dark:divide-gray-600">
     <thead>
-      <tr>
-        <!-- Name -->
-        <th
-          scope="col"
-          class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100"
+    <tr>
+      <!-- Name -->
+      <th
+        scope="col"
+        class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100"
+      >
+        <div
+          class="flex cursor-pointer items-center"
+          hx-get="/users/list?page={{ page.page }}&page_size={{ page.page_size }}&order_by=full_name&ascending={{ not page.ascending }}"
+          hx-target="#user_list"
+          hx-swap="outerHTML"
         >
-          <div
-            class="flex cursor-pointer items-center"
-            hx-get="/users/list?page={{ page.page }}&page_size={{ page.page_size }}&order_by=full_name&ascending={{ not page.ascending }}"
-            hx-target="#user_list"
-            hx-swap="outerHTML"
-          >
-            <span>Name</span>
-            {{ up_down("full_name", page.order_by, page.ascending) }}
-          </div>
-        </th>
-        <!-- Email Column with Sorting -->
-        <th
-          scope="col"
-          class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100"
+          <span>Name</span> {{ up_down("full_name", page.order_by, page.ascending) }}
+        </div>
+      </th>
+      <!-- Email Column with Sorting -->
+      <th
+        scope="col"
+        class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100"
+      >
+        <div
+          class="flex cursor-pointer items-center"
+          hx-get="/users/list?page={{ page.page }}&page_size={{ page.page_size }}&order_by=email&ascending={{ not page.ascending }}"
+          hx-target="#user_list"
+          hx-swap="outerHTML"
         >
-          <div
-            class="flex cursor-pointer items-center"
-            hx-get="/users/list?page={{ page.page }}&page_size={{ page.page_size }}&order_by=email&ascending={{ not page.ascending }}"
-            hx-target="#user_list"
-            hx-swap="outerHTML"
-          >
-            <span>Email</span>
-            {{ up_down("email", page.order_by, page.ascending) }}
-          </div>
-        </th>
-        <!-- Active and Admin columns (no sorting) -->
-        <th
-          class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100"
-          scope="col"
-        >
-          Active
-        </th>
-        <th
-          class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100"
-          scope="col"
-        >
-          Admin
-        </th>
-        <th class="px-3 py-3.5 text-right text-sm font-semibold text-gray-400" scope="col">Edit</th>
-      </tr>
+          <span>Email</span> {{ up_down("email", page.order_by, page.ascending) }}
+        </div>
+      </th>
+      <!-- Active and Admin columns (no sorting) -->
+      <th
+        class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100"
+        scope="col"
+      >
+        Active
+      </th>
+      <th
+        class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100"
+        scope="col"
+      >
+        Admin
+      </th>
+      <th class="px-3 py-3.5 text-right text-sm font-semibold text-gray-400" scope="col">Edit</th>
+    </tr>
     </thead>
     <!-- Table Body -->
     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-      {% for user in page.items %}
-        {% include "partials/user/user_list_view.html" %}
-      {% endfor %}
+    {% for user in page.items %}
+      {% include "partials/user/user_list_row.html" %}
+    {% endfor %}
     </tbody>
     <!-- Pagination Controls -->
     <tfoot>
-      <tr>
-        <td colspan="5">{% include "partials/pagination.html" %}</td>
-      </tr>
+    <tr>
+      <td colspan="5">{% include "partials/pagination.html" %}</td>
+    </tr>
     </tfoot>
   </table>
 </section>

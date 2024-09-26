@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     DOMAIN: str = "localhost"
     ENVIRONMENT: Literal["local", "staging", "production"] = "local"
 
-    app_name: str = "Basic API"
+    APP_NAME: str
     JWT_SECRET: str
     CSRF_SECRET: str
     POSTGRES_USER: str
