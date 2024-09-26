@@ -44,6 +44,7 @@ async def on_startup():  # pragma: no cover
     :return: None
     """
     logger.info(f"Welcome to {config.settings.APP_NAME}")
+    logger.info(f"email enabled: {config.settings.EMAIL_ENABLED}")
 
     # silence bcrypt noise
     logging.getLogger("passlib").setLevel(logging.ERROR)

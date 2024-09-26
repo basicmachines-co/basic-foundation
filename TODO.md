@@ -23,7 +23,10 @@
 - [x] pywright
 - [x] form includes
 - [x] users page refresh
-- [ ] mailapi - sendgrid? or mailgun?
+- [ ] mailapi
+    - mailgun
+        - setup domain
+        - mx record
 - [ ] automate github releases on merge to main
 
 ## feature
