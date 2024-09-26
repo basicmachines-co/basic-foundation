@@ -6,7 +6,7 @@
     - core
     - api
     - web-htmx
-- [ ] uv
+- [-] uv
 - [ ] permission checks
     - [x] has to be at least one admin
     - [x] only admins can create/edit users

@@ -1,0 +1,63 @@
+name: Release on Merge to Main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code
+      - uses: actions/checkout@v4
+
+      # Step 2: Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # Step 3: Install dependencies (including bump2version)
+      - name: Install Dependencies
+        run: |
+          pip install poetry
+          poetry install
+          pip install bump2version
+
+      # Step 4: Bump the version (patch, minor, or major)
+      - name: Bump Version
+        run: |
+          bump2version patch 
+
+      # Step 5: Build the project
+      - name: Build Project
+        run: |
+          poetry build
+
+      # Step 6: Push changes (committed by bump2version)
+      - name: Push Version Bump Changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git push origin main
+
+      # Step 7: Create a GitHub Release
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: 'v${{ steps.bump_version.outputs.new_version }}'  # New version from bump2version
+          release_name: 'Release v${{ steps.bump_version.outputs.new_version }}'
+          draft: false
+          prerelease: false
+
+#      # Step 8: Upload build artifacts to the release (optional)
+#      - name: Upload Build Artifacts
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: basic-foundation-build
+#          path: dist/  # Path to your build artifacts
