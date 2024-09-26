@@ -82,26 +82,28 @@ async def user_create_post(
     current_user: CurrentUserDep,
 ):
     form = await UserCreateForm.from_formdata(request)
-    if await form.validate():
-        try:
-            created_user = await user_service.create_user(create_dict=form.data)
-            # Because we are handling a post, we do a redirect in the response
-            return Response(
-                status_code=status.HTTP_307_TEMPORARY_REDIRECT,
-                headers={
-                    "HX-Redirect": router.url_path_for(
-                        "user_detail_view", user_id=created_user.id
-                    )
-                },
-            )
-        except UserCreateError as e:
-            return error_notification(request, e.args[0])
+    if not await form.validate():
+        return template(
+            request,
+            "partials/user/user_create.html",
+            {"current_user": current_user, "form": form},
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
+        )    
 
-    return template(
-        request,
-        "partials/user/user_form.html",
-        {"current_user": current_user, "form": form},
-    )
+    try:
+        created_user = await user_service.create_user(create_dict=form.data)
+        # Because we are handling a post, we do a redirect in the response
+        return Response(
+            status_code=status.HTTP_307_TEMPORARY_REDIRECT,
+            headers={
+                "HX-Redirect": router.url_path_for(
+                    "user_detail_view", user_id=created_user.id
+                )
+            },
+        )
+    except UserCreateError as e:
+        return error_notification(request, e.args[0])
+
 
 
 @router.get("/users/{user_id}")
