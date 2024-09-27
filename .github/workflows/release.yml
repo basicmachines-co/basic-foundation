@@ -26,6 +26,11 @@ jobs:
           poetry install
           pip install bump2version
 
+      - name: Set up Git user
+        run: |
+          git config --local user.name "GitHub Action"
+          git config --local user.email "action@github.com"
+
       # Step 4: Bump the version (patch, minor, or major)
       - name: Bump Version
         run: |
