@@ -26,36 +26,32 @@ jobs:
           poetry install
           pip install bump2version
 
+      # Step 4: Set up Git user
       - name: Set up Git user
         run: |
           git config --local user.name "GitHub Action"
           git config --local user.email "action@github.com"
 
-      # Bump the version (patch, minor, or major)
+      # Step 5: Bump the version (patch, minor, or major)
       - name: Bump Version
-        id: bump_version
         run: |
-          bump2version patch 
-        outputs:
-          new_version: ${{ steps.bump_version.outputs.new_version }}
-
-
-      # Push changes (committed by bump2version)
-      - name: Push Version Bump Changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          bump2version patch
           git push origin main
 
-      # Create a GitHub Release
+      # Step 6: Extract new version from version.txt
+      - name: Get New Version
+        id: get_version
+        run: echo "NEW_VERSION=$(cat version.txt)" >> $GITHUB_ENV
+
+      # Step 7: Create a GitHub Release
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: 'v${{ steps.bump_version.outputs.new_version }}'
-          release_name: 'Release v${{ steps.bump_version.outputs.new_version }}'
+          tag_name: 'v${{ env.NEW_VERSION }}'
+          release_name: 'Release v${{ env.NEW_VERSION }}'
           draft: false
           prerelease: false
 
