@@ -23,7 +23,7 @@ from fastapi.exception_handlers import (
 logger.remove()
 logger.add(sys.stderr, colorize=True, backtrace=True, diagnose=True)
 
-app = FastAPI()
+app = FastAPI(title=settings.APP_NAME)
 
 # Add middleware for sessions and CSRF protection
 app.add_middleware(SessionMiddleware, secret_key=settings.JWT_SECRET)
@@ -43,7 +43,8 @@ async def on_startup():  # pragma: no cover
 
     :return: None
     """
-    logger.info(f"Welcome to {config.settings.app_name}")
+    logger.info(f"Welcome to {config.settings.APP_NAME}")
+    logger.info(f"email enabled: {config.settings.EMAIL_ENABLED}")
 
     # silence bcrypt noise
     logging.getLogger("passlib").setLevel(logging.ERROR)

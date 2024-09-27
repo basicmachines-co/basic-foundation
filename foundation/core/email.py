@@ -18,7 +18,7 @@ class EmailData:
 
 def render_email_template(*, template_name: str, context: dict[str, Any]) -> str:
     template_str = (
-        BASE_DIR / "foundation" / "templates"  / "email" / "build" / template_name
+        BASE_DIR / "foundation" / "templates" / "email" / "build" / template_name
     ).read_text()
     html_content = Template(template_str).render(context)
     return html_content
@@ -27,8 +27,8 @@ def render_email_template(*, template_name: str, context: dict[str, Any]) -> str
 def send_email(  # pragma: no cover
     *,
     email_to: str,
-    subject: str = "",
-    html_content: str = "",
+    subject: str,
+    html_content: str,
 ) -> SMTPResponse:
     assert settings.emails_enabled, "no provided configuration for email variables"
     message = emails.Message(
@@ -47,28 +47,28 @@ def send_email(  # pragma: no cover
     if settings.EMAIL_SMTP_PASSWORD:
         smtp_options["password"] = settings.EMAIL_SMTP_PASSWORD
     response = message.send(to=email_to, smtp=smtp_options)
-    logger.info(f"send email result: {response}")
+    logger.info(f"send email {email_to} result: {response.__dict__}")
     return response
 
 
 def generate_test_email(email_to: str) -> EmailData:
-    project_name = settings.app_name
-    subject = f"{project_name} - Test email"
+    app_name = settings.APP_NAME
+    subject = f"{app_name} - Test email"
     html_content = render_email_template(
         template_name="test_email.html",
-        context={"project_name": project_name, "email": email_to},
+        context={"app_name": app_name, "email": email_to},
     )
     return EmailData(html_content=html_content, subject=subject)
 
 
 def generate_reset_password_email(email_to: str, email: str, token: str) -> EmailData:
-    project_name = settings.app_name
-    subject = f"{project_name} - Password recovery for user {email}"
+    app_name = settings.APP_NAME
+    subject = f"{app_name} - Password recovery for user {email}"
     link = f"{settings.server_host}/reset-password?token={token}"
     html_content = render_email_template(
         template_name="reset_password.html",
         context={
-            "project_name": project_name,
+            "app_name": app_name,
             "username": email,
             "email": email_to,
             "valid_hours": settings.EMAIL_RESET_TOKEN_EXPIRE_HOURS,
@@ -82,12 +82,12 @@ def generate_reset_password_email(email_to: str, email: str, token: str) -> Emai
 def generate_new_account_email(
     email_to: str, username: str, password: str
 ) -> EmailData:
-    project_name = settings.app_name
-    subject = f"{project_name} - New account for user {username}"
+    app_name = settings.APP_NAME
+    subject = f"{app_name} - New account for user {username}"
     html_content = render_email_template(
         template_name="new_account.html",
         context={
-            "project_name": settings.app_name,
+            "app_name": settings.APP_NAME,
             "username": username,
             "password": password,
             "email": email_to,

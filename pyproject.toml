@@ -60,6 +60,10 @@ optional = true
 pytest-github-actions-annotate-failures = "^0.1.7"
 
 
+
+[tool.poetry.group.dev.dependencies]
+bump2version = "^1.0.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.app"

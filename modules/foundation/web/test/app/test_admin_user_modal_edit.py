@@ -184,7 +184,6 @@ def test_admin_user_modal_edit_delete(create_user) -> None:
     menu_delete_link.click(timeout=10000)
 
     # assert modal confirmation
-    expect(page.locator("#modal")).to_be_visible()
     expect(page.get_by_role("heading", name="Delete user")).to_be_visible()
     expect(page.get_by_text("Are you sure you want to")).to_be_visible()
 

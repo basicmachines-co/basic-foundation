@@ -6,28 +6,11 @@
 {% endblock heading_text %}
 
 {% block content %}
-  <!-- REGISTRATION FORM -->
-  <form
-    class="space-y-6"
-    hx-post="/register"
-    hx-swap="innerTML"
-    hx-target="#register_form"
-    hx-target-error="#notification"
-  >
-    <section id="register_form">{% include "partials/auth/register_form.html" %}</section>
-    <div>
-      <button
-        type="submit"
-        class="flex w-full justify-center rounded-md bg-black px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600"
-      >
-        Register
-      </button>
-    </div>
-  </form>
-  <!-- /REGISTRATION FORM -->
+
+  {% include "partials/auth/register_form.html" %}
 
   <p class="mt-10 text-center text-sm text-gray-500">
-    Already have an account?
-    <a href="/login" class="font-semibold leading-6 text-slate-600 hover:text-slate-500">Login</a>
+    Already have an account? <a href="/login"
+    class="font-semibold leading-6 text-slate-600 hover:text-slate-500">Login</a>
   </p>
 {% endblock content %}
