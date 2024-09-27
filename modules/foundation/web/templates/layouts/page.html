@@ -7,17 +7,15 @@
       <!-- notification popup -->
       <div id="notification"></div>
       <!-- Modal container -->
-      <div id="modal-container" x-data="{ modal: false }">
-        <!--  page content card -->
-        <div
-          class="bg-white px-2 py-4 lg:rounded-lg lg:border lg:border-gray-200 dark:bg-black lg:dark:border-gray-700"
-        >
-          {% block page_content %}
-          {% endblock page_content %}
-        </div>
-        <!-- modal -->
-        <div id="modal"></div>
+      <div id="modal"></div>
+      <!--  page content card -->
+      <div
+        class="bg-white px-2 py-4 lg:rounded-lg lg:border lg:border-gray-200 dark:bg-black lg:dark:border-gray-700"
+      >
+        {% block page_content %}
+        {% endblock page_content %}
       </div>
+      <!-- modal -->
     </section>
   </div>
 {% endblock content %}

@@ -228,7 +228,7 @@ async def user_modal_put(
 
 
 @router.get("/users/modal/{user_id}/delete", dependencies=[AdminRequired])
-async def user_modal_delete(
+async def user_delete_modal_confirm(
     request: Request,
     user_id: UUID,
     user_service: UserServiceDep,
@@ -239,7 +239,7 @@ async def user_modal_delete(
 
     return template(
         request,
-        "partials/user/user_modal_delete.html",
+        "partials/user/user_delete_modal_confirm.html",
         {"user": user, "current_user": current_user, "csrf_token": token},
     )
 
