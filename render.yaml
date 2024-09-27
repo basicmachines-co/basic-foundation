@@ -1,6 +1,6 @@
 previews:
   generation:
-    expireAfterDays: 1
+  expireAfterDays: 1
 services:
   - type: web
     name: basic-foundation
