@@ -18,9 +18,9 @@
     <!-- list -->
     <div class="mt-8 flow-root px-4 py-3 sm:px-6">
       <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <!-- load the list of users, replace content -->
+        <!-- lazily load the list of users, replace div content with response returned from hx-get -->
         <div
-          id="user-list"
+          id="get-user-list"
           class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8"
           hx-get="/users/list"
           hx-trigger="load">
