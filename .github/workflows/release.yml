@@ -31,36 +31,34 @@ jobs:
           git config --local user.name "GitHub Action"
           git config --local user.email "action@github.com"
 
-      # Step 4: Bump the version (patch, minor, or major)
+      # Bump the version (patch, minor, or major)
       - name: Bump Version
+        id: bump_version
         run: |
           bump2version patch 
+        outputs:
+          new_version: ${{ steps.bump_version.outputs.new_version }}
 
-      # Step 5: Build the project
-      - name: Build Project
-        run: |
-          poetry build
 
-      # Step 6: Push changes (committed by bump2version)
+      # Push changes (committed by bump2version)
       - name: Push Version Bump Changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git push origin main
 
-      # Step 7: Create a GitHub Release
+      # Create a GitHub Release
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: 'v${{ steps.bump_version.outputs.new_version }}'  # New version from bump2version
+          tag_name: 'v${{ steps.bump_version.outputs.new_version }}'
           release_name: 'Release v${{ steps.bump_version.outputs.new_version }}'
           draft: false
           prerelease: false
 
-#      # Step 8: Upload build artifacts to the release (optional)
 #      - name: Upload Build Artifacts
 #        uses: actions/upload-artifact@v4
 #        with:
