@@ -1,5 +1,6 @@
 previews:
-  generation: automatic
+  generation:
+    expireAfterDays: 1
 services:
   - type: web
     name: basic-foundation
@@ -14,8 +15,8 @@ services:
         value: 3.12.1
 
 databases:
-  - name: basic-api-postgres
-    databaseName: api
+  - name: basic-foundation-postgres
+    databaseName: foundation
 
 envVarGroups:
   - name: dev
