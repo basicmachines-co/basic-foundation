@@ -6,7 +6,7 @@ from sqlalchemy import select, func
 from sqlalchemy.exc import IntegrityError
 
 from foundation.core.config import settings
-from foundation.core.emails import (
+from foundation.core.email import (
     generate_new_account_email,
     send_email,
     generate_reset_password_email,

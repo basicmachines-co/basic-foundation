@@ -4,7 +4,7 @@ from authlib.jose.errors import BadSignatureError
 from fastapi_jwt.jwt_backends.abstract_backend import BackendException
 from jwt import InvalidTokenError
 
-from foundation.core.emails import (
+from foundation.core.email import (
     generate_test_email,
     send_email,
     generate_reset_password_email,
