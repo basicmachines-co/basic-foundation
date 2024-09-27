@@ -1,4 +1,7 @@
-include .env
+ifneq (,$(wildcard ./.env))
+    include .env
+    export
+endif
 
 .PHONY: install test clean lint lint-fix format migrate-new migrate-up migrate-down migrate-dump migrate-reset
 

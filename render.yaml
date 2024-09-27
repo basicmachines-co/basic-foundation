@@ -13,6 +13,20 @@ services:
         value: 1.7.1
       - key: PYTHON_VERSION
         value: 3.12.1
+      - key: POSTGRES_USER
+        fromDatabase:
+          name: basic-foundation-postgres
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromDatabase:
+          name: basic-foundation-postgres
+          property: password
+      - key: POSTGRES_DB
+        fromDatabase:
+          name: basic-foundation-postgres
+          property: database
+      - key: POSTGRES_PORT
+        value: 5432
 databases:
   - name: basic-foundation-postgres
     databaseName: foundation
