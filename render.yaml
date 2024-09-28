@@ -1,5 +1,5 @@
 previews:
-  generation:
+  generation: automatic
   expireAfterDays: 1
 services:
   - type: web
