@@ -27,7 +27,8 @@ async def test_get_current_user_happy_path():
     # Assert
     user_service.get_user_by_id.assert_awaited_once_with(user_id=user_id)
     assert result is user
-    
+
+
 @pytest.mark.asyncio
 async def test_get_current_user_no_id_found():
     # Arrange

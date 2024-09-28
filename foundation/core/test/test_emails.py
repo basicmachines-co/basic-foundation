@@ -12,7 +12,8 @@ from foundation.core.email import (
 )
 from foundation.core.security import (
     generate_password_reset_token,
-    verify_password_reset_token, reset_token,
+    verify_password_reset_token,
+    reset_token,
 )
 from foundation.test_utils import mock_emails_send
 

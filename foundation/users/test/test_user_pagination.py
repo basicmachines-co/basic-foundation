@@ -18,6 +18,7 @@ pytestmark = pytest.mark.asyncio
 
 pytestmark = pytest.mark.asyncio
 
+
 @pytest_asyncio.fixture
 def mock_request():  # pyright: ignore
     request = mock(requests.Request)
@@ -50,6 +51,7 @@ async def test_user_pagination(user_repository):
     assert paginator.ascending is False
     assert paginator.repository == user_repository
     assert paginator.request == request
+
 
 async def test_total(mock_request, user_repository: Repository):
     user_count = await user_repository.count()
@@ -84,7 +86,7 @@ async def test_page_size_less_than_one(mock_request, user_repository: Repository
 
 
 async def test_page(
-        mock_request, user_repository: Repository, sample_user, inactive_user
+    mock_request, user_repository: Repository, sample_user, inactive_user
 ):
     users = await user_repository.find_all(limit=10)
     pagination = Paginator(
@@ -114,7 +116,7 @@ async def test_page(
 
 
 async def test_page_query(
-        mock_request, user_repository: Repository, sample_user, inactive_user
+    mock_request, user_repository: Repository, sample_user, inactive_user
 ):
     query = select(User).filter(User.is_active == True)
     query_result = await user_repository.execute_query(query)
@@ -132,12 +134,12 @@ async def test_page_query(
     assert page_1.has_previous is False
     assert page_1.has_next is True
     assert page_1.next_page is not None
-    
+
     page_2 = await pagination.page(2)
     assert page_2.items == [users[1]]
     assert page_2.page == 2
     assert page_2.page_size == 1
     assert page_2.total == await pagination.total
-    
+
     assert page_2.has_previous is True
     assert page_2.previous_page is not None

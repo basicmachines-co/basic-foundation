@@ -18,7 +18,9 @@ def random_email() -> str:
     return f"{random_lower_string()}@{random_lower_string()}.com"
 
 
-async def get_superuser_auth_token_headers(client: AsyncClient) -> dict[str, str]: # pragma: no cover
+async def get_superuser_auth_token_headers(
+    client: AsyncClient,
+) -> dict[str, str]:  # pragma: no cover
     login_data = {
         "username": settings.SUPERUSER_EMAIL,
         "password": settings.SUPERUSER_PASSWORD,
@@ -26,7 +28,9 @@ async def get_superuser_auth_token_headers(client: AsyncClient) -> dict[str, str
     return await get_auth_token_headers(client, login_data)
 
 
-async def get_auth_token(client: AsyncClient, login_data: dict[str, str]) -> AuthToken: # pragma: no cover
+async def get_auth_token(
+    client: AsyncClient, login_data: dict[str, str]
+) -> AuthToken:  # pragma: no cover
     r = await client.post("/api/auth/login/access-token", data=login_data)
     assert r.status_code == 200, r.text
     return AuthToken.model_validate(r.json())
@@ -34,7 +38,7 @@ async def get_auth_token(client: AsyncClient, login_data: dict[str, str]) -> Aut
 
 async def get_auth_token_headers(
     client: AsyncClient, login_data: dict[str, str]
-) -> dict[str, str]: # pragma: no cover
+) -> dict[str, str]:  # pragma: no cover
     auth_token = await get_auth_token(client, login_data)
     headers = {"Authorization": f"Bearer {auth_token.access_token}"}
     return headers

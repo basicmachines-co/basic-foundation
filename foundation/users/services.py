@@ -162,5 +162,3 @@ class UserService:
             subject=email_data.subject,
             html_content=email_data.html_content,
         )
-
-

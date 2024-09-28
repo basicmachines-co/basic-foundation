@@ -35,12 +35,12 @@ class UserPagination:
         self.repository = repository
 
     def paginate(
-            self,
-            request: Request,
-            query: Select[Tuple[Any]],
-            order_by: str,
-            asc: bool = True,
-            page_size: int = 10,
+        self,
+        request: Request,
+        query: Select[Tuple[Any]],
+        order_by: str,
+        asc: bool = True,
+        page_size: int = 10,
     ):
         return Paginator(
             request,
@@ -53,7 +53,7 @@ class UserPagination:
 
 
 def get_user_pagination(
-        repository: UserRepositoryDep,
+    repository: UserRepositoryDep,
 ) -> UserPagination:  # pragma: no cover
     return UserPagination(repository)
 

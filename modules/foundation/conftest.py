@@ -39,7 +39,9 @@ def unstub_mocks():
 
 # Create a new instance of the engine
 AsyncTestingSessionLocal = sessionmaker(  # pyright: ignore [reportCallIssue]
-    engine, class_=AsyncSession, expire_on_commit=False  # pyright: ignore [reportArgumentType]
+    engine,
+    class_=AsyncSession,
+    expire_on_commit=False,  # pyright: ignore [reportArgumentType]
 )
 
 
@@ -111,6 +113,7 @@ async def async_db_session_rollback(event_loop) -> AsyncGenerator[AsyncSession, 
 async def user_repository(session) -> Repository[User]:
     return Repository[User](session, User)
 
+
 @pytest_asyncio.fixture
 async def session(async_db_session_rollback) -> AsyncGenerator[AsyncSession, None]:
     """
@@ -121,7 +124,7 @@ async def session(async_db_session_rollback) -> AsyncGenerator[AsyncSession, Non
 
 @pytest_asyncio.fixture
 async def client(
-        user_repository: Repository[User],
+    user_repository: Repository[User],
 ) -> AsyncGenerator[AsyncClient, None]:
     print(f"tclient fixture: user_repository: {user_repository}")
     app.dependency_overrides[get_user_repository] = lambda: user_repository

@@ -2,6 +2,20 @@
 
 ## todo
 
+golive:
+
+- [ ] Pre-commit hookspo
+- [ ] Schema changes
+- [ ] Error handling in the services
+- [ ] Add more comments to the code
+- [ ] Demo deployment environment
+- [ ] Developer docs
+- [ ] Screenshots
+- [ ] Demo video
+- [x] Issue tracking
+- [-] Pluggy plugins
+
+
 - [x] package as separate modules?
     - core
     - api

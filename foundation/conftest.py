@@ -35,7 +35,9 @@ def unstub_mocks():
 
 # Create a new instance of the engine
 AsyncTestingSessionLocal = sessionmaker(  # pyright: ignore [reportCallIssue]
-    engine, class_=AsyncSession, expire_on_commit=False  # pyright: ignore [reportArgumentType]
+    engine,
+    class_=AsyncSession,
+    expire_on_commit=False,  # pyright: ignore [reportArgumentType]
 )
 
 
@@ -115,6 +117,7 @@ async def session(async_db_session_rollback) -> AsyncGenerator[AsyncSession, Non
 async def user_repository(session) -> Repository[User]:
     return Repository[User](session, User)
 
+
 @pytest_asyncio.fixture
 async def sample_user_password() -> str:
     return "password"
@@ -131,6 +134,7 @@ async def sample_user(user_repository: Repository[User], sample_user_password: s
         }
     )
     return sample_user
+
 
 @pytest_asyncio.fixture
 async def inactive_user(user_repository: Repository[User], sample_user_password: str):

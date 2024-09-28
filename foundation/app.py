@@ -13,8 +13,12 @@ from foundation.core import config
 from foundation.core.config import BASE_DIR, settings
 from modules.foundation.web.templates import templates
 
-from modules.foundation.api.routes import api_router  # Import the router from api module
-from modules.foundation.web.routes import html_router  # Import the router from web module
+from modules.foundation.api.routes import (
+    api_router,
+)  # Import the router from api module
+from modules.foundation.web.routes import (
+    html_router,
+)  # Import the router from web module
 from fastapi.exception_handlers import (
     http_exception_handler,
 )
@@ -29,7 +33,11 @@ app = FastAPI(title=settings.APP_NAME)
 app.add_middleware(SessionMiddleware, secret_key=settings.JWT_SECRET)
 app.add_middleware(CSRFProtectMiddleware, csrf_secret=settings.CSRF_SECRET)
 
-app.mount("/static", StaticFiles(directory=f"{BASE_DIR}/modules/foundation/web/static"), name="static")
+app.mount(
+    "/static",
+    StaticFiles(directory=f"{BASE_DIR}/modules/foundation/web/static"),
+    name="static",
+)
 
 # include routes from modules
 app.include_router(api_router, prefix="/api")
@@ -53,10 +61,8 @@ async def on_startup():  # pragma: no cover
     init_data.main()
 
 
-
-
 @app.exception_handler(StarletteHTTPException)
-async def custom_http_exception_handler(request, exc): #pragma: no cover
+async def custom_http_exception_handler(request, exc):  # pragma: no cover
     accept_header = request.headers.get("accept", "")
 
     if "text/html" in accept_header:  # pragma: no cover

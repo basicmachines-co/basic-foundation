@@ -1,4 +1,3 @@
-
 import pytest
 from foundation.app import app
 from fastapi.testclient import TestClient

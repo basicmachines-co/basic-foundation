@@ -23,10 +23,10 @@ class Settings(BaseSettings):
     """
 
     env_file: str
-    
+
     API_URL: str
     APP_NAME: str
-    
+
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
     DOMAIN: str = "localhost"
     ENVIRONMENT: Literal["local", "ci", "production"] = "local"
@@ -34,14 +34,14 @@ class Settings(BaseSettings):
     JWT_SECRET: str
     CSRF_SECRET: str
 
-    # either DATABASE_URL has to be set 
-    DATABASE_URL: str | None = None 
+    # either DATABASE_URL has to be set
+    DATABASE_URL: str | None = None
     # or each POSTGRES VALUE
     POSTGRES_USER: str | None = None
     POSTGRES_PASSWORD: str | None = None
     POSTGRES_DB: str | None = None
     POSTGRES_HOST: str | None = None
-    POSTGRES_PORT: Optional[int] 
+    POSTGRES_PORT: Optional[int]
 
     SUPERUSER_NAME: str
     SUPERUSER_EMAIL: str
@@ -63,7 +63,7 @@ class Settings(BaseSettings):
         return f"postgresql{asyncpg}://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
 
     @property
-    def postgres_dsn(self) -> str: # pragma: no cover
+    def postgres_dsn(self) -> str:  # pragma: no cover
         if not self.DATABASE_URL:
             return self.postgres_url(is_async=True)
         # the render DATEBASE_URL is in the non async format

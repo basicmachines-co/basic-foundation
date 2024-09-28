@@ -87,8 +87,8 @@ async def user_create_post(
             request,
             "partials/user/user_create.html",
             {"current_user": current_user, "form": form},
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
-        )    
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        )
 
     try:
         created_user = await user_service.create_user(create_dict=form.data)
@@ -103,7 +103,6 @@ async def user_create_post(
         )
     except UserCreateError as e:
         return error_notification(request, e.args[0])
-
 
 
 @router.get("/users/{user_id}")

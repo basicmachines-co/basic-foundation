@@ -12,7 +12,9 @@
         <a
           class="block rounded-md bg-black px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600 dark:bg-white dark:text-black dark:hover:bg-slate-400 dark:focus-visible:outline-slate-400"
           href="/users/create"
-        > Create user </a>
+        >
+          Create user
+        </a>
       </div>
     </div>
     <!-- list -->
@@ -23,7 +25,8 @@
           id="get-user-list"
           class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8"
           hx-get="/users/list"
-          hx-trigger="load">
+          hx-trigger="load"
+        >
           {{ svg_loader() }}
         </div>
       </div>

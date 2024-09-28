@@ -7,7 +7,11 @@ from httpx import AsyncClient
 from foundation.core.repository import Repository
 from foundation.users import User
 from foundation.users.schemas import UserCreate, UserUpdate, UserPublic
-from foundation.test_utils import random_email, random_lower_string, get_auth_token_headers
+from foundation.test_utils import (
+    random_email,
+    random_lower_string,
+    get_auth_token_headers,
+)
 
 pytestmark = pytest.mark.asyncio
 

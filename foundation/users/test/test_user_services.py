@@ -59,13 +59,15 @@ async def test_authenticate(user_service, sample_user: User, sample_user_passwor
     assert authenticated_user is not None
     assert authenticated_user.email == sample_user.email
 
+
 async def test_authenticate_user_not_found(
-        user_service, sample_user: User, sample_user_password: str
+    user_service, sample_user: User, sample_user_password: str
 ):
     authenticated_user = await user_service.authenticate(
         email="not@real.email", password=sample_user_password
     )
     assert authenticated_user is None
+
 
 async def test_authenticate_fails(
     user_service, sample_user: User, sample_user_password: str

@@ -39,4 +39,3 @@ async def get_current_superuser(current_user: CurrentUserDep) -> UserPublic:
 
 
 AdminRequired = Depends(get_current_superuser)
-

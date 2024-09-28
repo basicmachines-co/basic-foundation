@@ -44,7 +44,7 @@ def test_user_create_valid_password():
     user_data = {
         "full_name": "full name",
         "email": "some@email.com",
-        "password": "@&ZhfLyCxyca2T"
+        "password": "@&ZhfLyCxyca2T",
     }
 
     # Act
