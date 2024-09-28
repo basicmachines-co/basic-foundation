@@ -4,59 +4,44 @@
 
 ### Overview
 
-Basic Foundation is designed for developers building web applications and APIs in Python. It takes advantage of Python
-3.12’s type hinting and async capabilities for scalability and performance. The project includes transactional database
-tests, ensuring that the real database logic is tested and not just mocked. With built-in JWT authentication, API, and
-web modules, and a pre-configured CI/CD pipeline, it streamlines setting up the infrastructure needed for a typical SaaS
-project. Additionally, full test coverage and support for dynamic preview environments reduce the chances of bugs and
-make deployments safer.
+Basic Foundation is a starter kit for building SaaS applications in Python. It provides user authentication, APIs, and
+user management using modern Python technologies, including FastAPI, PostgreSQL, and HTMX.
 
-## Features of Basic Foundation
+### Tech Stack
 
-- **Python 3.12 with Type Hints**: The project uses Python 3.12 and includes type hints throughout the codebase. Pyright
-  is configured to perform type checking during development, ensuring that types are correctly enforced. This reduces
-  runtime errors by catching type mismatches early.
-- **100% Asynchronous APIs**: All API operations are asynchronous, implemented with FastAPI and async SQLAlchemy. This
-  setup allows non-blocking I/O, which improves performance and scalability when handling multiple concurrent requests,
-  such as during API-heavy workloads.
-- **Transactional Tests with Rollbacks**: Instead of relying on mock objects, database tests are run in real
-  transactions that are rolled back after the test completes. This ensures that each test starts with a clean database
-  state while still exercising the full application stack, making it possible to catch more bugs and integration issues.
-- **Authentication and User Management**: The application includes JWT-based authentication, with functionality for user
-  registration, login, and subscription management. These are implemented as modular components that can be extended to
-  fit project-specific requirements.
-- **API Module**: The API module exposes endpoints for core business logic, including user management and subscription
-  handling. Built using FastAPI, it offers an easy way to extend or add new APIs while maintaining clear separation
-  between the web and API layers.
-- **Web Module**: Server-side rendering is handled using Jinja2 templates, while HTMX is used to enhance the user
-  experience with partial page updates. TailwindCSS is used for styling to minimize the need for custom CSS. This
-  approach keeps the frontend simple, while still supporting dynamic updates.
-- **Email Integration**: The project includes email sending via SMTP, enabling the app to send account-related emails
-  such as password recovery or account activation. This feature simplifies integrating email functionality without
-  third-party services.
-- **Database Migrations with DBMate**: Database schema changes are handled by DBMate, which provides simple migration
-  commands for PostgreSQL. It ensures that schema changes can be applied, rolled back, and dumped consistently across
-  different environments.
-- **100% Test Coverage**: Every core library, API endpoint, and web component has full test coverage. Tests are written
-  using pytest, ensuring that all critical paths are tested. This helps catch regressions and bugs early in the
-  development process.
-- **Playwright for Frontend Testing**: Playwright is used for testing frontend functionality, including interactive
-  features like forms and modals. These tests ensure that the frontend behaves as expected across different browsers and
-  devices.
-- **Continuous Integration and Deployment (CI/CD)**: GitHub Actions is used for automated testing, versioning, and
-  building of the project. Each release includes automated version bumps, database migrations, and deployment to
-  Render.com or other platforms.
-- **Preview Environments**: The project supports preview environments using Render.com’s feature, allowing each pull
-  request or branch to deploy its own isolated environment. This is useful for testing changes before merging them into
-  the main branch.
-- **TailwindCSS for Styling**: Minimal CSS is used in favor of TailwindCSS, which provides utility-based styling. This
-  keeps the styles consistent and reduces the complexity of managing custom CSS.
+- **Python 3.12**: Improved typing support, error messages, and performance.
+- **Type Hints and Type Checking**: Comprehensive type hints with Pyright configured for type checking during
+  development.
+- **Async FastAPI**: All API operations are implemented asynchronously using `async`/`await` and non-blocking I/O.
+- **PostgreSQL**: Database layer for persistence.
+- **SQLAlchemy**: Async DB layer with SQLAlchemy 2.0 for ORM.
+- **HTMX**: Frontend admin web app with dynamic interactions via HTMX.
+- **TailwindCSS**: Utility-first styling for the admin interface.
+- **Testing**: Full test coverage for core app and API using Pytest.
+- **Playwright**: End-to-end in-browser testing for the admin web app.
+- **GitHub Actions**: CI/CD pipelines for testing and deployment.
 
-## Assumptions
+### Features
 
-- Requires a python installation (3.12)
-- Github access https://docs.github.com/en/get-started/quickstart/set-up-git
-- Docker/Docker compose
+- **Asynchronous API Implementation**: FastAPI for non-blocking I/O and async database access.
+- **JWT Authentication**: Secure token-based authentication for both API and web endpoints.
+- **RESTful API Module**: Comprehensive user management and authentication via API.
+- **Responsive Web UI**: Server-side rendered admin UI with partial page updates using Jinja2 templates and HTMX.
+- **TailwindCSS**: Modular and customizable styles using TailwindCSS.
+- **Email Integration**: SMTP support for sending account-related emails (password recovery, activation).
+- **DBMate for Migrations**: Easy schema migrations with DBMate, including schema versioning, rollback and SQL schema
+  dumping.
+- **Transactional Tests**: Rollback transaction after each test to ensure isolated test environments.
+- **100% Test Coverage**:  Test coverage measurement with reporting via Coverage.py.
+- **End-to-End Testing**: Playwright tests for frontend functionality, including interactive elements.
+- **CI/CD with GitHub Actions**: Automated testing, versioning, and deployment with GitHub Actions. Releases include
+  version bumps, migrations, and automated deployment (Render.com).
+- **Preview Environments**: Each branch or pull request is deployed to an isolated environment via Render.com.
+
+## Requirements
+
+- Python (3.12): required for generics and type hinting
+- Docker/Docker compose: run postgres instance locally via docker-compose
 
 ## Getting started
 
