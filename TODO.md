@@ -49,6 +49,7 @@
 ## done
 
 - [x] deploy to render
+    - preview environments
 - [x] add fastapi-users
 - [x] transactional tests
 - [x] add fastapi-users endpoint tests
