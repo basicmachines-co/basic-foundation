@@ -60,21 +60,18 @@ class Settings(BaseSettings):
 
     def postgres_url(self, *, is_async: bool = True) -> str:
         asyncpg = "+asyncpg" if is_async else ""
-        
-        url = f"{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}" if not self.DATABASE_URL else self.DATABASE_URL
-        return f"postgresql{asyncpg}://{url}"
+        return f"postgresql{asyncpg}://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
 
     @property
     def postgres_dsn(self) -> str:
-        postgres_url = self.postgres_url(is_async=True)
-        logger.info(f"postgres_url {postgres_url}")
-        return postgres_url
+        if not self.DATABASE_URL:
+            return self.postgres_url(is_async=True)
+        # the render DATEBASE_URL is in the non async format
+        return self.DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://")
 
     @property
     def postgres_dsn_sync(self) -> str:  # pragma: no cover
-        url = self.postgres_url(is_async=False)
-        logger.info(f"postgres_url {url}")
-        return url
+        return self.DATABASE_URL or self.postgres_url(is_async=False)
 
     @computed_field  # type: ignore[misc]
     @property
