@@ -66,7 +66,7 @@ tailwind-prod:
 # Database migrations
 
 # Database URL (customize according to your environment)
-DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable"
+#DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable"
 
 # Path to migrations directory
 DB_DIR="./db"
@@ -81,7 +81,9 @@ migrate: migrate-up
 
 # Run all pending migrations
 migrate-up:
-	echo $(DATABASE_URL)
+	echo "database url: $(DATABASE_URL)"
+	echo "POSTGRES_USER: $(POSTGRES_USER)"
+	env
 	@npx dbmate -d $(MIGRATIONS_DIR) -s "$(DB_DIR)/schema.sql" -u $(DATABASE_URL) up
 
 # Rollback the latest migration
