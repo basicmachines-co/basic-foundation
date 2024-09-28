@@ -64,8 +64,7 @@ tailwind-prod:
 	cd modules/foundation/web && npm run build-prod
 
 # Database migrations
-
-# Database URL (customize according to your environment)
+# Database URL for db mate
 MIGRATE_DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable"
 
 # Path to migrations directory
@@ -73,7 +72,7 @@ DB_DIR="./db"
 MIGRATIONS_DIR="$(DB_DIR)/migrations"
 
 # Create a new migration
-# make migrate-new name=create_users_table
+# Example: make migrate-new name=create_users_table
 migrate-new:
 	npx dbmate new $(name)
 
@@ -101,6 +100,9 @@ migrate-reset:
 migrate-render:
 	echo "database url: $(DATABASE_URL)"
 	@npx dbmate -d $(MIGRATIONS_DIR) -s "$(DB_DIR)/schema.sql" -u $(DATABASE_URL) up
+
+release:
+	gh workflow run release.yml
 
 init-data:
 	poetry run python foundation/tools/init_data.py

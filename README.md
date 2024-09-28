@@ -42,6 +42,7 @@ user management using modern Python technologies, including FastAPI, PostgreSQL,
 
 - Python (3.12): required for generics and type hinting
 - Docker/Docker compose: run postgres instance locally via docker-compose
+- GitHub: the `gh` [cli tool](https://cli.github.com/) is used for releases
 
 ## Getting started
 
@@ -62,14 +63,6 @@ using pyenv
 
 ```bash
 pyenv version
-```
-
-https://pipx.pypa.io/stable/
-
-```bash
-brew install pipx
-pipx ensurepath
-sudo pipx --global ensurepath  # optional to allow pipx actions with --global argument
 ```
 
 ```bash

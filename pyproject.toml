@@ -1,10 +1,11 @@
 [tool.poetry]
-name = "foundation"
+name = "basic foundation"
 version = "0.1.9"
-description = "Opinionated Python based SaaS foundation using FastAPI"
+description = "A modular Python starter kit for building SaaS applications."
 authors = ["phernandez <phernandez@basicmachines.co>"]
-license = "Apache-2.0"
+license = "MIT"
 readme = "README.md"
+repository = "https://github.com/basicmachines-co/basic-foundation"
 
 packages = [
     { include = "foundation" }, # Core components
@@ -14,43 +15,38 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "3.12.1"
-ruff = "^0.2.1"
-setuptools = "^69.0.3"
-loguru = "^0.7.2"
-fastapi-jwt = { extras = ["authlib"], version = "^0.3.0" }
-typer = "^0.12.3"
-passlib = { extras = ["bcrypt"], version = "^1.7.4" }
+sqlalchemy = { extras = ["asyncio"], version = "^2.0.25" }
 psycopg2 = "^2.9.9"
+asyncpg = "^0.29.0"
+fastapi = { extras = ["standard"], version = "^0.112.0" }
+fastapi-jwt = { extras = ["authlib"], version = "^0.3.0" }
+passlib = { extras = ["bcrypt"], version = "^1.7.4" }
+loguru = "^0.7.2"
+typer = "^0.12.3"
 emails = "^0.6"
 aiosmtpd = "^1.4.6"
-mockito = "^1.5.0"
-fastapi = { extras = ["standard"], version = "^0.112.0" }
 pyjwt = "^2.9.0"
 itsdangerous = "^2.2.0"
 starlette-wtf = "^0.4.5"
-pytest-cov = "^5.0.0"
-pyright = "^1.1.381"
-
-[tool.poetry.group.app.dependencies]
 uvicorn = "^0.25.0"
 jinja2 = "^3.1.2"
-aiosqlite = "^0.19.0"
 pydantic-settings = "^2.1.0"
-sqlalchemy = { extras = ["asyncio"], version = "^2.0.25" }
-asyncpg = "^0.29.0"
 
 
-[tool.poetry.group.test.dependencies]
+[tool.poetry.group.dev.dependencies]
+pyright = "^1.1.381"
+pytest-cov = "^5.0.0"
 pytest = "^7.4.4"
+mockito = "^1.5.0"
 coverage = "^7.4.0"
+ruff = "^0.2.1"
 playwright = "^1.41.2"
 pytest-playwright = "^0.4.4"
-
-[tool.poetry.group.ci.dependencies]
 pytest-asyncio = "^0.23.3"
 asgi-lifespan = "^2.1.0"
 httpx-oauth = "^0.13.1"
 pytest-mock = "^3.12.0"
+bump2version = "^1.0.1"
 
 [tool.poetry.group.github-actions]
 optional = true
@@ -60,10 +56,6 @@ optional = true
 pytest-github-actions-annotate-failures = "^0.1.7"
 
 
-
-[tool.poetry.group.dev.dependencies]
-bump2version = "^1.0.1"
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.app"
@@ -71,8 +63,9 @@ build-backend = "poetry.core.masonry.app"
 
 [tool.pytest.ini_options]
 pythonpath = [
-    ".", "./app/src",
-    ".", "./app/tests",
+    ".",
+    "./foundation",
+    "./modules",
 ]
 filterwarnings = [
     "ignore::DeprecationWarning:",
@@ -96,8 +89,6 @@ ignore = [
     "conftest.py"
 ]
 defineConstant = { DEBUG = true }
-
 reportMissingImports = "error"
 reportMissingTypeStubs = false
-
 pythonVersion = "3.12"
