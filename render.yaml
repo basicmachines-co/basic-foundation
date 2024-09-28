@@ -13,10 +13,20 @@ services:
         value: 1.7.1
       - key: PYTHON_VERSION
         value: 3.12.1
+      - key: APP_NAME
+        value: Basic Foundation
+      - key: API_URL
+        value: $RENDER_EXTERNAL_URL
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CSRF_SECRET
+        generateValue: true
       - key: DATABASE_URL
         fromDatabase:
           name: basic-foundation-postgres
           property: connectionString
+      - fromGroup: email
+      - fromGroup: init-data
 databases:
   - name: basic-foundation-postgres
     databaseName: foundation
