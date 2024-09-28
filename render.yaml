@@ -6,7 +6,7 @@ services:
     name: basic-foundation
     env: python
     plan: starter
-    buildCommand: make install && make tailwind-prod && cat env
+    buildCommand: make install && make tailwind-prod && env
     startCommand: make run
     initialDeployHook: make migrate-up
     envVars:
