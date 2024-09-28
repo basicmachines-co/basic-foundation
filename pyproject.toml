@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "foundation"
-version = "0.1.7"
+version = "0.1.8"
 description = "Opinionated Python based SaaS foundation using FastAPI"
 authors = ["phernandez <phernandez@basicmachines.co>"]
 license = "Apache-2.0"
