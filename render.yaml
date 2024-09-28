@@ -6,9 +6,8 @@ services:
     name: basic-foundation
     env: python
     plan: starter
-    buildCommand: make install && make tailwind-prod && env
+    buildCommand: make install && make tailwind-prod && make migrate-up
     startCommand: make run
-    initialDeployHook: make migrate-up
     envVars:
       - key: POETRY_VERSION
         value: 1.7.1
