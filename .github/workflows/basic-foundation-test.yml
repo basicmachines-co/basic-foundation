@@ -108,3 +108,8 @@ jobs:
 
       - name: Display coverage report in job summary
         run: cat coverage.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

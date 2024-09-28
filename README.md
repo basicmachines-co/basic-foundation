@@ -5,12 +5,12 @@
 ![Version](https://img.shields.io/github/v/release/basicmachines-co/basic-foundation)
 ![Coverage](https://codecov.io/gh/basicmachines-co/basic-foundation/branch/main/graph/badge.svg)
 
-### Overview
+## Overview
 
 Basic Foundation is a Python framework for building full-stack SaaS applications. It provides user authentication, APIs,
 and user management using modern Python technologies, including FastAPI, PostgreSQL, and HTMX.
 
-### Tech Stack
+## Tech Stack
 
 - **Modern Python**: Python 3.12 for improved typing support, error messages, and performance.
 - **Type Hints and Type Checking**: Comprehensive type hints with Pyright configured for type checking during
@@ -23,7 +23,7 @@ and user management using modern Python technologies, including FastAPI, Postgre
 - **Testing**: Comprehensive test coverage for core app and API using Pytest.
 - **Playwright**: End-to-end in-browser testing for the admin web app.
 
-### Features
+## Features
 
 - **Asynchronous API Implementation**: FastAPI for non-blocking I/O and async database access.
 - **JWT Authentication**: Secure token-based authentication for both API and web endpoints.
