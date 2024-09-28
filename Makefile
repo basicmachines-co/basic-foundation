@@ -81,6 +81,7 @@ migrate: migrate-up
 
 # Run all pending migrations
 migrate-up:
+	echo $(DATABASE_URL)
 	@npx dbmate -d $(MIGRATIONS_DIR) -s "$(DB_DIR)/schema.sql" -u $(DATABASE_URL) up
 
 # Rollback the latest migration
