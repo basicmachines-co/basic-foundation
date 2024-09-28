@@ -1,0 +1,10 @@
+cff-version: 1.0.3
+message: "If you use this project, please cite it as follows:"
+authors:
+  - family-names: "Hernandez"
+    given-names: "Paul"
+    affiliation: "Basic Machines"
+title: "Basic Foundation"
+version: "0.1.9"
+date-released: "2024-09-28"
+url: "https://github.com/basicmachines-co/basic-foundation"

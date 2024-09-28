@@ -1,6 +1,9 @@
 # Basic Foundation
 
 ![Build Status](https://github.com/basicmachines-co/basic-foundation/actions/workflows/basic-foundation-test.yml/badge.svg)
+![License](https://img.shields.io/github/license/basicmachines-co/basic-foundation)
+![Version](https://img.shields.io/github/v/release/basicmachines-co/basic-foundation)
+![Coverage](https://codecov.io/gh/basicmachines-co/basic-foundation/branch/main/graph/badge.svg)
 
 ### Overview
 
@@ -119,6 +122,17 @@ freedom to build your project on your own terms, without licensing or vendor loc
 - https://max.engineer/server-informed-ui
 - https://htmx.org/essays/splitting-your-apis/
 - https://htmx.org/essays/why-tend-not-to-use-content-negotiation/
+
+## Contributing
+
+Contributions are welcome! If you’re interested in contributing to Basic Foundation, follow these steps:
+
+1. **Fork the repository** and clone it locally.
+2. **Create a new branch** for your feature or bugfix.
+3. **Ensure tests pass** and add new tests where needed.
+4. **Submit a pull request** with a clear explanation of your changes.
+
+Please check the [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines.
 
 ## Requirements
 
