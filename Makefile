@@ -66,7 +66,7 @@ tailwind-prod:
 # Database migrations
 
 # Database URL (customize according to your environment)
-DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable"
+MIGRATE_DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable"
 
 # Path to migrations directory
 DB_DIR="./db"
@@ -81,24 +81,26 @@ migrate: migrate-up
 
 # Run all pending migrations
 migrate-up:
-	@npx dbmate -d $(MIGRATIONS_DIR) -s "$(DB_DIR)/schema.sql" -u $(DATABASE_URL) up
+	echo "database url: $(MIGRATE_DATABASE_URL)"
+	@npx dbmate -d $(MIGRATIONS_DIR) -s "$(DB_DIR)/schema.sql" -u $(MIGRATE_DATABASE_URL) up
 
 # Rollback the latest migration
 migrate-down:
-	@npx dbmate -d $(MIGRATIONS_DIR) -s "$(DB_DIR)/schema.sql" -u $(DATABASE_URL) down
+	@npx dbmate -d $(MIGRATIONS_DIR) -s "$(DB_DIR)/schema.sql" -u $(MIGRATE_DATABASE_URL) down
 
 # dump the schema.sql file
+
 migrate-dump:
-	@npx dbmate -s "$(DB_DIR)/schema.sql" -u $(DATABASE_URL) dump
+	@npx dbmate -s "$(DB_DIR)/schema.sql" -u $(MIGRATE_DATABASE_URL) dump
 
 # Rollback all migrations
 migrate-reset:
-	@npx dbmate -d $(MIGRATIONS_DIR) -s "$(DB_DIR)/schema.sql" -u DATABASE_URL=$(DATABASE_URL) drop
-	@npx dbmate -d $(MIGRATIONS_DIR) -s "$(DB_DIR)/schema.sql" -u DATABASE_URL=$(DATABASE_URL) up
+	@npx dbmate -d $(MIGRATIONS_DIR) -s "$(DB_DIR)/schema.sql" -u DATABASE_URL=$(MIGRATE_DATABASE_URL) drop
+	@npx dbmate -d $(MIGRATIONS_DIR) -s "$(DB_DIR)/schema.sql" -u DATABASE_URL=$(MIGRATE_DATABASE_URL) up
 
-# Note: The `--network="host"` option is used to allow the Docker container to access the host network.
-# This is necessary for the container to connect to the local database.
-# You might need to adjust this depending on your Docker setup and database location.
+migrate-render:
+	echo "database url: $(DATABASE_URL)"
+	@npx dbmate -d $(MIGRATIONS_DIR) -s "$(DB_DIR)/schema.sql" -u $(DATABASE_URL) up
 
 init-data:
 	poetry run python foundation/tools/init_data.py

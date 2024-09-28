@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Literal
+from typing import Literal, Optional
 
 from dotenv import load_dotenv
 from loguru import logger
@@ -22,20 +22,26 @@ class Settings(BaseSettings):
     This class represents the settings for the Basic API.
     """
 
+    env_file: str
+    
     API_URL: str
+    APP_NAME: str
+    
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
     DOMAIN: str = "localhost"
-    ENVIRONMENT: Literal["local", "staging", "production"] = "local"
+    ENVIRONMENT: Literal["local", "ci", "production"] = "local"
 
-    APP_NAME: str
     JWT_SECRET: str
     CSRF_SECRET: str
-    POSTGRES_USER: str
-    POSTGRES_PASSWORD: str
-    POSTGRES_DB: str
-    POSTGRES_HOST: str
-    POSTGRES_PORT: int
-    env_file: str
+
+    # either DATABASE_URL has to be set 
+    DATABASE_URL: str | None = None 
+    # or each POSTGRES VALUE
+    POSTGRES_USER: str | None = None
+    POSTGRES_PASSWORD: str | None = None
+    POSTGRES_DB: str | None = None
+    POSTGRES_HOST: str | None = None
+    POSTGRES_PORT: Optional[int] 
 
     SUPERUSER_NAME: str
     SUPERUSER_EMAIL: str
@@ -57,12 +63,15 @@ class Settings(BaseSettings):
         return f"postgresql{asyncpg}://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
 
     @property
-    def postgres_dsn(self) -> str:
-        return self.postgres_url(is_async=True)
+    def postgres_dsn(self) -> str: # pragma: no cover
+        if not self.DATABASE_URL:
+            return self.postgres_url(is_async=True)
+        # the render DATEBASE_URL is in the non async format
+        return self.DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://")
 
     @property
     def postgres_dsn_sync(self) -> str:  # pragma: no cover
-        return self.postgres_url(is_async=False)
+        return self.DATABASE_URL or self.postgres_url(is_async=False)
 
     @computed_field  # type: ignore[misc]
     @property
