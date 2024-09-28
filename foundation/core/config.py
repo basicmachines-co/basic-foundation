@@ -63,7 +63,7 @@ class Settings(BaseSettings):
         return f"postgresql{asyncpg}://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
 
     @property
-    def postgres_dsn(self) -> str:
+    def postgres_dsn(self) -> str: # pragma: no cover
         if not self.DATABASE_URL:
             return self.postgres_url(is_async=True)
         # the render DATEBASE_URL is in the non async format
