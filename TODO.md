@@ -7,7 +7,7 @@
     - api
     - web-htmx
 - [-] uv
-- [ ] permission checks
+- [x] permission checks
     - [x] has to be at least one admin
     - [x] only admins can create/edit users
 - [ ] dashboard stats should link to filtered list
