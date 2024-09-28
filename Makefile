@@ -18,7 +18,7 @@ reset-cov:
 
 test: reset-cov test-foundation test-modules-api test-modules-web
 
-COVERAGE_ARGS ?= --cov-append --cov-report=term-missing --cov-config=.coveragerc
+COVERAGE_ARGS ?= --cov-append --cov-report=term-missing --cov-report=xml --cov-config=.coveragerc --junitxml=junit.xml -o junit_family=legacy
 
 test-foundation:
 	poetry run pytest foundation --cov=./foundation $(COVERAGE_ARGS)

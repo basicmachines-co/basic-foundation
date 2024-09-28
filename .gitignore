@@ -161,3 +161,4 @@ cython_debug/
 modules/foundation/web/node_modules/
 !/foundation/templates/email/build/
 coverage.txt
+/junit.xml
