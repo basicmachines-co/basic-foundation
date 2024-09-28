@@ -67,12 +67,14 @@ class Settings(BaseSettings):
     @property
     def postgres_dsn(self) -> str:
         postgres_url = self.postgres_url(is_async=True)
-        logger.info("postgres_url {postgres_url}")
+        logger.info(f"postgres_url {postgres_url}")
         return postgres_url
 
     @property
     def postgres_dsn_sync(self) -> str:  # pragma: no cover
-        return self.postgres_url(is_async=False)
+        url = self.postgres_url(is_async=False)
+        logger.info(f"postgres_url {url}")
+        return url
 
     @computed_field  # type: ignore[misc]
     @property
