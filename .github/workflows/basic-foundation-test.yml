@@ -52,6 +52,15 @@ jobs:
         run: |
           make install
 
+      - name: Run code formatting check
+        run: |
+          make format
+          git diff --exit-code || (echo "Code is not formatted correctly. Please run 'make format' and commit the changes." && exit 1)
+
+      - name: Run type checks
+        run: |
+          make type-check || (echo "Type check failed. Please fix the issues before committing." && exit 1)
+
       - name: Run dbmate migrations
         run: |
           make migrate-up
@@ -59,10 +68,6 @@ jobs:
       - name: Run init data
         run: |
           make init-data
-
-      - name: Run type checks
-        run: |
-          make type-check
 
       - name: Run foundation tests
         run: |
