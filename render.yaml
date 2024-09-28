@@ -16,7 +16,7 @@ services:
       - key: APP_NAME
         value: Basic Foundation
       - key: API_URL
-        value: $RENDER_EXTERNAL_URL
+        value: https://basic-foundation.onrender.com
       - key: JWT_SECRET
         generateValue: true
       - key: CSRF_SECRET

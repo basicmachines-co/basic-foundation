@@ -68,7 +68,7 @@ tailwind-prod:
 # Database URL
 # Check if RENDER, otherwise create DATABASE_URL
 ifeq ($(RENDER),)
-	DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable"
+DATABASE_URL := "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable"
 endif
 
 # Path to migrations directory
