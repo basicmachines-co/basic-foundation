@@ -22,6 +22,14 @@ class UserBase(BaseModel):
     role: RoleEnum = RoleEnum.USER
     full_name: Annotated[str, StringConstraints(min_length=2)]
 
+    @property
+    def is_admin(self):
+        return self.role == RoleEnum.ADMIN
+
+    @property
+    def is_active(self):
+        return self.status == StatusEnum.ACTIVE
+
 
 def validate_password(password: str) -> str:
     # Ensure password is at least 8 characters long

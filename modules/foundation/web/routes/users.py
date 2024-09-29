@@ -20,7 +20,7 @@ router = HTMLRouter(dependencies=[LoginRequired])
 
 
 def authorize_admin_or_owner(*, user: User, current_user: UserPublic):
-    if current_user.is_superuser:
+    if current_user.is_admin:
         return
     if user.id != current_user.id:
         return Response(status_code=status.HTTP_403_FORBIDDEN)

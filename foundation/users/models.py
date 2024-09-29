@@ -35,3 +35,11 @@ class User(BaseWithId):
     role: Mapped[RoleEnum] = mapped_column(
         String(), nullable=False, default=RoleEnum.USER
     )
+
+    @property
+    def is_admin(self):
+        return self.role == RoleEnum.ADMIN
+
+    @property
+    def is_active(self):
+        return self.status == StatusEnum.ACTIVE

@@ -92,6 +92,8 @@ async def test_create_user(user_service):
     assert created_user.email == user_create.get("email")
     assert created_user.status == StatusEnum.PENDING
     assert created_user.role == RoleEnum.USER
+    assert created_user.is_active is False
+    assert created_user.is_admin is False
     assert verify_password(user_create["password"], created_user.hashed_password)
 
 
@@ -112,8 +114,8 @@ async def test_update_user(user_service, sample_user: User):
     user_update = {
         "full_name": "New name",
         "email": random_email(),
-        "is_active": True,
-        "is_superuser": True,
+        "status": StatusEnum.ACTIVE,
+        "role": RoleEnum.ADMIN,
     }
     updated_user = await user_service.update_user(
         user_id=sample_user.id, update_dict=user_update
@@ -122,8 +124,11 @@ async def test_update_user(user_service, sample_user: User):
     assert updated_user.id == sample_user.id
     assert updated_user.full_name == user_update.get("full_name")
     assert updated_user.email == user_update.get("email")
-    assert updated_user.is_active == user_update.get("is_active")
-    assert updated_user.is_superuser == user_update.get("is_superuser")
+    assert updated_user.status == user_update.get("status")
+    assert updated_user.role == user_update.get("role")
+
+    assert updated_user.is_admin is True
+    assert updated_user.is_admin is True
 
 
 async def test_update_user_password(user_service, sample_user: User):
@@ -151,8 +156,8 @@ async def test_update_user_fails(user_service, sample_user: User):
         "full_name": "New name",
         "email": sample_user.email,
         "password": random_lower_string(),
-        "is_active": True,
-        "is_superuser": True,
+        "staus": StatusEnum.ACTIVE,
+        "role": RoleEnum.ADMIN,
     }
     with pytest.raises(UserValueError, match="user can not be updated"):
         await user_service.update_user(user_id=created_user.id, update_dict=user_update)

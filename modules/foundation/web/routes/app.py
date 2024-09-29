@@ -13,7 +13,7 @@ router = HTMLRouter()
 async def index(
     current_user: CurrentUserDep,
 ):
-    if current_user.is_superuser:
+    if current_user.is_admin:
         return RedirectResponse(url=router.url_path_for("dashboard"))
     else:
         return RedirectResponse(url=router.url_path_for("profile"))
