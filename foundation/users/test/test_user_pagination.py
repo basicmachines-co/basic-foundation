@@ -12,6 +12,7 @@ from starlette import requests
 from starlette.datastructures import URL
 
 from foundation.core.repository import Repository
+from users import StatusEnum
 
 pytestmark = pytest.mark.asyncio
 
@@ -118,7 +119,7 @@ async def test_page(
 async def test_page_query(
     mock_request, user_repository: Repository, sample_user, inactive_user
 ):
-    query = select(User).filter(User.is_active == True)
+    query = select(User).filter(User.status == StatusEnum.ACTIVE)
     query_result = await user_repository.execute_query(query)
     users = query_result.scalars().all()
     assert len(users) >= 2

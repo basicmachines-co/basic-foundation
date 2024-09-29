@@ -17,7 +17,7 @@ from foundation.core.security import (
     get_password_hash,
     generate_password_reset_token,
 )
-from foundation.users.models import User
+from foundation.users.models import User, StatusEnum, RoleEnum
 
 
 class UserNotFoundError(Exception):
@@ -79,18 +79,23 @@ class UserService:
         return await self.repository.count()
 
     async def get_active_users_count(self) -> int:
-        query = select(func.count()).select_from(User).filter(User.is_active == True)
+        query = (
+            select(func.count())
+            .select_from(User)
+            .filter(User.status == StatusEnum.ACTIVE)
+        )
         return await self.repository.count(query)
 
     async def get_admin_users_count(self) -> int:
-        query = select(func.count()).select_from(User).filter(User.is_superuser == True)
+        query = (
+            select(func.count()).select_from(User).filter(User.role == RoleEnum.ADMIN)
+        )
         return await self.repository.count(query)
 
     async def create_user(self, *, create_dict: dict[str, Any]) -> User:
         create_dict.update(
             {
                 "hashed_password": get_password_hash(create_dict["password"]),
-                "is_active": True,
             }
         )
         try:

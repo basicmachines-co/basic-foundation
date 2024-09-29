@@ -3,7 +3,7 @@ import uuid
 import pytest
 from sqlalchemy import select
 
-from foundation.users.models import User
+from foundation.users.models import User, StatusEnum
 
 
 @pytest.mark.asyncio
@@ -17,6 +17,7 @@ async def test_create_user(user_repository, session):
     )
     found_user = await user_repository.find_by_id(new_user.id)
     assert found_user.full_name == "John Doe"
+    assert found_user.status == StatusEnum.PENDING
 
 
 @pytest.mark.asyncio
@@ -71,7 +72,7 @@ async def test_count_user(user_repository, sample_user, session):
 
 @pytest.mark.asyncio
 async def test_find_one(user_repository, sample_user, session):
-    stmt = select(User).where(sample_user.email == User.email)
+    stmt = select(User).where(User.email == sample_user.email)
     found_user = await user_repository.find_one(stmt)
     assert found_user is not None
     assert found_user.id == sample_user.id
@@ -80,14 +81,14 @@ async def test_find_one(user_repository, sample_user, session):
 
 @pytest.mark.asyncio
 async def test_find_one_not_found(user_repository, sample_user, session):
-    stmt = select(User).where(sample_user.email == "bad@email.com")
+    stmt = select(User).where("bad@email.com" == sample_user.email)
     found_user = await user_repository.find_one(stmt)
     assert found_user is None
 
 
 @pytest.mark.asyncio
 async def test_execute_query(user_repository, sample_user, session):
-    stmt = select(User).where(sample_user.email == User.email)
+    stmt = select(User).where(User.email == sample_user.email)
     result = await user_repository.execute_query(stmt)
     found_users = result.fetchall()
     assert found_users is not None

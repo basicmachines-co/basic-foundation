@@ -12,6 +12,7 @@ from foundation.test_utils import (
     random_lower_string,
     get_auth_token_headers,
 )
+from users import RoleEnum
 
 pytestmark = pytest.mark.asyncio
 
@@ -483,13 +484,15 @@ async def test_delete_user_current_user(
 async def test_superuser_cannot_delete_self(
     client: AsyncClient, superuser_auth_token_headers, user_repository: Repository[User]
 ) -> None:
+    from users import StatusEnum
+
     new_superuser = UserCreate.model_validate(
         {
             "full_name": "new superuser",
             "email": random_email(),
             "password": "kszd8t5Sg#NT",
-            "is_active": True,
-            "is_superuser": True,
+            "status": StatusEnum.ACTIVE,
+            "rol": RoleEnum.ADMIN,
         }
     )
     r = await client.post(

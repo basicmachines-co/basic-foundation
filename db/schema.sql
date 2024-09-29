@@ -59,10 +59,12 @@ CREATE TABLE public."user" (
     full_name character varying(255),
     email character varying(255) NOT NULL,
     hashed_password character varying NOT NULL,
-    is_active boolean DEFAULT false NOT NULL,
-    is_superuser boolean NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    status character varying(10) DEFAULT 'pending'::character varying NOT NULL,
+    role character varying(10) DEFAULT 'user'::character varying NOT NULL,
+    CONSTRAINT role_check CHECK (((role)::text = ANY ((ARRAY['admin'::character varying, 'user'::character varying])::text[]))),
+    CONSTRAINT status_check CHECK (((status)::text = ANY ((ARRAY['active'::character varying, 'inactive'::character varying, 'pending'::character varying])::text[])))
 );
 
 
@@ -80,6 +82,20 @@ ALTER TABLE ONLY public.schema_migrations
 
 ALTER TABLE ONLY public."user"
     ADD CONSTRAINT user_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: idx_user_role; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_user_role ON public."user" USING btree (role);
+
+
+--
+-- Name: idx_user_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_user_status ON public."user" USING btree (status);
 
 
 --
@@ -106,4 +122,5 @@ CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON public."user" FOR EACH R
 --
 
 INSERT INTO public.schema_migrations (version) VALUES
-    ('20240211180307');
+    ('20240211180307'),
+    ('20240929013917');

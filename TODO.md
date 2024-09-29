@@ -4,7 +4,7 @@
 
 golive:
 
-- [ ] Pre-commit hookspo
+- [x] Pre-commit hookspo
 - [ ] Schema changes
 - [ ] Error handling in the services
 - [ ] Add more comments to the code
@@ -14,6 +14,11 @@ golive:
 - [ ] Demo video
 - [x] Issue tracking
 - [-] Pluggy plugins
+- [ ] custom gpt trained with repo
+    - custom prompts to configure chat responses
+    - Tools in makefile
+    - docs for deps
+    - code walkthroughs for how to use gpt to add features
 
 
 - [x] package as separate modules?
