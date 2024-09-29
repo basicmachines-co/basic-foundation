@@ -35,7 +35,7 @@ def unstub_mocks():
 
 # Create a new instance of the engine
 AsyncTestingSessionLocal = sessionmaker(  # pyright: ignore [reportCallIssue]
-    engine,
+    engine,  # pyright: ignore [reportArgumentType]
     class_=AsyncSession,
     expire_on_commit=False,  # pyright: ignore [reportArgumentType]
 )
