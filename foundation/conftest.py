@@ -10,7 +10,7 @@ from sqlalchemy.orm import sessionmaker
 from foundation.core import security
 from foundation.core.db import engine
 from foundation.core.repository import Repository
-from foundation.users.models import User
+from foundation.users.models import User, StatusEnum
 from foundation.test_utils import (
     random_email,
 )
@@ -130,7 +130,7 @@ async def sample_user(user_repository: Repository[User], sample_user_password: s
             "full_name": "John Doe",
             "email": random_email(),
             "hashed_password": security.get_password_hash(sample_user_password),
-            "is_active": True,
+            "status": StatusEnum.ACTIVE,
         }
     )
     return sample_user
@@ -143,7 +143,7 @@ async def inactive_user(user_repository: Repository[User], sample_user_password:
             "full_name": "Lazy John Doe",
             "email": random_email(),
             "hashed_password": security.get_password_hash(sample_user_password),
-            "is_active": False,
+            "status": StatusEnum.ACTIVE,
         }
     )
     return sample_user

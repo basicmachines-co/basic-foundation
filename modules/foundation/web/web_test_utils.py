@@ -5,6 +5,7 @@ from typing import Optional
 from playwright.sync_api import expect
 
 from foundation.core.config import settings
+from foundation.users import StatusEnum, RoleEnum
 
 BASE_URL = settings.API_URL
 URL_DASHBOARD_PAGE = f"{BASE_URL}/dashboard"
@@ -23,8 +24,8 @@ class User:
     full_name: str
     email: str
     password: str
-    is_active: bool
-    is_admin: bool
+    status: StatusEnum
+    role: RoleEnum
     id: Optional[str] = None
 
 
@@ -61,12 +62,10 @@ def assert_user_form(page):
     expect(password2).to_be_visible()
     expect(password2_input).to_be_visible()
 
-    admin = page.get_by_test_id("admin-label")
-    admin_checkbox = page.get_by_test_id("admin-checkbox")
-    expect(admin).to_be_visible()
-    expect(admin_checkbox).to_be_visible()
+    role_input = page.get_by_label("Role")
+    expect(role_input).to_be_visible()
 
-    return fullname_input, email_input, password_input, password2_input, admin_checkbox
+    return fullname_input, email_input, password_input, password2_input, role_input
 
 
 def assert_users_page(page):
@@ -89,7 +88,7 @@ def assert_create_user_page(page):
         email_input,
         password_input,
         password2_input,
-        admin_checkbox,
+        role_input,
     ) = assert_user_form(page)
 
     cancel_button = page.get_by_role("button", name="Cancel")
@@ -103,13 +102,15 @@ def assert_create_user_page(page):
         email_input,
         password_input,
         password2_input,
-        admin_checkbox,
+        role_input,
         cancel_button,
         save_button,
     )
 
 
-def assert_user_detail_view(page, full_name=None, email=None, active=True, admin=False):
+def assert_user_detail_view(
+    page, full_name=None, email=None, status=StatusEnum.ACTIVE, role=RoleEnum.USER
+):
     # full name is displayed in heading
     expect(page.get_by_role("heading", name=full_name)).to_be_visible()
     # details
@@ -118,8 +119,7 @@ def assert_user_detail_view(page, full_name=None, email=None, active=True, admin
     expect(page.get_by_text("Email address")).to_be_visible()
     expect(page.locator("#email")).to_contain_text(email)
     # status values
-    expect(page.get_by_text("Status")).to_be_visible()
-    expect(page.get_by_text("Active", exact=True)).to_be_visible()
-    expect(page.get_by_label("Active")).to_be_checked(checked=active)
-    expect(page.get_by_text("Admin", exact=True)).to_be_visible()
-    expect(page.get_by_label("Admin")).to_be_checked(checked=admin)
+    expect(page.get_by_text("Status", exact=True)).to_be_visible()
+    expect(page.get_by_role("button", name=status.capitalize())).to_be_visible()
+    expect(page.get_by_text("Role", exact=True)).to_be_visible()
+    expect(page.get_by_role("button", name=role.capitalize())).to_be_visible()

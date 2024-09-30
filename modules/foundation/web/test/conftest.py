@@ -4,6 +4,7 @@ from playwright.sync_api import expect
 
 from foundation.core.config import settings
 from foundation.test_utils import random_email
+from foundation.users import RoleEnum, StatusEnum
 from foundation.users.schemas import AuthToken
 from modules.foundation.web.web_test_utils import (
     URL_LOGIN_PAGE,
@@ -60,12 +61,13 @@ def register_user(page):
 
     expect(page).to_have_url(URL_PROFILE_PAGE)
 
+    # yield a user that has been registered and is active
     user = User(
         full_name=full_name,
         email=email,
         password=strong_password,
-        is_active=True,
-        is_admin=False,
+        status=StatusEnum.ACTIVE,
+        role=RoleEnum.USER,
     )
     yield page, user
 
@@ -76,14 +78,13 @@ def register_user(page):
     )
     u = get_user_response.json()
 
-    # TODO response returns `is_superuser`
     user = User(
         id=u["id"],
         full_name=u["full_name"],
         email=u["email"],
         password=strong_password,
-        is_active=u["is_active"],
-        is_admin=False,
+        status=u["status"],
+        role=u["role"],
     )
     delete_api_url = f"{BASE_URL}/api/users/{user.id}"
     httpx.delete(delete_api_url, headers=get_superuser_auth_token_headers())
@@ -103,7 +104,7 @@ def create_user(do_admin_login):
         email_input,
         password_input,
         password2_input,
-        admin_checkbox,
+        role_input,
         cancel_button,
         save_button,
     ) = assert_create_user_page(page)
@@ -117,6 +118,7 @@ def create_user(do_admin_login):
     email_input.fill(email)
     password_input.fill(password)
     password2_input.fill(password)
+    role_input.select_option(RoleEnum.USER)
 
     with page.expect_navigation():
         save_button.click()
@@ -129,8 +131,8 @@ def create_user(do_admin_login):
         full_name=user_name,
         email=email,
         password=password,
-        is_active=True,
-        is_admin=False,
+        status=StatusEnum.ACTIVE,
+        role=RoleEnum.USER,
     )
     expect(page).to_have_url(f"{URL_USERS_PAGE}/{user.id}")
 

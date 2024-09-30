@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from fastapi_jwt import JwtAuthorizationCredentials
 
-from foundation.users.models import User
+from foundation.users.models import User, StatusEnum, RoleEnum
 from foundation.users.services import UserService, UserNotFoundError
 
 
@@ -29,13 +29,13 @@ async def get_current_user(
         user: User = await user_service.get_user_by_id(user_id=user_id)
     except UserNotFoundError:
         raise HTTPException(status_code=404, detail="User not found")
-    if not user.is_active:
+    if not user.status == StatusEnum.ACTIVE:
         raise HTTPException(status_code=400, detail="Inactive user")
     return user
 
 
-def validate_is_superuser(user):
-    if not user.is_superuser:
+def validate_role_is_admin(user):
+    if not user.role == RoleEnum.ADMIN:
         raise HTTPException(
             status_code=403, detail=f"The user {user.id} doesn't have enough privileges"
         )

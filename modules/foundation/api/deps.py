@@ -5,7 +5,7 @@ from fastapi import Security
 from fastapi_jwt import JwtAuthorizationCredentials, JwtAccessBearer, JwtRefreshBearer
 
 from foundation.core.config import settings
-from foundation.users import get_current_user, validate_is_superuser
+from foundation.users import get_current_user, validate_role_is_admin
 from foundation.users.deps import UserServiceDep
 from foundation.users.models import User
 
@@ -36,7 +36,7 @@ CurrentUserDep = Annotated[User, Depends(get_current_api_user)]
 
 
 async def get_current_superuser(current_user: CurrentUserDep) -> User:
-    return validate_is_superuser(current_user)
+    return validate_role_is_admin(current_user)
 
 
 AdminRequired = Depends(get_current_superuser)

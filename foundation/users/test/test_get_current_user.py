@@ -2,7 +2,13 @@ import pytest
 from unittest.mock import AsyncMock, Mock
 from fastapi import HTTPException
 from fastapi_jwt import JwtAuthorizationCredentials
-from foundation.users import get_current_user, User, validate_is_superuser
+from foundation.users import (
+    get_current_user,
+    User,
+    validate_role_is_admin,
+    RoleEnum,
+    StatusEnum,
+)
 from foundation.users.services import UserService, UserNotFoundError
 
 
@@ -16,7 +22,7 @@ async def test_get_current_user_happy_path():
     credentials.subject = subject
 
     user = Mock(User)
-    user.is_active = True
+    user.status = StatusEnum.ACTIVE
 
     user_service = Mock(UserService)
     user_service.get_user_by_id = AsyncMock(return_value=user)
@@ -66,7 +72,7 @@ async def test_get_current_user_raises_user_not_found():
 @pytest.mark.asyncio
 async def test_get_current_user_raises_inactive_user():
     # Arrange
-    user = Mock(spec=User, id="foo", is_active=False)
+    user = Mock(spec=User, id="foo", status=StatusEnum.INACTIVE)
 
     user_service = Mock(spec=UserService)
     user_service.get_user_by_id = AsyncMock(return_value=user)
@@ -82,27 +88,27 @@ async def test_get_current_user_raises_inactive_user():
     assert excinfo.value.detail == "Inactive user"
 
 
-def test_validate_is_superuser_happy_path():
+def test_validate_role_is_admin_true():
     # Arrange
     user = Mock()
-    user.is_superuser = True
+    user.role = RoleEnum.ADMIN
 
     # Act
-    result = validate_is_superuser(user)
+    result = validate_role_is_admin(user)
 
     # Assert
     assert result is user
 
 
-def test_validate_is_superuser_not_superuser():
+def test_validate_role_is_admin_false():
     # Arrange
     user = Mock()
-    user.is_superuser = False
+    user.role = RoleEnum.USER
     user.id = "user-id"
 
     # Act & Assert
     with pytest.raises(HTTPException) as exc_info:
-        validate_is_superuser(user)
+        validate_role_is_admin(user)
 
     assert exc_info.value.status_code == 403
     assert exc_info.value.detail == f"The user {user.id} doesn't have enough privileges"

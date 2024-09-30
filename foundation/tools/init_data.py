@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from foundation.core.config import settings
 from foundation.core.security import get_password_hash
-from foundation.users.models import User
+from foundation.users.models import User, StatusEnum, RoleEnum
 
 # silence bcrypt noise
 logging.getLogger("passlib").setLevel(logging.ERROR)
@@ -21,8 +21,8 @@ def main():  # pragma: no cover
     user = User(
         full_name=settings.SUPERUSER_NAME,
         email=settings.SUPERUSER_EMAIL,
-        is_active=True,
-        is_superuser=True,
+        status=StatusEnum.ACTIVE,
+        role=RoleEnum.ADMIN,
         hashed_password=get_password_hash(settings.SUPERUSER_PASSWORD),
     )
 

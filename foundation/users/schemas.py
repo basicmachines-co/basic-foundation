@@ -1,8 +1,10 @@
 import re
 import uuid
-from typing import Sequence
+from typing import Sequence, Annotated
 
-from pydantic import BaseModel, EmailStr, ConfigDict, field_validator
+from pydantic import BaseModel, EmailStr, ConfigDict, field_validator, StringConstraints
+
+from foundation.users.models import StatusEnum, RoleEnum
 
 
 class AuthToken(BaseModel):
@@ -16,9 +18,17 @@ class AuthTokenPayload(BaseModel):
 
 class UserBase(BaseModel):
     email: EmailStr
-    is_active: bool = False
-    is_superuser: bool = False
-    full_name: str | None
+    status: StatusEnum = StatusEnum.PENDING
+    role: RoleEnum = RoleEnum.USER
+    full_name: Annotated[str, StringConstraints(min_length=2)]
+
+    @property
+    def is_admin(self):
+        return self.role == RoleEnum.ADMIN
+
+    @property
+    def is_active(self):
+        return self.status == StatusEnum.ACTIVE
 
 
 def validate_password(password: str) -> str:
@@ -57,7 +67,7 @@ class UserCreate(UserBase):
 class UserRegister(BaseModel):
     email: EmailStr
     password: str
-    full_name: str | None
+    full_name: str
 
 
 class UserUpdate(UserBase):

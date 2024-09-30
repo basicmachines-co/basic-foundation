@@ -4,7 +4,7 @@
 
 golive:
 
-- [ ] Pre-commit hookspo
+- [x] Pre-commit hookspo
 - [ ] Schema changes
 - [ ] Error handling in the services
 - [ ] Add more comments to the code
@@ -14,8 +14,14 @@ golive:
 - [ ] Demo video
 - [x] Issue tracking
 - [-] Pluggy plugins
+- [ ] custom gpt trained with repo
+    - custom prompts to configure chat responses
+    - Tools in makefile
+    - docs for deps
+    - code walkthroughs for how to use gpt to add features
 
-
+- [ ] responsive tests for playwright
+- [ ] dashboard stats should link to filtered list
 - [x] package as separate modules?
     - core
     - api
@@ -24,16 +30,14 @@ golive:
 - [x] permission checks
     - [x] has to be at least one admin
     - [x] only admins can create/edit users
-- [ ] dashboard stats should link to filtered list
-- [ ] make active/admin colums enums
-- [ ] db: rename is_superuser to is_admin
+- [x] make active/admin colums enums
+- [x] db: rename is_superuser to is_admin
 - [-] page_size is appended to url
 - [x] use fixtures in web tests
 - [x] delete user after test
 - [x] add playwright to github ci
 - [x] code coverage for ci
 - [x] Api docs say FASTAPI
-- [ ] responsive tests for playwright
 - [x] pywright
 - [x] form includes
 - [x] users page refresh

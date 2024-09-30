@@ -1,10 +1,30 @@
-from typing import Optional
+from enum import Enum
+from typing import Optional, Sequence, Iterable
 from uuid import UUID
 
 from sqlalchemy import func, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from foundation.core.models import BaseWithId
+
+
+class StatusEnum(str, Enum):
+    ACTIVE = "active"
+    INACTIVE = "inactive"
+    PENDING = "pending"
+
+    @classmethod
+    def values(cls):
+        return [v.value for v in cls]
+
+
+class RoleEnum(str, Enum):
+    ADMIN = "admin"
+    USER = "user"
+
+    @classmethod
+    def values(cls) -> list[str]:
+        return [v.value for v in cls]
 
 
 class User(BaseWithId):
@@ -17,5 +37,17 @@ class User(BaseWithId):
     full_name: Mapped[Optional[str]]
     email: Mapped[str] = mapped_column(String())
     hashed_password: Mapped[str] = mapped_column(String())
-    is_active: Mapped[Optional[bool]] = mapped_column(nullable=False, default=False)
-    is_superuser: Mapped[Optional[bool]] = mapped_column(nullable=False, default=False)
+    status: Mapped[StatusEnum] = mapped_column(
+        String(), nullable=False, default=StatusEnum.PENDING
+    )
+    role: Mapped[RoleEnum] = mapped_column(
+        String(), nullable=False, default=RoleEnum.USER
+    )
+
+    @property
+    def is_admin(self):
+        return self.role == RoleEnum.ADMIN
+
+    @property
+    def is_active(self):
+        return self.status == StatusEnum.ACTIVE

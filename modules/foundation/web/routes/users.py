@@ -7,6 +7,7 @@ from sqlalchemy import select, desc, asc
 from starlette_wtf import csrf_token
 from starlette_wtf.csrf import get_csrf_token
 
+from foundation.users import RoleEnum
 from foundation.users.deps import UserServiceDep, UserPaginationDep
 from foundation.users.models import User
 from foundation.users.schemas import UserPublic
@@ -20,7 +21,7 @@ router = HTMLRouter(dependencies=[LoginRequired])
 
 
 def authorize_admin_or_owner(*, user: User, current_user: UserPublic):
-    if current_user.is_superuser:
+    if current_user.is_admin:
         return
     if user.id != current_user.id:
         return Response(status_code=status.HTTP_403_FORBIDDEN)
@@ -160,11 +161,9 @@ async def user_detail_put(
         )
     try:
         # if the user is not an admin, they can not set these fields
-        if not current_user.is_superuser:
+        if not current_user.is_admin:
             update_dict = {
-                k: v
-                for k, v in form.data.items()
-                if k not in ("is_superuser", "is_active")
+                k: v for k, v in form.data.items() if k not in ("status", "role")
             }
         else:
             update_dict = form.data

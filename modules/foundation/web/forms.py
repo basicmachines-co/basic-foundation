@@ -1,7 +1,11 @@
+from typing import Sequence, Iterable
+
 from starlette_wtf import StarletteForm
 from wtforms import StringField, BooleanField, PasswordField, validators
 from wtforms import ValidationError
+from wtforms.fields.choices import SelectField
 
+from foundation.users import StatusEnum, RoleEnum
 from foundation.users.schemas import validate_password
 
 
@@ -10,6 +14,11 @@ def password_validator(form, field):
         validate_password(field.data)
     except ValueError as e:
         raise ValidationError(str(e))
+
+
+def choices_list(values: Sequence[str]):
+    choices = [(val, val.capitalize()) for val in values]
+    return [(" ", " ")] + choices
 
 
 def password_2_validator(form, field):
@@ -53,11 +62,19 @@ class RegisterForm(StarletteForm):
 
 
 class UserCreateForm(RegisterForm):
-    is_superuser = BooleanField("Superuser")
+    role = SelectField(
+        "Role",
+        choices=choices_list(RoleEnum.values()),
+        validators=[validators.DataRequired()],
+    )
 
 
 class UserEditForm(UserCreateForm):
-    is_active = BooleanField("Active")
+    status = SelectField(
+        "Status",
+        choices=choices_list(StatusEnum.values()),
+        validators=[validators.DataRequired()],
+    )
     password = PasswordField("Password", [password_validator_admin])
     password_2 = PasswordField(
         "Repeat Password",

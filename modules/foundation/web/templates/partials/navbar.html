@@ -10,7 +10,7 @@
       <div class="flex">
         <div class="flex flex-shrink-0 items-center">{% include "partials/logo.html" %}</div>
         <!-- Main navigation links for larger screens -->
-        {% if current_user.is_superuser %}
+        {% if current_user.is_admin %}
           <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
             <a
               href="/dashboard"
@@ -115,7 +115,7 @@
   </div>
   <!-- Mobile navbar -->
   <div x-show="mobileMenuOpen" class="min-h-screen bg-white sm:hidden dark:bg-black">
-    {% if current_user.is_superuser %}
+    {% if current_user.is_admin %}
       <div class="space-y-1 pb-3 pt-2">
         <a
           href="/dashboard"

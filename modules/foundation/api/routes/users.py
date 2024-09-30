@@ -4,7 +4,7 @@ from uuid import UUID
 from fastapi import APIRouter, HTTPException, status
 
 from modules.foundation.api.deps import (
-    validate_is_superuser,
+    validate_role_is_admin,
     CurrentUserDep,
     AdminRequired,
 )
@@ -51,7 +51,7 @@ async def get_user(
     """
 
     if current_user.id != user_id:
-        validate_is_superuser(current_user)
+        validate_role_is_admin(current_user)
 
     try:
         user = await user_service.get_user_by_id(user_id=user_id)
@@ -74,7 +74,7 @@ async def get_user_by_email(
     Get a user.
     """
 
-    validate_is_superuser(current_user)
+    validate_role_is_admin(current_user)
 
     try:
         user = await user_service.get_user_by_email(email=email)
@@ -120,7 +120,7 @@ async def update_user(
     Superusers can update any user.
     """
     if current_user.id != user_id:
-        validate_is_superuser(current_user)
+        validate_role_is_admin(current_user)
 
     try:
         await user_service.get_user_by_id(user_id=user_id)
@@ -155,7 +155,7 @@ async def delete_user(
     Superusers can not delete their own user.
     """
     if current_user.id != user_id:
-        validate_is_superuser(current_user)
+        validate_role_is_admin(current_user)
 
     try:
         await user_service.delete_user(user_id=user_id)

@@ -17,6 +17,7 @@ from foundation.users.schemas import (
     NewPassword,
 )
 from foundation.users.services import UserNotFoundError
+from foundation.users.models import StatusEnum
 
 router = APIRouter()
 
@@ -34,7 +35,7 @@ async def login_access_token(
     )
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect email or password")
-    if not user.is_active:
+    if not user.status == StatusEnum.ACTIVE:
         raise HTTPException(status_code=400, detail="Inactive user")
 
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -88,7 +89,7 @@ async def reset_password(user_service: UserServiceDep, body: NewPassword) -> Mes
             status_code=404,
             detail=e.args[0],
         )
-    if not user.is_active:
+    if not user.status == StatusEnum.ACTIVE:
         raise HTTPException(status_code=400, detail="Inactive user")
 
     updated_user = await user_service.update_user(

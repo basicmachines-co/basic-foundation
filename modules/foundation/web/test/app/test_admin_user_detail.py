@@ -2,6 +2,7 @@ import pytest
 from playwright.sync_api import expect
 
 from foundation.test_utils import random_email
+from foundation.users import RoleEnum
 from modules.foundation.web.web_test_utils import (
     URL_USERS_PAGE,
     assert_user_detail_view,
@@ -31,16 +32,12 @@ def test_admin_user_detail_edit(create_user) -> None:
         email_input,
         password_input,
         password2_input,
-        admin_checkbox,
+        role_input,
     ) = assert_user_form(page)
-
-    # active checkbox is only on edit form
-    page.get_by_text("Active", exact=True)
-    active_checkbox = page.get_by_label("Active")
 
     expect(fullname_input).to_have_value(user.full_name)
     expect(email_input).to_have_value(user.email)
-    expect(admin_checkbox).to_be_checked(checked=False)
+    expect(role_input).to_have_value("user")
 
     updated_full_name = "updated name"
     updated_email = random_email()
@@ -48,16 +45,21 @@ def test_admin_user_detail_edit(create_user) -> None:
     # update the name and email values
     fullname_input.fill(updated_full_name)
     email_input.fill(updated_email)
-    admin_checkbox.check()
-    active_checkbox.uncheck()
+    role_input.select_option(value="admin")
 
     # password values are not validated unless they have values
 
     save_button = page.get_by_role("button", name="Save")
     save_button.click()
 
+    from foundation.users import StatusEnum
+
     assert_user_detail_view(
-        page, full_name=updated_full_name, email=updated_email, admin=True, active=False
+        page,
+        full_name=updated_full_name,
+        email=updated_email,
+        role=RoleEnum.ADMIN,
+        status=StatusEnum.ACTIVE,
     )
 
 
@@ -73,7 +75,7 @@ def test_admin_user_detail_edit_password(create_user) -> None:
         email_input,
         password_input,
         password2_input,
-        admin_checkbox,
+        role_input,
     ) = assert_user_form(page)
 
     updated_password = strong_password
