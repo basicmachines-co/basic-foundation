@@ -41,7 +41,7 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str | None = None
     POSTGRES_DB: str | None = None
     POSTGRES_HOST: str | None = None
-    POSTGRES_PORT: Optional[int]
+    POSTGRES_PORT: int | None = None
 
     SUPERUSER_NAME: str
     SUPERUSER_EMAIL: str
