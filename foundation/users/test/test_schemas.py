@@ -1,6 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
+from foundation.users import StatusEnum
 from foundation.users.schemas import validate_password, UserCreate
 
 
@@ -41,10 +42,14 @@ def test_validate_password_exceptions(password: str, expected_exception: str):
 
 def test_user_create_valid_password():
     # Arrange
+    from foundation.users import RoleEnum
+
     user_data = {
         "full_name": "full name",
         "email": "some@email.com",
         "password": "@&ZhfLyCxyca2T",
+        "role": RoleEnum.ADMIN,
+        "status": StatusEnum.ACTIVE,
     }
 
     # Act
@@ -52,6 +57,8 @@ def test_user_create_valid_password():
 
     # Assert
     assert user.password == user_data["password"]
+    assert user.is_active
+    assert user.is_admin
 
 
 def test_user_create_invalid_password():

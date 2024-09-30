@@ -29,8 +29,7 @@ def send_email(  # pragma: no cover
     email_to: str,
     subject: str,
     html_content: str,
-) -> SMTPResponse:
-    assert settings.emails_enabled, "no provided configuration for email variables"
+) -> SMTPResponse | None:
     message = emails.Message(
         subject=subject,
         html=html_content,
@@ -46,9 +45,14 @@ def send_email(  # pragma: no cover
         smtp_options["user"] = settings.EMAIL_SMTP_USER
     if settings.EMAIL_SMTP_PASSWORD:
         smtp_options["password"] = settings.EMAIL_SMTP_PASSWORD
-    response = message.send(to=email_to, smtp=smtp_options)
-    logger.info(f"send email {email_to} result: {response.__dict__}")
-    return response
+
+    if settings.EMAIL_ENABLED:
+        response = message.send(to=email_to, smtp=smtp_options)
+        logger.info(f"send email {email_to} result: {response.__dict__}")
+        return response
+    else:
+        logger.info(f"send email is disabled: {str(message)}")
+        return None
 
 
 def generate_test_email(email_to: str) -> EmailData:

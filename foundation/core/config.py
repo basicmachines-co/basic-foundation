@@ -73,11 +73,6 @@ class Settings(BaseSettings):
     def postgres_dsn_sync(self) -> str:  # pragma: no cover
         return self.DATABASE_URL or self.postgres_url(is_async=False)
 
-    @computed_field  # type: ignore[misc]
-    @property
-    def emails_enabled(self) -> bool:
-        return bool(self.EMAIL_SMTP_HOST and self.EMAIL_FROM_EMAIL)
-
     # assume the .env file is in the directory above the project
     model_config = SettingsConfigDict(env_file=f"{CWD}/../.env", extra="allow")
 

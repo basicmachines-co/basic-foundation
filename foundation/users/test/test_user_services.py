@@ -90,9 +90,9 @@ async def test_create_user(user_service):
     assert created_user.id is not None
     assert created_user.full_name == user_create.get("full_name")
     assert created_user.email == user_create.get("email")
-    assert created_user.status == StatusEnum.PENDING
+    assert created_user.status == StatusEnum.ACTIVE
     assert created_user.role == RoleEnum.USER
-    assert created_user.is_active is False
+    assert created_user.is_active is True
     assert created_user.is_admin is False
     assert verify_password(user_create["password"], created_user.hashed_password)
 

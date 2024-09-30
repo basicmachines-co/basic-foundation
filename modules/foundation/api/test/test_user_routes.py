@@ -5,14 +5,13 @@ import pytest_asyncio
 from httpx import AsyncClient
 
 from foundation.core.repository import Repository
-from foundation.users import User
+from foundation.users import User, RoleEnum, StatusEnum
 from foundation.users.schemas import UserCreate, UserUpdate, UserPublic
 from foundation.test_utils import (
     random_email,
     random_lower_string,
     get_auth_token_headers,
 )
-from users import RoleEnum
 
 pytestmark = pytest.mark.asyncio
 
@@ -36,6 +35,7 @@ async def test_get_user(
             "full_name": "New user",
             "email": random_email(),
             "hashed_password": random_lower_string(),
+            "status": StatusEnum.ACTIVE,
         }
     )
 
@@ -47,6 +47,8 @@ async def test_get_user(
     assert user.id is not None
     assert user.full_name == user_in.full_name
     assert user.email == user_in.email
+    assert user.is_admin is False
+    assert user.is_active is True
 
 
 async def test_get_user_unauthorized_401(client: AsyncClient) -> None:

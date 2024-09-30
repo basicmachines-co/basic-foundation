@@ -93,27 +93,23 @@
   <td class="whitespace-nowrap px-2 py-4 text-sm text-gray-500 dark:text-gray-400">
     {{ user.email }}
   </td>
-  <td class="whitespace-nowrap px-3 py-4 text-sm">
-    <input
-      data-testid="is-active-{{ user.email }}"
-      class="h-4 w-4 rounded border-gray-300 text-slate-600 focus:ring-slate-600 dark:border-gray-600 dark:text-slate-400 dark:focus:ring-slate-300"
-      type="checkbox"
-      {% if user.is_active %}
-        checked
-      {% endif %}
-      disabled
-    />
+  <td class="whitespace-nowrap px-2 py-4 text-sm text-gray-500 dark:text-gray-400">
+    <button
+      data-testid="status-{{ user.email }}"
+      type="button"
+      class="rounded-lg bg-white px-2 py-1 text-sm text-black ring-1 ring-inset ring-gray-800 dark:bg-black dark:text-white dark:ring-gray-300"
+    >
+      {{ user.status|capitalize }}
+    </button>
   </td>
-  <td class="whitespace-nowrap px-3 py-4 text-sm">
-    <input
-      data-testid="is-superuser-{{ user.email }}"
-      class="h-4 w-4 rounded border-gray-300 text-slate-600 focus:ring-slate-600 dark:border-gray-600 dark:text-slate-400 dark:focus:ring-slate-300"
-      type="checkbox"
-      {% if user.is_superuser %}
-        checked
-      {% endif %}
-      disabled
-    />
+  <td class="whitespace-nowrap px-2 py-4 text-sm text-gray-500 dark:text-gray-400">
+    <button
+      data-testid="role-{{ user.email }}"
+      type="button"
+      class="rounded-lg bg-white px-2 py-1 text-sm text-black ring-1 ring-inset ring-gray-800 dark:bg-black dark:text-white dark:ring-gray-300"
+    >
+      {{ user.role|capitalize }}
+    </button>
   </td>
   <td class="whitespace-nowrap px-2 py-4 text-right">{{ edit_delete_popup(user) }}</td>
 </tr>

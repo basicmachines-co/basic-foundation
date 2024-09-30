@@ -18,57 +18,33 @@
         {{ user.email }}
       </dd>
     </div>
-    <div class="px-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-6">
-      <div
-        aria-hidden="true"
-        class="text-sm font-semibold leading-6 text-gray-900 sm:grid sm:grid-cols-3 sm:gap-4 dark:text-gray-100"
+    <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+      <dt class="text-sm font-medium text-gray-900 dark:text-gray-100">Status</dt>
+      <dd
+        id="status"
+        class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 dark:text-gray-200"
       >
-        Status
-      </div>
-      <div class="mt-4 sm:col-span-2 sm:mt-0">
-        <div class="max-w-lg space-y-6">
-          <div class="relative flex gap-x-3">
-            <div class="flex h-6 items-center">
-              <input
-                class="h-4 w-4 rounded border-gray-300 text-slate-600 focus:ring-slate-600 dark:border-gray-600 dark:text-slate-400 dark:focus:ring-slate-300"
-                id="is_active"
-                name="is_active"
-                type="checkbox"
-                {% if user.is_active %}
-                  checked
-                {% endif %}
-                disabled
-              />
-            </div>
-            <div class="text-sm leading-6">
-              <label class="font-medium text-gray-900 dark:text-gray-100" for="is_active">
-                Active
-              </label>
-              <p class="mt-1 text-gray-600 dark:text-gray-400">active users can log in</p>
-            </div>
-          </div>
-          <div class="relative flex gap-x-3">
-            <div class="flex h-6 items-center">
-              <input
-                class="h-4 w-4 rounded border-gray-300 text-slate-600 focus:ring-slate-600 dark:border-gray-600 dark:text-slate-400 dark:focus:ring-slate-300"
-                id="is_superuser"
-                name="is_superuser"
-                type="checkbox"
-                {% if user.is_superuser %}
-                  checked
-                {% endif %}
-                disabled
-              />
-            </div>
-            <div class="text-sm leading-6">
-              <label class="font-medium text-gray-900 dark:text-gray-100" for="is_superuser">
-                Admin
-              </label>
-              <p class="mt-1 text-gray-600 dark:text-gray-400">has admin privileges</p>
-            </div>
-          </div>
-        </div>
-      </div>
+        <button
+          type="button"
+          class="rounded-lg bg-white px-2 py-1 text-sm text-black ring-1 ring-inset ring-gray-700 dark:bg-black dark:text-white dark:ring-gray-300"
+        >
+          {{ user.status | capitalize }}
+        </button>
+      </dd>
+    </div>
+    <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+      <dt class="text-sm font-medium text-gray-900 dark:text-gray-100">Role</dt>
+      <dd
+        id="role"
+        class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 dark:text-gray-200"
+      >
+        <button
+          type="button"
+          class="rounded-lg bg-white px-2 py-1 text-sm text-black ring-1 ring-inset ring-gray-700 dark:bg-black dark:text-white dark:ring-gray-300"
+        >
+          {{ user.role | capitalize }}
+        </button>
+      </dd>
     </div>
   </dl>
   <!-- edit button -->

@@ -3,6 +3,7 @@ from playwright.sync_api import Page, expect
 
 from foundation.core.config import settings
 from foundation.test_utils import random_email, random_lower_string
+from foundation.users import StatusEnum, RoleEnum
 from modules.foundation.web.web_test_utils import (
     URL_USERS_PAGE,
     assert_users_page,
@@ -24,25 +25,25 @@ def assert_user_edit_modal(page, user):
         email_input,
         password_input,
         password2_input,
-        admin_checkbox,
+        role_input,
     ) = assert_user_form(page)
 
     expect(fullname_input).to_have_value(user.full_name)
     expect(email_input).to_have_value(user.email)
-    expect(admin_checkbox).to_be_checked(checked=user.is_admin)
+    expect(role_input).to_have_value(user.role.value)
 
-    # active checkbox is only on edit form
-    page.get_by_text("Active", exact=True)
-    active_checkbox = page.get_by_label("Active")
-    expect(active_checkbox).to_be_checked(checked=user.is_active)
+    # status is only on edit form
+    page.get_by_text("Status", exact=True)
+    status_input = page.get_by_label("Status")
+    expect(status_input).to_have_value(user.status.value)
 
     return (
         fullname_input,
         email_input,
         password_input,
         password2_input,
-        admin_checkbox,
-        active_checkbox,
+        role_input,
+        status_input,
     )
 
 
@@ -67,20 +68,20 @@ def test_admin_user_list(do_admin_login: Page) -> None:
     expect(page.get_by_role("cell", name=admin_full_name)).to_be_visible()
     expect(page.get_by_role("cell", name=admin_email, exact=True)).to_be_visible()
 
-    is_active = page.get_by_test_id(f"is-active-{admin_email}")
-    expect(is_active).to_be_visible()
-    expect(is_active).to_be_checked(checked=True)
+    status = page.get_by_test_id(f"status-{admin_email}")
+    expect(status).to_be_visible()
+    expect(status).to_contain_text(StatusEnum.ACTIVE.capitalize())
 
-    is_superuser = page.get_by_test_id(f"is-superuser-{admin_email}")
-    expect(is_superuser).to_be_visible()
-    expect(is_superuser).to_be_checked(checked=True)
+    role = page.get_by_test_id(f"role-{admin_email}")
+    expect(role).to_be_visible()
+    expect(role).to_contain_text(RoleEnum.ADMIN.capitalize())
 
     admin_user = User(
         full_name=admin_full_name,
         email=admin_email,
         password=settings.SUPERUSER_PASSWORD,
-        is_active=True,
-        is_admin=True,
+        status=StatusEnum.ACTIVE,
+        role=RoleEnum.ADMIN,
     )
     edit_user_in_modal(page, admin_user)
 
@@ -99,8 +100,8 @@ def test_admin_user_modal_edit(create_user) -> None:
         email_input,
         password_input,
         password2_input,
-        admin_checkbox,
-        active_checkbox,
+        role_input,
+        status_input,
     ) = assert_user_edit_modal(page, user)
 
     updated_full_name = random_lower_string()
@@ -109,8 +110,8 @@ def test_admin_user_modal_edit(create_user) -> None:
     # update the name and email values
     fullname_input.fill(updated_full_name)
     email_input.fill(updated_email)
-    admin_checkbox.check()
-    active_checkbox.uncheck()
+    role_input.select_option(value=RoleEnum.USER)
+    status_input.select_option(value=StatusEnum.INACTIVE)
 
     # password values are not validated unless they have values
 

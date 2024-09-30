@@ -32,7 +32,7 @@ def test_admin_create_user_validate_full_name(do_admin_login: Page) -> None:
         email_input,
         password_input,
         password2_input,
-        admin_checkbox,
+        role_input,
         cancel_button,
         save_button,
     ) = assert_create_user_page(page)
@@ -67,7 +67,7 @@ def test_admin_create_user_validate_email(do_admin_login: Page) -> None:
         email_input,
         password_input,
         password2_input,
-        admin_checkbox,
+        role_input,
         cancel_button,
         save_button,
     ) = assert_create_user_page(page)
@@ -102,7 +102,7 @@ def test_admin_create_user_validate_password_required(do_admin_login: Page) -> N
         email_input,
         password_input,
         password2_input,
-        admin_checkbox,
+        role_input,
         cancel_button,
         save_button,
     ) = assert_create_user_page(page)
@@ -135,7 +135,7 @@ def test_admin_create_user_validate_password_strong(do_admin_login: Page) -> Non
         email_input,
         password_input,
         password2_input,
-        admin_checkbox,
+        role_input,
         cancel_button,
         save_button,
     ) = assert_create_user_page(page)
@@ -171,7 +171,7 @@ def test_admin_create_user_validate_passwords_match(do_admin_login: Page) -> Non
         email_input,
         password_input,
         password2_input,
-        admin_checkbox,
+        role_input,
         cancel_button,
         save_button,
     ) = assert_create_user_page(page)

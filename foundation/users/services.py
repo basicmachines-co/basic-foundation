@@ -96,6 +96,7 @@ class UserService:
         create_dict.update(
             {
                 "hashed_password": get_password_hash(create_dict["password"]),
+                "status": StatusEnum.ACTIVE,
             }
         )
         try:

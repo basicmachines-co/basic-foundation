@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import Optional, Sequence, Iterable
 from uuid import UUID
 
 from sqlalchemy import func, String
@@ -13,10 +13,18 @@ class StatusEnum(str, Enum):
     INACTIVE = "inactive"
     PENDING = "pending"
 
+    @classmethod
+    def values(cls):
+        return [v.value for v in cls]
+
 
 class RoleEnum(str, Enum):
     ADMIN = "admin"
     USER = "user"
+
+    @classmethod
+    def values(cls) -> list[str]:
+        return [v.value for v in cls]
 
 
 class User(BaseWithId):

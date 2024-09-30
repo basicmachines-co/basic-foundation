@@ -1,6 +1,7 @@
 import pytest
 from playwright.sync_api import expect
 
+from foundation.users import StatusEnum, RoleEnum
 from modules.foundation.web.web_test_utils import (
     URL_PROFILE_PAGE,
     assert_user_detail_view,
@@ -31,7 +32,11 @@ def test_user_profile(register_user) -> None:
     expect(page).to_have_url(URL_PROFILE_PAGE)
 
     assert_user_detail_view(
-        page, email=user.email, full_name=user.full_name, active=True, admin=False
+        page,
+        email=user.email,
+        full_name=user.full_name,
+        status=StatusEnum.ACTIVE,
+        role=RoleEnum.USER,
     )
 
 
@@ -46,6 +51,7 @@ def test_user_profile(register_user) -> None:
 
 
 def test_404(page):
+    print(f"{BASE_URL}/some-page-does-not-exist")
     page.goto(f"{BASE_URL}/some-page-does-not-exist")
 
     expect(page.get_by_text("404")).to_be_visible()
