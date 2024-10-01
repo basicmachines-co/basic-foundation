@@ -69,13 +69,13 @@ jobs:
         run: |
           make init-data
 
-      - name: Run foundation tests
+      - name: Run foundation core tests
         run: |
-          make test-foundation
+          make test-foundation-core
 
-      - name: Run foundation tests
+      - name: Run foundation api tests
         run: |
-          make test-modules-api
+          make test-foundation-api
 
       - name: Install Playwright and dependencies
         run: |
@@ -93,7 +93,7 @@ jobs:
 
       - name: Run Playwright tests
         run: |
-          make test-modules-web
+          make test-foundation-web
 
       - name: Upload Playwright Traces
         uses: actions/upload-artifact@v4

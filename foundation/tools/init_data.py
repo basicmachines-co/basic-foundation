@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from foundation.core.config import settings
 from foundation.core.security import get_password_hash
-from foundation.users.models import User, StatusEnum, RoleEnum
+from foundation.core.users.models import User, StatusEnum, RoleEnum
 
 # silence bcrypt noise
 logging.getLogger("passlib").setLevel(logging.ERROR)

@@ -5,7 +5,6 @@ source =
     foundation
 
 omit =
-    foundation/conftest.py
-    modules/foundation/web/*
+    foundation/web/*
 
 concurrency=greenlet

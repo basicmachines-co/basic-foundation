@@ -2,26 +2,25 @@ import logging
 import sys
 
 from fastapi import FastAPI
+from fastapi.exception_handlers import (
+    http_exception_handler,
+)
 from loguru import logger
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.staticfiles import StaticFiles
 from starlette_wtf import CSRFProtectMiddleware
 
-from foundation.tools import init_data
+from foundation.api.routes import (
+    api_router,
+)  # Import the router from api
 from foundation.core import config
 from foundation.core.config import BASE_DIR, settings
-from modules.foundation.web.templates import templates
-
-from modules.foundation.api.routes import (
-    api_router,
-)  # Import the router from api module
-from modules.foundation.web.routes import (
+from foundation.tools import init_data
+from foundation.web.routes import (
     html_router,
-)  # Import the router from web module
-from fastapi.exception_handlers import (
-    http_exception_handler,
-)
+)  # Import the router from web
+from foundation.web.templates import templates
 
 # delete all existing default loggers
 logger.remove()
@@ -35,11 +34,11 @@ app.add_middleware(CSRFProtectMiddleware, csrf_secret=settings.CSRF_SECRET)
 
 app.mount(
     "/static",
-    StaticFiles(directory=f"{BASE_DIR}/modules/foundation/web/static"),
+    StaticFiles(directory=f"{BASE_DIR}/web/static"),
     name="static",
 )
 
-# include routes from modules
+# include routes from api and web
 app.include_router(api_router, prefix="/api")
 app.include_router(html_router)
 
