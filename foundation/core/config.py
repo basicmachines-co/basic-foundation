@@ -19,7 +19,56 @@ load_dotenv(verbose=True)
 
 class Settings(BaseSettings):
     """
-    This class represents the settings for the Basic API.
+    Settings configuration class that holds various application settings.
+
+    Attributes:
+        env_file (str): Path to the environment file.
+
+        API_URL (str): URL of the API.
+        APP_NAME (str): Name of the application.
+
+        ACCESS_TOKEN_EXPIRE_MINUTES (int): Token expiration time in minutes. Default is 60 * 24 * 8.
+        DOMAIN (str): Domain name. Default is "localhost".
+        ENVIRONMENT (Literal): Environment type; can be "local", "ci", or "production". Default is "local".
+
+        JWT_SECRET (str): Secret key for JWT.
+        CSRF_SECRET (str): Secret key for CSRF.
+
+        DATABASE_URL (str | None): Database URL; either this has to be set or each individual PostgreSQL value.
+        POSTGRES_USER (str | None): PostgreSQL user.
+        POSTGRES_PASSWORD (str | None): PostgreSQL password.
+        POSTGRES_DB (str | None): PostgreSQL database name.
+        POSTGRES_HOST (str | None): PostgreSQL host.
+        POSTGRES_PORT (int | None): PostgreSQL port.
+
+        SUPERUSER_NAME (str): Superuser name.
+        SUPERUSER_EMAIL (str): Superuser email.
+        SUPERUSER_PASSWORD (str): Superuser password.
+
+        EMAIL_ENABLED (bool): Email service enabled flag. Default is True.
+        EMAIL_SMTP_TLS (bool): Use TLS for SMTP. Default is True.
+        EMAIL_SMTP_SSL (bool): Use SSL for SMTP. Default is False.
+        EMAIL_SMTP_PORT (int): SMTP port. Default is 587.
+        EMAIL_SMTP_HOST (str | None): SMTP host.
+        EMAIL_SMTP_USER (str | None): SMTP user.
+        EMAIL_SMTP_PASSWORD (str | None): SMTP password.
+        EMAIL_FROM_EMAIL (str | None): From email address.
+        EMAIL_FROM_NAME (str | None): From name.
+        EMAIL_RESET_TOKEN_EXPIRE_HOURS (int): Reset token expiration time in hours. Default is 48.
+
+    Methods:
+        postgres_url(self, *, is_async: bool = True) -> str:
+            Constructs a PostgreSQL URL based on the settings.
+            Param is_async: Boolean flag to indicate if the URL should be asynchronous.
+
+        postgres_dsn(self) -> str:
+            Property that returns the PostgreSQL DSN for asynchronous connections. Falls back to constructing the URL if DATABASE_URL is not set.
+
+        postgres_dsn_sync(self) -> str:
+            Property that returns the PostgreSQL DSN for synchronous connections.
+
+        server_host(self) -> str:
+            Property that returns the server host URL. Uses HTTPS for environments other than local development.
     """
 
     env_file: str

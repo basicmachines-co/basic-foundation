@@ -10,6 +10,38 @@ from foundation.core.repository import Repository
 
 @dataclass
 class Page:
+    """
+    Represents a pageable collection of items with metadata and navigation.
+
+    :param url: URL to the current page.
+    :param items: Sequence of items on the current page.
+    :param page: Current page number.
+    :param page_size: Number of items per page.
+    :param total: Total number of items.
+    :param order_by: Field by which items are ordered, can be None.
+    :param ascending: Boolean indicating ascending or descending order.
+
+    :property pages: Total number of pages.
+    :property start: Starting index of items on the current page.
+    :property end: Ending index of items on the current page.
+    :property has_previous: True if there is a previous page, False otherwise.
+    :property has_next: True if there is a next page, False otherwise.
+    :property previous_page: URL to the previous page.
+    :property next_page: URL to the next page.
+
+    Example usage:
+        >>> page = Page(url, items, page=1, page_size=10, total=100, order_by=None, ascending=True)
+        >>> print(page.pages)
+        >>> print(page.start)
+        >>> print(page.end)
+        >>> print(page.has_previous)
+        >>> print(page.has_next)
+        >>> print(page.previous_page)
+        >>> print(page.next_page)
+
+    Handles cases where the current page is the first or last page in the set.
+    """
+
     def __init__(
         self,
         url: URL,
@@ -61,6 +93,37 @@ class Page:
 
 
 class Paginator:
+    """
+    Paginator class for managing pagination of database query results.
+
+    :param request: The current HTTP request
+    :type request: Request
+    :param repository: The repository to execute queries
+    :type repository: Repository
+    :param query: The SQL Alchemy Select query to paginate
+    :type query: Select[Tuple[Any]]
+    :param order_by: Optional column name to order results by
+    :type order_by: str or None, optional
+    :param ascending: Specifies if ordering should be ascending, defaults to True
+    :type ascending: bool, optional
+    :param page_size: Number of items per page, defaults to 10
+    :type page_size: int, optional
+
+    Example usage:
+
+        paginator = Paginator(request, repository, query)
+        page = await paginator.page(1)  # Fetches the first page
+
+    Properties:
+        total: The total number of items matching the query
+
+    Methods:
+        page(page): Fetches items for the given page number.
+
+    Errors:
+        Returns an empty list of items if page < 1 or page_size < 1.
+    """
+
     def __init__(
         self,
         request: Request,

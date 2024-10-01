@@ -27,6 +27,12 @@ router = HTMLRouter()
 
 @router.get("/register")
 async def register_get(request: Request):
+    """
+    Handles GET request for the registration page
+
+    :param request: HTTP request object
+    :return: Renders the registration HTML page with a registration form
+    """
     form = RegisterForm(request)
     return templates.TemplateResponse(
         "pages/register.html", dict(request=request, form=form)
@@ -38,6 +44,13 @@ async def register_post(
     request: Request,
     user_service: UserServiceDep,
 ):
+    """
+    Handles user registration via a POST request. Validates form data and creates a new user if validation passes. Logs in the user upon successful creation.
+
+    :param request: The HTTP request object
+    :param user_service: Service for user-related operations
+    :return: An HTTP response, either rendering a form with errors or redirecting upon successful registration
+    """
     form = await RegisterForm.from_formdata(request)
 
     if await form.validate():
@@ -56,6 +69,12 @@ async def register_post(
 
 @router.get("/login")
 async def login(request: Request):
+    """
+    Render a login page.
+
+    :param request: The incoming HTTP request data.
+    :return: Rendered login page with an empty login form.
+    """
     form = LoginForm(request)
     return template(request, "pages/login.html", {"form": form})
 
@@ -65,6 +84,14 @@ async def login_post(
     request: Request,
     user_service: UserServiceDep,
 ):
+    """
+    Handles user login by processing form data, validating credentials,
+    and authenticating the user. Displays appropriate messages on error cases.
+
+    :param request: HTTP request object containing form data
+    :param user_service: Dependency for user authentication methods
+    :return: Template with login form and notification if any error occurs
+    """
     form = await LoginForm.from_formdata(request)
     if not await form.validate():
         return template(request, "partials/auth/login_form.html", {"form": form})
@@ -100,6 +127,14 @@ async def login_post(
 
 
 async def login_user(request: Request, user: User):
+    """
+    Logs in the user by creating an access token which is set as a cookie in the response.
+    It sets an expiration time for the access token and adds a redirect header to the root page.
+
+    :param request: FastAPI request object
+    :param user: Authenticated User object
+    :return: HTTP response object with an access token cookie and a redirect header
+    """
     response = Response(status_code=status.HTTP_204_NO_CONTENT)
 
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -115,6 +150,17 @@ async def login_user(request: Request, user: User):
 
 @router.get("/logout")
 async def logout(request: Request):
+    """
+    Handles user logout by clearing the authentication cookie and redirecting to the homepage.
+
+    :param request: FastAPI Request object
+    :return: RedirectResponse to homepage
+
+    Example:
+        @router.get("/logout")
+        async def logout(request: Request):
+            # Invoke this function to logout a user
+    """
     # clear cookie
     response = RedirectResponse(url="/")
     access_token_security.unset_access_cookie(response)
@@ -123,12 +169,26 @@ async def logout(request: Request):
 
 @router.get("/forgot-password")
 async def forgot_password(request: Request):
+    """
+    Handles GET requests for the forgot password page.
+
+    :param request: The HTTP request object
+    :return: A rendered HTML page with the forgot password form
+    """
     form = ForgotPasswordForm(request)
     return template(request, "pages/forgot_password.html", {"form": form})
 
 
 @router.post("/forgot-password")
 async def forgot_password_post(request: Request, user_service: UserServiceDep):
+    """
+    Handles the forgot password post request.
+    Validates the form data and attempts to initiate the password recovery process using the provided email.
+
+    :param request: The HTTP request object containing the data submitted by the user.
+    :param user_service: Dependency injection for the user service, responsible for user-related operations.
+    :return: The response template with appropriate feedback messages.
+    """
     form = await ForgotPasswordForm.from_formdata(request)
     if not await form.validate():
         return template(
@@ -158,6 +218,17 @@ async def forgot_password_post(request: Request, user_service: UserServiceDep):
 
 @router.get("/reset-password")
 async def reset_password(request: Request, token: Optional[str] = None):
+    """
+    Handle the GET request for password reset.
+
+    :param request: The request object containing the request metadata and data.
+    :param token: Optional password reset token provided in the request.
+    :return: Rendered HTML template for the password reset page with the token, any possible error, and the form.
+
+    The function initializes a form for resetting the password. If a token is provided,
+    it attempts to verify the token and retrieves the associated email.
+    If the token is invalid, an error message is set.
+    """
     form = ResetPasswordForm(request)
     form.token.data = token
 
@@ -181,6 +252,20 @@ async def reset_password_post(
     request: Request,
     user_service: UserServiceDep,
 ):
+    """
+    Handle password reset request. Validates form data, verifies the reset token,
+    and updates the user's password if the token and form data are valid.
+
+    :param request: HTTP request with form data to reset password
+    :param user_service: Service dependency to interact with user data
+    :return: HTML response with the outcome of the reset process
+
+    Errors:
+        - If form data is invalid, returns form errors.
+        - If reset token is invalid, returns "Invalid token" error message.
+        - If user is not found, returns "User not found" error message.
+        - If user's account is not active, returns "Your account is not active" error message.
+    """
     form = await ResetPasswordForm.from_formdata(request)
 
     if not await form.validate():

@@ -30,7 +30,22 @@ async def get_users(
     user_service: UserServiceDep, skip: int = 0, limit: int = 100
 ) -> Any:
     """
-    Get all users.
+    Retrieves a list of users with pagination support.
+
+    :param user_service: User service dependency for accessing user data
+    :param skip: Number of records to skip (default is 0)
+    :param limit: Maximum number of records to return (default is 100)
+    :return: A UsersPublic object containing the list of users and count
+
+    Example usage::
+
+        # Assuming 'client' is an instance of TestClient
+        response = client.get("/users?skip=0&limit=10")
+        users = response.json()
+
+    Note:
+    - Requires Admin authorization
+    - Ensure 'skip' and 'limit' are non-negative integers
     """
 
     count, users = await user_service.get_users(skip=skip, limit=limit)
@@ -45,9 +60,15 @@ async def get_user(
     user_service: UserServiceDep, user_id: UUID, current_user: CurrentUserDep
 ) -> Any:
     """
-    Get a user.
-    If the current_user is a non-superuser, they can only get their own user.
-    Superusers can get any user.
+    Fetch a user by user ID. Requires the current user to be an admin if fetching details other than their own.
+
+    :param user_service: Dependency to access user-related operations
+    :param user_id: Unique identifier of the user to fetch
+    :param current_user: Logged-in user making the request
+    :return: User details
+
+    :raises HTTPException 404: If the user is not found
+    :raises HTTPException 403: If the current user is not an admin and tries to fetch details of a different user
     """
 
     if current_user.id != user_id:
@@ -71,7 +92,14 @@ async def get_user_by_email(
     user_service: UserServiceDep, email: str, current_user: CurrentUserDep
 ) -> Any:
     """
-    Get a user.
+    Fetches user details by email if the current user has admin privileges.
+
+    :param user_service: Service dependency to fetch user data
+    :param email: Email address of the user to be fetched
+    :param current_user: Currently authenticated user
+    :return: User details in response model format or 404 if user not found
+
+    :raises HTTPException: If user with the given email is not found, raises with status code 404
     """
 
     validate_role_is_admin(current_user)
@@ -94,7 +122,13 @@ async def get_user_by_email(
 )
 async def create_user(*, user_service: UserServiceDep, user_in: UserCreate) -> Any:
     """
-    Create new user.
+    Creates a new user using the user data provided. Raises HTTP 400 if user creation fails.
+
+    :param user_service: Dependency injection of UserService
+    :param user_in: Data required to create a new user
+
+    :return: Created user object as per UserPublic schema or raises HTTP 400 on error
+
     """
     try:
         user_created = await user_service.create_user(create_dict=user_in.model_dump())
@@ -115,9 +149,17 @@ async def update_user(
     current_user: CurrentUserDep,
 ) -> Any:
     """
-    Update a user.
-    If the current_user is a non-super user, they can only update their own user.
-    Superusers can update any user.
+    Update user details.
+
+    :param user_service: Dependency that provides user service methods
+    :param user_id: UUID representing the user's ID
+    :param user_in: Object containing updated user information
+    :param current_user: Dependency that provides the currently authenticated user
+    :return: Updated user details
+    :raises HTTPException:
+        - 404 if user is not found
+        - 400 if there is an error updating the user
+
     """
     if current_user.id != user_id:
         validate_role_is_admin(current_user)
@@ -149,10 +191,15 @@ async def delete_user(
     *, user_service: UserServiceDep, user_id: UUID, current_user: CurrentUserDep
 ) -> Message:
     """
-    Delete a user.
-    If the current_user is a non-super user, they can only delete their own user.
-    Superusers can delete any other user.
-    Superusers can not delete their own user.
+    Deletes a user based on user_id if the current user is either the same user or an admin.
+
+    :param user_service: Dependency that provides user-related operations
+    :param user_id: UUID of the user to be deleted
+    :param current_user: Dependency that provides information about the current authenticated user
+    :return: Confirmation message indicating that the user has been deleted
+
+    Raises:
+        HTTPException: If the user is not found (404 error)
     """
     if current_user.id != user_id:
         validate_role_is_admin(current_user)

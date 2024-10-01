@@ -5,8 +5,8 @@
 golive:
 
 - [x] Pre-commit hookspo
-- [ ] Schema changes
-- [ ] Error handling in the services
+- [x] Schema changes
+- [-] Error handling in the services
 - [ ] Add more comments to the code
 - [ ] Demo deployment environment
 - [ ] Developer docs
