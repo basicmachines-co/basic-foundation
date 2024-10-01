@@ -50,7 +50,7 @@ def render_email_template(*, template_name: str, context: dict[str, Any]) -> str
         Raises KeyError if any placeholders in the template are missing from the context.
     """
     template_str = (
-        BASE_DIR / "foundation" / "templates" / "email" / "build" / template_name
+        BASE_DIR / "foundation" / "core" / "email_templates" / "build" / template_name
     ).read_text()
     html_content = Template(template_str).render(context)
     return html_content

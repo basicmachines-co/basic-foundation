@@ -7,7 +7,7 @@ from httpx import AsyncClient
 from mockito import when, mock
 
 from foundation.core.config import settings
-from foundation.users.schemas import AuthToken
+from foundation.core.users.schemas import AuthToken
 
 
 def random_lower_string() -> str:

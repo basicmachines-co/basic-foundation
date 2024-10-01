@@ -11,23 +11,23 @@ install-python:
 	poetry install
 
 install-node:
-	cd modules/foundation/web && npm install
+	cd foundation/web && npm install
 
 reset-cov:
 	rm -f .coverage
 
-test: reset-cov test-foundation test-modules-api test-modules-web
+test: reset-cov test-foundation-core test-foundation-api test-foundation-web
 
 COVERAGE_ARGS ?= --cov-append --cov-report=term-missing --cov-report=xml --cov-config=.coveragerc --junitxml=junit.xml -o junit_family=legacy
 
-test-foundation:
-	poetry run pytest foundation --cov=./foundation $(COVERAGE_ARGS)
+test-foundation-core:
+	poetry run pytest foundation/test/core --cov=./foundation/core $(COVERAGE_ARGS)
 
-test-modules-api:
-	poetry run pytest modules/foundation/api --cov=./modules/foundation/api $(COVERAGE_ARGS)
+test-foundation-api:
+	poetry run pytest foundation/test/api --cov=./foundation/api $(COVERAGE_ARGS)
 
-test-modules-web:  # runs playwright tests: assumes app is running on at API_URL in config
-	poetry run pytest modules/foundation/web --cov=./modules/foundation/web $(COVERAGE_ARGS) -m "playwright" --tracing=retain-on-failure
+test-foundation-web:  # runs playwright tests: assumes app is running on at API_URL in config
+	poetry run pytest foundation/test/web -m "playwright" --tracing=retain-on-failure
 	#poetry run pytest -m "playwright" --headed --slowmo 500
 
 test-coverage:
@@ -50,7 +50,7 @@ format-python:
 	poetry run ruff format .
 
 format-prettier:
-	cd modules/foundation/web && npx prettier templates --write
+	cd foundation/web && npx prettier templates --write
 
 format: format-python format-prettier
 
