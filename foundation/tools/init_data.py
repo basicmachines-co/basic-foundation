@@ -18,6 +18,18 @@ logger.add(sys.stderr, colorize=True, backtrace=True, diagnose=True)
 
 
 def main():  # pragma: no cover
+    """
+    Creates a default admin user if it does not already exist. Uses settings
+    for defining admin user's properties like name, email, status, role, and
+    hashed password. Checks for user existence in a PostgreSQL database using
+    the provided Data Source Name (DSN). If user is already present, logs
+    that information. If not, creates the user and logs the information.
+
+    :raises Exception: If there is an error during the user creation process
+
+    Example:
+        main()
+    """
     user = User(
         full_name=settings.SUPERUSER_NAME,
         email=settings.SUPERUSER_EMAIL,

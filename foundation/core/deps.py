@@ -10,8 +10,21 @@ from foundation.core.db import async_sessionmaker
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:  # pragma: no cover
     """
-    :return: An asynchronous generator that yields an AsyncSession object.
-    :rtype: AsyncGenerator[AsyncSession, None]
+    :return: An asynchronous generator yielding database sessions.
+
+    This function provides an asynchronous database session generator using
+    SQLAlchemy. It ensures that the session is closed after use. In the
+    event of a SQLAlchemy exception, it raises an HTTP 500 error with a
+    "Database error occurred" message.
+
+    Example:
+        async for session in get_async_session():
+            # Use `session` here
+            pass
+
+    Error Cases:
+        Raises an HTTP 500 exception if an SQLAlchemy specific error occurs.
+
     """
     async with async_sessionmaker() as session:
         try:

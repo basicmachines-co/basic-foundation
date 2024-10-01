@@ -15,6 +15,14 @@ from foundation.core.pagination import Paginator
 def get_user_repository(
     async_session: AsyncSession = Depends(get_async_session),
 ) -> Repository[User]:  # pragma: no cover
+    """
+    Factory function to get a `Repository` instance for `User` entities.
+
+    :param async_session: Database session used for querying
+    :type async_session: AsyncSession
+    :return: Repository instance for User entities
+    :rtype: Repository[User]
+    """
     return Repository(async_session, User)
 
 
@@ -22,6 +30,20 @@ UserRepositoryDep = Annotated[Repository[User], Depends(get_user_repository)]
 
 
 def get_user_service(repository: UserRepositoryDep) -> UserService:  # pragma: no cover
+    """
+    Returns a UserService instance initialized with the given UserRepository dependency
+
+    :param repository: An instance of UserRepositoryDep used to manage User entities.
+    :return: A UserService instance that uses the provided repository.
+
+    Example:
+        repository = UserRepositoryDep()
+        user_service = get_user_service(repository)
+        # user_service can now be used for user-related operations
+
+    Error Cases:
+        None - Assumes valid UserRepositoryDep is provided.
+    """
     return UserService(repository)
 
 
@@ -29,6 +51,12 @@ UserServiceDep = Annotated[UserService, Depends(get_user_service)]
 
 
 class UserPagination:
+    """
+    Manages pagination for User entities using a provided repository.
+
+    :param repository: Repository for User entities.
+    """
+
     repository: Repository[User]
 
     def __init__(self, repository: Repository[User]):
@@ -55,6 +83,17 @@ class UserPagination:
 def get_user_pagination(
     repository: UserRepositoryDep,
 ) -> UserPagination:  # pragma: no cover
+    """
+    This function returns a UserPagination object, which handles pagination of user data using a provided repository.
+
+    :param repository: The repository to fetch user data from
+    :return: UserPagination object
+
+    Example usage:
+
+        repository = UserRepositoryDep()
+        pagination = get_user_pagination(repository)
+    """
     return UserPagination(repository)
 
 
