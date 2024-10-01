@@ -1,5 +1,5 @@
 {
-  "name": "basic-foundation-web",
+  "name": "basic-foundation",
   "version": "1.0.0",
   "description": "Saas platform api web frontend using tailwind, alpine.js and htmx",
   "scripts": {
