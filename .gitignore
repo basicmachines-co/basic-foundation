@@ -159,6 +159,5 @@ cython_debug/
 .DS_Store
 .idea/
 foundation/web/node_modules/
-!/foundation/core/email_templates/build/
 coverage.txt
 /junit.xml
