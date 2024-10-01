@@ -58,10 +58,10 @@ type-check:
 	poetry run pyright
 
 tailwind:
-	cd modules/foundation/web && npm run build
+	cd foundation/web && npm run build
 
 tailwind-prod:
-	cd modules/foundation/web && npm run build-prod
+	cd foundation/web && npm run build-prod
 
 # Database migrations
 # Database URL for db mate

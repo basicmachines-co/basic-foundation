@@ -2,8 +2,8 @@ import pytest
 from foundation.core.users import RoleEnum
 from playwright.sync_api import expect
 
-from foundation.test_utils import random_email
-from foundation.web.web_test_utils import (
+from foundation.test.utils import random_email
+from foundation.test.web.utils import (
     URL_USERS_PAGE,
     assert_user_detail_view,
     strong_password,

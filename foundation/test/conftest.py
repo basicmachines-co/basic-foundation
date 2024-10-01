@@ -14,7 +14,7 @@ from foundation.core.db import engine
 from foundation.core.repository import Repository
 from foundation.core.users.deps import get_user_repository
 from foundation.core.users.models import User, StatusEnum
-from foundation.test_utils import (
+from foundation.test.utils import (
     get_superuser_auth_token_headers,
     random_email,
 )

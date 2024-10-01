@@ -9,8 +9,6 @@ repository = "https://github.com/basicmachines-co/basic-foundation"
 
 packages = [
     { include = "foundation" }, # Core components
-    { include = "modules/foundation/api" }, # API module from modules/foundation/api
-    { include = "modules/foundation/web" }      # Web module from modules/foundation/web
 ]
 
 [tool.poetry.dependencies]

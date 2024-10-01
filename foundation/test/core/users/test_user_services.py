@@ -11,7 +11,7 @@ from foundation.core.users.services import (
     UserService,
     UserCreateError,
 )
-from foundation.test_utils import random_email, random_lower_string, mock_emails_send
+from foundation.test.utils import random_email, random_lower_string, mock_emails_send
 from foundation.core.users import StatusEnum, RoleEnum
 
 pytestmark = pytest.mark.asyncio

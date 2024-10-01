@@ -3,8 +3,8 @@ from foundation.core.users import StatusEnum, RoleEnum
 from playwright.sync_api import Page, expect
 
 from foundation.core.config import settings
-from foundation.test_utils import random_email, random_lower_string
-from foundation.web.web_test_utils import (
+from foundation.test.utils import random_email, random_lower_string
+from foundation.test.web.utils import (
     URL_USERS_PAGE,
     assert_users_page,
     admin_email,

@@ -4,7 +4,7 @@ import pytest
 from playwright.sync_api import Page, expect
 
 from foundation.core.config import settings
-from foundation.web.web_test_utils import (
+from foundation.test.web.utils import (
     URL_LOGIN_PAGE,
     URL_DASHBOARD_PAGE,
     URL_REGISTER_PAGE,

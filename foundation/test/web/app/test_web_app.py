@@ -2,7 +2,7 @@ import pytest
 from foundation.core.users import StatusEnum, RoleEnum
 from playwright.sync_api import expect
 
-from foundation.web.web_test_utils import (
+from foundation.test.web.utils import (
     URL_PROFILE_PAGE,
     assert_user_detail_view,
     BASE_URL,

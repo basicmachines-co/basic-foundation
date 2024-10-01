@@ -7,7 +7,7 @@ from httpx import AsyncClient
 
 from foundation.core.repository import Repository
 from foundation.core.users.schemas import UserCreate, UserUpdate, UserPublic
-from foundation.test_utils import (
+from foundation.test.utils import (
     random_email,
     random_lower_string,
     get_auth_token_headers,

@@ -4,7 +4,7 @@ from httpx import AsyncClient
 
 from foundation.core.security import generate_password_reset_token
 from foundation.core.users.schemas import UserPublic, Message, NewPassword
-from foundation.test_utils import get_auth_token, mock_emails_send, random_lower_string
+from foundation.test.utils import get_auth_token, mock_emails_send, random_lower_string
 
 pytestmark = pytest.mark.asyncio
 
