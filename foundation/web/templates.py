@@ -6,7 +6,7 @@ from starlette.templating import Jinja2Templates
 
 from foundation.core.config import BASE_DIR
 
-templates = Jinja2Templates(directory=f"{BASE_DIR}/foundation/web/templates")
+templates = Jinja2Templates(directory=f"{BASE_DIR}/web/templates")
 templates.env.add_extension(DebugExtension)
 
 

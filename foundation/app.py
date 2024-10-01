@@ -34,7 +34,7 @@ app.add_middleware(CSRFProtectMiddleware, csrf_secret=settings.CSRF_SECRET)
 
 app.mount(
     "/static",
-    StaticFiles(directory=f"{BASE_DIR}/foundation/web/static"),
+    StaticFiles(directory=f"{BASE_DIR}/web/static"),
     name="static",
 )
 

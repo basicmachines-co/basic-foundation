@@ -158,6 +158,6 @@ cython_debug/
 
 .DS_Store
 .idea/
-foundation/web/node_modules/
+web/node_modules/
 coverage.txt
 /junit.xml

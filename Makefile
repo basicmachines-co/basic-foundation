@@ -11,7 +11,7 @@ install-python:
 	poetry install
 
 install-node:
-	cd foundation/web && npm install
+	cd web && npm install
 
 reset-cov:
 	rm -f .coverage
@@ -50,7 +50,7 @@ format-python:
 	poetry run ruff format .
 
 format-prettier:
-	cd foundation/web && npx prettier templates --write
+	cd web && npx prettier templates --write
 
 format: format-python format-prettier
 
@@ -58,10 +58,10 @@ type-check:
 	poetry run pyright
 
 tailwind:
-	cd foundation/web && npm run build
+	cd web && npm run build
 
 tailwind-prod:
-	cd foundation/web && npm run build-prod
+	cd web && npm run build-prod
 
 # Database migrations
 # Database URL for db mate
