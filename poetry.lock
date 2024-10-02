@@ -1065,6 +1065,22 @@ MarkupSafe = ">=2.0"
 i18n = ["Babel (>=2.7)"]
 
 [[package]]
+name = "jinjax"
+version = "0.46"
+description = "Replace your HTML templates with Python server-Side components"
+optional = false
+python-versions = "<4.0,>=3.10"
+files = [
+    {file = "jinjax-0.46-py3-none-any.whl", hash = "sha256:02aeb1e711172e34ed2daa6eda5b26b9ce9b8071c4828eb06011332d5ae38185"},
+    {file = "jinjax-0.46.tar.gz", hash = "sha256:3baeebd0195abc585d9c33d651bbc0fe51241718ce18cdaf3a3531572945d850"},
+]
+
+[package.dependencies]
+jinja2 = ">=3.0"
+markupsafe = ">=2.0"
+whitenoise = ">=5.3"
+
+[[package]]
 name = "loguru"
 version = "0.7.2"
 description = "Python logging made (stupidly) simple"
@@ -2556,6 +2572,20 @@ files = [
 ]
 
 [[package]]
+name = "whitenoise"
+version = "6.7.0"
+description = "Radically simplified static file serving for WSGI applications"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "whitenoise-6.7.0-py3-none-any.whl", hash = "sha256:a1ae85e01fdc9815d12fa33f17765bc132ed2c54fa76daf9e39e879dd93566f6"},
+    {file = "whitenoise-6.7.0.tar.gz", hash = "sha256:58c7a6cd811e275a6c91af22e96e87da0b1109e9a53bb7464116ef4c963bf636"},
+]
+
+[package.extras]
+brotli = ["brotli"]
+
+[[package]]
 name = "win32-setctime"
 version = "1.1.0"
 description = "A small Python utility to set file creation time on Windows"
@@ -2589,4 +2619,4 @@ email = ["email-validator"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.12.1"
-content-hash = "f8dc010f098aba1fcdcae4abebbfce80da3a56f6d249eb889bd426a9d281a163"
+content-hash = "b5d7c54a2adb9214ddd354731931645943b249540549c724e64282fc822d8ff6"

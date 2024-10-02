@@ -1,0 +1,36 @@
+{#def
+  mobileMenuOpen
+#}
+<!-- Mobile menu button -->
+<div class="-mr-2 flex items-center sm:hidden">
+  <button
+      @click="mobileMenuOpen = !{{ mobileMenuOpen }}"
+      class="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 focus:outline-none dark:bg-black dark:text-gray-600"
+  >
+    <span class="sr-only">Open main menu</span>
+    <!-- Hamburger Menu Icon (shown when menu is closed) -->
+    <svg
+        class="h-6 w-6"
+        x-show="!{{ mobileMenuOpen }}"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke="currentColor"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M3 12h18m-18 6h18"/>
+    </svg>
+    <!-- Close Icon (shown when menu is open) -->
+    <svg
+        class="h-6 w-6"
+        x-show="{{ mobileMenuOpen }}"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke="currentColor"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+    </svg>
+  </button>
+</div>

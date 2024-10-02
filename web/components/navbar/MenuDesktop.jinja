@@ -1,0 +1,20 @@
+{#def
+current_user, currentPath
+#}
+
+<!--desktop navbar  menu -->
+{% if current_user.is_admin %}
+{#
+tailwind css:
+
+hidden: This class hides the element by setting display: none;. By default, this will hide the element on all screen sizes.
+
+sm:flex: This class sets display: flex; on small screens (minimum width of 640px) and above. On screens smaller than 640px, the element will remain hidden, but on screens that are 640px or wider, the flex layout will be applied, making the element visible.
+
+Other classes (sm:-my-px sm:ml-6 sm:space-x-8): These are also only applied for small screens and above. They control spacing and margin for the element.
+#}
+<div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
+  <navbar.MenuDesktopNavLink url="/dashboard" name="Dashboard" currentPath={{ currentPath }}/>
+  <navbar.MenuDesktopNavLink url="/users" name="Users" currentPath={{ currentPath }}/>
+</div>
+{% endif %}
