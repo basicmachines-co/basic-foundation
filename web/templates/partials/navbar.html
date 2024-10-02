@@ -63,6 +63,14 @@
             @click.outside="open = false"
             class="absolute right-0 z-10 mt-2 w-48 rounded-md bg-white py-1 shadow-lg dark:bg-gray-700"
           >
+            <div class="block border-b border-gray-200 px-4 py-2 dark:border-gray-600">
+              <div class="text-base font-medium text-gray-800 dark:text-gray-200">
+                {{ current_user.full_name }}
+              </div>
+              <div class="text-sm font-medium text-gray-400 dark:text-gray-500">
+                {{ current_user.email }}
+              </div>
+            </div>
             <a
               href="/profile"
               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
