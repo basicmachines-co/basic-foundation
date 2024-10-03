@@ -80,7 +80,7 @@ async def users_list(
     Error Cases:
     - If `order_by` is not "full_name" or "email", it defaults to "full_name".
     HTMX Specific Behavior:
-    - Returns a partial template "partials/user/user_list.html" containing the paginated user list.
+    - Returns a UserList component containing the paginated user list.
     """
     if order_by not in ["full_name", "email"]:
         order_by = "full_name"
@@ -96,11 +96,10 @@ async def users_list(
         request, query, page_size=page_size, order_by=order_by, asc=ascending
     )
     page = await pagination.page(page=page_num)
-    return template(
-        request,
-        "partials/user/user_list.html",
-        {"current_user": current_user, "page": page},
-    )
+
+    # Render the component and return it in response with errors
+    modal_component = render("user.UserList", current_user=current_user, page=page)
+    return HTMLResponse(modal_component)
 
 
 @router.get("/users/create", dependencies=[AdminRequired])
@@ -378,15 +377,13 @@ async def user_delete_modal_confirm(
     :return: Renders the user deletion confirmation modal template with relevant data.
 
     HTMX Specific Behavior:
-    - Returns a partial template "partials/user/user_delete_modal_confirm.html" for confirming the user deletion.
+    - Returns a UserModalDeleteConfirm confirming the user deletion.
     """
     user = await user_service.get_user_by_id(user_id=user_id)
     token = csrf_token(request)
-    return template(
-        request,
-        "partials/user/user_delete_modal_confirm.html",
-        {"user": user, "current_user": current_user, "csrf_token": token},
-    )
+
+    modal_component = render("user.UserModalDeleteConfirm", user=user, csrf_token=token)
+    return HTMLResponse(modal_component)
 
 
 @router.delete("/users/{user_id}", dependencies=[AdminRequired])

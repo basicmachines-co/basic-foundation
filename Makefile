@@ -52,7 +52,8 @@ format-python:
 format-prettier:
 	cd web && npx prettier templates --write
 
-format: format-python format-prettier
+format: format-python
+#format: format-python format-prettier
 
 type-check:
 	poetry run pyright

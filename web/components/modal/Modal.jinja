@@ -1,6 +1,6 @@
 {#def
   close_modal: bool = False,
-  title: str
+  title: str = ""
 #}
 
 {% if close_modal %}
@@ -34,7 +34,9 @@
             </svg>
           </button>
         </div>
-        {{ content }}
+        <div id="modal-content">
+          {{ content }}
+        </div>
       </div>
     </div>
   </div>
