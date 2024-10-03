@@ -1,10 +1,11 @@
-{% extends "layouts/page.html" %}
+{#def
+  current_user
+#}
 {% from "macros.html" import svg_loader %}
-
-{% block page_content %}
+<Page page_title="Users" current_user="{{ current_user }}">
   <!--  header-->
   <div>
-    <div class="px-4 py-3 sm:flex sm:items-center sm:px-6">
+    <div class="px-4 py-6 sm:flex sm:items-center sm:px-6">
       <div class="sm:flex-auto">
         <h1 class="text-lg font-semibold leading-6 text-gray-900 dark:text-gray-100">Users</h1>
       </div>
@@ -33,4 +34,4 @@
     </div>
     <!-- list -->
   </div>
-{% endblock page_content %}
+</Page>

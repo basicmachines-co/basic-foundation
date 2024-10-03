@@ -3,6 +3,9 @@ from uuid import UUID
 from fastapi import Request, Header, HTTPException
 from fastapi import Response
 from fastapi import status
+from starlette.responses import HTMLResponse
+
+from foundation.api.routes.users import update_user
 from foundation.core.users.deps import UserServiceDep, UserPaginationDep
 from foundation.core.users.models import User
 from foundation.core.users.schemas import UserPublic
@@ -17,7 +20,7 @@ from starlette_wtf.csrf import get_csrf_token
 
 from foundation.web.deps import CurrentUserDep, LoginRequired, AdminRequired
 from foundation.web.forms import UserEditForm, UserCreateForm
-from foundation.web.templates import template
+from foundation.web.templates import template, render
 from foundation.web.utils import HTMLRouter, error_notification
 
 router = HTMLRouter(dependencies=[LoginRequired])
@@ -308,7 +311,10 @@ async def user_modal_edit(
     """
     edit_user = await user_service.get_user_by_id(user_id=user_id)
     form = UserEditForm(request, obj=edit_user)
-    return template(request, "pages/user_modal.html", {"user": edit_user, "form": form})
+
+    # Render the component and return it in response
+    modal_component = render("user.UserModal", user=edit_user, form=form)
+    return HTMLResponse(modal_component)
 
 
 @router.put("/users/modal/{user_id}", dependencies=[AdminRequired])
@@ -334,12 +340,10 @@ async def user_modal_put(
     user = await user_service.get_user_by_id(user_id=user_id)
     form = await UserEditForm.from_formdata(request)
     if not await form.validate():
-        # display the form with errors
-        return template(
-            request,
-            "partials/user/user_modal_edit.html",
-            {"user": user, "form": form},
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        # Render the component and return it in response with errors
+        modal_component = render("user.UserModal", user=user, form=form)
+        return HTMLResponse(
+            modal_component, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
         )
     try:
         updated_user = await user_service.update_user(
@@ -348,12 +352,13 @@ async def user_modal_put(
         )
     except UserValueError as e:
         return error_notification(request, e.args[0])
-    return template(
-        request,
-        "pages/user_modal.html",
-        {"user": updated_user, "form": form, "close_modal": True},
-        headers={"HX-Trigger": "refresh"},
+
+    # Render the model as closed
+    # return a trigger to refresh the user list
+    modal_component = render(
+        "user.UserModal", user=updated_user, form=form, close_modal=True
     )
+    return HTMLResponse(modal_component, headers={"HX-Trigger": "refresh"})
 
 
 @router.get("/users/modal/{user_id}/delete", dependencies=[AdminRequired])
