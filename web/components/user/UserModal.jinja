@@ -5,5 +5,9 @@
   close_modal: bool = False
 #}
 <modal.Modal title="Edit user" :close_modal="{{ close_modal }}">
-  <user.UserModalEdit :request="{{ request }}" :user="{{ user }}" :form="{{ form }}"></user.UserModalEdit>
+  <user.UserModalEdit
+    :request="{{ request }}"
+    :user="{{ user }}"
+    :form="{{ form }}"
+  ></user.UserModalEdit>
 </modal.Modal>

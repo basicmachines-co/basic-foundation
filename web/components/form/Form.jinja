@@ -11,14 +11,14 @@
     notification = None
 #}
 <form
-    class="{{ _class }}"
-    {% if hx_post %} hx-post="{{ hx_post }}" {% endif %}
-    {% if hx_put %} hx-put="{{ hx_put }}" {% endif %}
-    hx-target="{{ hx_target }}"
-    hx-target-422="{{ hx_target_422 }}"
-    hx-target-400="{{ hx_target_400 }}"
-    hx-target-error="{{ hx_target_error }}"
-    hx-swap="{{ hx_swap }}"
+  class="{{ _class }}"
+  {% if hx_post %}hx-post="{{ hx_post }}"{% endif %}
+  {% if hx_put %}hx-put="{{ hx_put }}"{% endif %}
+  hx-target="{{ hx_target }}"
+  hx-target-422="{{ hx_target_422 }}"
+  hx-target-400="{{ hx_target_400 }}"
+  hx-target-error="{{ hx_target_error }}"
+  hx-swap="{{ hx_swap }}"
 >
   {{ csrf_token }}
   {{ content }}
@@ -26,9 +26,9 @@
 {# notification sent via hx-swap-oob to the #notification css selector #}
 {% if notification %}
   <Notification
-      :error="{{ notification.error }}"
-      :title="{{ notification.title }}"
-      :message="{{ notification.message }}"
-      :hx_swap_oob="{{ notification.hx_swap_oob }}">
-  </Notification>
+    :error="{{ notification.error }}"
+    :title="{{ notification.title }}"
+    :message="{{ notification.message }}"
+    :hx_swap_oob="{{ notification.hx_swap_oob }}"
+  ></Notification>
 {% endif %}

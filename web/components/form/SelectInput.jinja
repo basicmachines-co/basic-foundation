@@ -11,16 +11,18 @@
 #}
 <!-- {{ name }} -->
 <div class="{{ css["div"] }}">
-  <label for="{{ id }}"
-      class="block text-sm font-medium leading-6 sm:pt-1.5 text-gray-900 dark:text-gray-100">{{ label }}</label>
+  <label
+    for="{{ id }}"
+    class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5 dark:text-gray-100"
+  >
+    {{ label }}
+  </label>
   <div class="{{ css["div.div"] }}">
-    <p class="block text-sm leading-6 text-gray-900 dark:text-gray-400">
-      {{ description }}
-    </p>
+    <p class="block text-sm leading-6 text-gray-900 dark:text-gray-400">{{ description }}</p>
     <select
-        id="{{ id }}"
-        name="{{ name }}"
-        class="{{ 'border-red-600 dark:border-red-300 ring-red-600 dark:ring-red-300' if errors else 'ring-gray-300 dark:ring-gray-600' }} block rounded-md border-0 bg-white py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:max-w-md sm:text-sm sm:leading-6 dark:bg-black dark:text-gray-100 dark:ring-gray-600 dark:placeholder:text-gray-500"
+      id="{{ id }}"
+      name="{{ name }}"
+      class="{{ 'border-red-600 dark:border-red-300 ring-red-600 dark:ring-red-300' if errors else 'ring-gray-300 dark:ring-gray-600' }} block rounded-md border-0 bg-white py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:max-w-md sm:text-sm sm:leading-6 dark:bg-black dark:text-gray-100 dark:ring-gray-600 dark:placeholder:text-gray-500"
     >
       {% for choice in choices %}
         <option value="{{ choice[0] }}" {% if value == choice[0] %}selected{% endif %}>

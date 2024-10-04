@@ -6,37 +6,37 @@
 <section id="user_edit">
   <div class="p-6">
     <form.Form
-        :hx_put="{{ url_for('user_detail_put', user_id=user.id) }}"
-        hx_target="#user_edit"
-        hx_target-422="#user_edit"
-        hx_target-400="#notification"
-        hx_swap="outerHTML"
-        _class=""
-        :csrf_token="{{ form.csrf_token() }}"
+      :hx_put="{{ url_for('user_detail_put', user_id=user.id) }}"
+      hx_target="#user_edit"
+      hx_target-422="#user_edit"
+      hx_target-400="#notification"
+      hx_swap="outerHTML"
+      _class=""
+      :csrf_token="{{ form.csrf_token() }}"
     >
       <user.UserFormContent :form="{{ form }}"></user.UserFormContent>
       <!-- save/cancel buttons -->
       <div class="mt-6 flex items-center justify-end gap-x-2">
         <a href="/users/{{ user.id }}">
           <button
-              class="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-100"
-              type="button"
+            class="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-100"
+            type="button"
           >
             Cancel
           </button>
         </a>
         <button
-            class="inline-flex justify-center rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600 dark:bg-white dark:text-black dark:hover:bg-slate-400 dark:focus-visible:outline-slate-300"
-            type="submit"
+          class="inline-flex justify-center rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600 dark:bg-white dark:text-black dark:hover:bg-slate-400 dark:focus-visible:outline-slate-300"
+          type="submit"
         >
           Save
         </button>
         <button
-            hx-get="/users/modal/{{ user.id }}/delete"
-            hx-target="#modal"
-            hx-swap="outerHTML"
-            type="button"
-            class="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-black dark:text-gray-100 dark:ring-gray-600 dark:hover:bg-gray-950"
+          hx-get="/users/modal/{{ user.id }}/delete"
+          hx-target="#modal"
+          hx-swap="outerHTML"
+          type="button"
+          class="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-black dark:text-gray-100 dark:ring-gray-600 dark:hover:bg-gray-950"
         >
           Delete
         </button>
