@@ -73,9 +73,17 @@ async def custom_http_exception_handler(request, exc):  # pragma: no cover
             return templates.TemplateResponse(
                 "pages/404.html", {"request": request}, status_code=404
             )
-        elif exc.status_code == 500:  # pragma: no cover
-            return templates.TemplateResponse(
-                "pages/500.html", {"request": request}, status_code=500
-            )
+
+    return await http_exception_handler(request, exc)
+
+
+@app.exception_handler(Exception)
+async def custom_exception_handler(request, exc):  # pragma: no cover
+    accept_header = request.headers.get("accept", "")
+
+    if "text/html" in accept_header:  # pragma: no cover
+        return templates.TemplateResponse(
+            "pages/500.html", {"request": request}, status_code=500
+        )
 
     return await http_exception_handler(request, exc)
