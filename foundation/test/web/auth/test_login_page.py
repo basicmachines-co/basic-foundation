@@ -55,6 +55,24 @@ def test_login_success_admin(page: Page) -> None:
     expect(page).to_have_url(URL_DASHBOARD_PAGE)
 
 
+def test_login_failed_invalid_form(page: Page) -> None:
+    page.goto(URL_LOGIN_PAGE)
+
+    login_page = assert_login_page(page)
+
+    # login with an invalid email
+    login_page["username_input"].fill("user@e")
+    login_page["password_input"].fill("invalid-password")
+
+    # submit login
+    login_page["login_button"].click()
+
+    expect(page.get_by_text("Invalid email address.")).to_be_visible()
+
+    # still on login page
+    expect(page).to_have_url(URL_LOGIN_PAGE)
+
+
 def test_login_failed_invalid_password(page: Page) -> None:
     page.goto(URL_LOGIN_PAGE)
 

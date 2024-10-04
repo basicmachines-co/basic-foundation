@@ -91,7 +91,11 @@ async def login_post(
     """
     form = await LoginForm.from_formdata(request)
     if not await form.validate():
-        return template(request, "partials/auth/login_form.html", {"form": form})
+        component = render("auth.LoginForm", form=form)
+        return HTMLResponse(
+            component,
+            # status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
+        )
 
     message = None
     assert form.username.data is not None
