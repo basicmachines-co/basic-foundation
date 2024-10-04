@@ -13,15 +13,15 @@
         <div class="flex flex-shrink-0 items-center">
           <Logo>BASIC FOUNDATION</Logo>
         </div>
-        <navbar.MenuDesktop currentPath="currentPath" current_user={{ current_user }}/>
+        <navbar.MenuDesktop currentPath="currentPath" :current_user="{{ current_user }}"/>
       </div>
       <!-- Right-aligned section for dark mode toggle and profile dropdown -->
       <div class="hidden sm:ml-6 sm:flex sm:items-center">
         <DarkModeToggle/>
-        <navbar.ProfileDropDown current_user={{ current_user }}/>
+        <navbar.ProfileDropDown :current_user="{{ current_user }}"/>
       </div>
       <navbar.MobileMenuButton mobileMenuOpen="mobileMenuOpen"/>
     </div>
   </div>
-  <navbar.MenuMobile mobileMenuOpen="mobileMenuOpen" currentPath="currentPath" current_user={{ current_user }}/>
+  <navbar.MenuMobile mobileMenuOpen="mobileMenuOpen" currentPath="currentPath" :current_user="{{ current_user }}"/>
 </nav>

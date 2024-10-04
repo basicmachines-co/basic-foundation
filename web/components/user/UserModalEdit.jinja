@@ -12,10 +12,9 @@
       hx-target-400="#notification"
       hx-swap="outerHTML"
       _class=""
-      
       :csrf_token="{{ form.csrf_token() }}"
   >
-    <user.UserFormContent form={{ form }}/>
+    <user.UserFormContent :form="{{ form }}"/>
     <!-- Save/Cancel Buttons -->
     <div class="mt-6 flex items-center justify-end gap-x-2">
       <button

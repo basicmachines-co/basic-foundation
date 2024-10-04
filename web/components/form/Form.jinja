@@ -26,9 +26,9 @@
 {# notification sent via hx-swap-oob to the #notification css selector #}
 {% if notification %}
   <Notification
-      error={{ notification.error }}
-          title={{ notification.title }}
-      message={{ notification.message }}
-          hx_swap_oob={{ notification.hx_swap_oob }}>
+      :error="{{ notification.error }}"
+      :title="{{ notification.title }}"
+      :message="{{ notification.message }}"
+      :hx_swap_oob="{{ notification.hx_swap_oob }}">
   </Notification>
 {% endif %}

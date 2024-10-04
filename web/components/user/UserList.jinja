@@ -91,14 +91,14 @@
     <!-- Table Body -->
     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
     {% for user in page.items %}
-      <user.UserListRow user={{ user }}/>
+      <user.UserListRow :user="{{ user }}"/>
     {% endfor %}
     </tbody>
     <!-- Pagination Controls -->
     <tfoot>
     <tr>
       <td colspan="5">
-        <Pagination page={{ page }}/>
+        <Pagination :page="{{ page }}"/>
       </td>
     </tr>
     </tfoot>

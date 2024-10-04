@@ -6,8 +6,8 @@
 <div x-show="mobileMenuOpen" class="min-h-screen bg-white sm:hidden dark:bg-black">
   {% if current_user.is_admin %}
     <div class="space-y-1 pb-3 pt-2">
-      <navbar.MenuMobileNavLink url="/dashboard" name="Dashboard" currentPath={{ currentPath }}/>
-      <navbar.MenuMobileNavLink url="/users" name="Users" currentPath={{ currentPath }}/>
+      <navbar.MenuMobileNavLink url="/dashboard" name="Dashboard" :currentPath="{{ currentPath }}"/>
+      <navbar.MenuMobileNavLink url="/users" name="Users" :currentPath="{{ currentPath }}"/>
     </div>
   {% endif %}
   <div class="border-t border-gray-200 pb-3 pt-4">

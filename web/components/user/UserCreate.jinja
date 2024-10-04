@@ -13,7 +13,7 @@
         _class=""
         :csrf_token="{{ form.csrf_token() }}"
     >
-      <user.UserFormContent form={{ form }} create={{ True }}></user.UserFormContent>
+      <user.UserFormContent :form="{{ form }}" :create="{{ True }}"></user.UserFormContent>
       <div class="px-4 py-6 sm:px-6">
         <div class="mt-6 flex items-center justify-end gap-x-2">
           <a href="/users">

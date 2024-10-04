@@ -14,7 +14,7 @@
         _class=""
         :csrf_token="{{ form.csrf_token() }}"
     >
-      <user.UserFormContent form={{ form }}></user.UserFormContent>
+      <user.UserFormContent :form="{{ form }}"></user.UserFormContent>
       <!-- save/cancel buttons -->
       <div class="mt-6 flex items-center justify-end gap-x-2">
         <a href="/users/{{ user.id }}">

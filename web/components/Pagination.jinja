@@ -22,7 +22,7 @@
       <span class="text-sm text-gray-700 dark:text-gray-200">Rows per page:</span>
       <select
           class="rounded-md border-gray-300 dark:border-gray-600 dark:bg-black dark:text-gray-200"
-          hx-get="/users/list?page={{ page.page }}&page_size={{ page.page_size }}"
+          :hx-get="/users/list?page={{ page.page }}&page_size={{ page.page_size }}"
           hx-target="#user-list"
           hx-trigger="change"
           name="page_size"

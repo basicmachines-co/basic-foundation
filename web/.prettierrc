@@ -1,10 +1,16 @@
 {
   "printWidth": 100,
   "htmlWhitespaceSensitivity": "ignore",
-  "plugins": ["prettier-plugin-tailwindcss", "prettier-plugin-jinja-template"],
+  "plugins": [
+    "prettier-plugin-tailwindcss",
+    "prettier-plugin-jinja-template"
+  ],
   "overrides": [
     {
-      "files": ["*.html"],
+      "files": [
+        "*.html",
+        "*.jinja"
+      ],
       "options": {
         "parser": "jinja-template"
       }

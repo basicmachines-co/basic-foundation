@@ -1,7 +1,7 @@
 {#def
   current_user
 #}
-<Application page_title="Dashboard" current_user={{ current_user }}>
+<Application page_title="Dashboard" :current_user="{{ current_user }}">
   <div class="py-6 pl-2 pr-2">
     <h1 class="pl-2 pt-2 text-lg font-semibold leading-6 text-gray-900 dark:text-gray-200">
       Dashboard
@@ -9,11 +9,11 @@
     <!-- row of stats -->
     <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
       <!-- Total Users -->
-      <Loading hx_get="/dashboard/users/count" hx_trigger="load"/>
+      <Loading hx_get="/dashboard/users/count" hx_trigger="load" />
       <!-- Active Users -->
-      <Loading hx_get="/dashboard/users/active_count" hx_trigger="load"/>
+      <Loading hx_get="/dashboard/users/active_count" hx_trigger="load" />
       <!-- Admin Users -->
-      <Loading hx_get="/dashboard/users/admin_count" hx_trigger="load"/>
+      <Loading hx_get="/dashboard/users/admin_count" hx_trigger="load" />
     </dl>
   </div>
 </Application>
