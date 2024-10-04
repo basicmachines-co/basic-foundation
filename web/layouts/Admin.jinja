@@ -1,0 +1,14 @@
+{#def
+  current_user,
+  page_title
+#}
+<Application :title="{{ page_title }}">
+  <body class="h-full" hx-ext="response-targets">
+    <navbar.Navbar :current_user="{{ current_user }}"></navbar.Navbar>
+    <!-- Main content -->
+    <main class="lg:min-w-0 lg:pb-2 lg:pt-2">
+      <!-- page content -->
+      {{ content }}
+    </main>
+  </body>
+</Application>

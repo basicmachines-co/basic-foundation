@@ -90,7 +90,8 @@ def test_register_password_valid(page: Page) -> None:
 
     register_page["fullname_input"].fill(full_name)
     register_page["email_input"].fill(email)
-    register_page["password_input"].fill("weak password")
+    register_page["password_input"].fill("weak")
+    register_page["password2_input"].fill("weak")
     register_page["register_button"].click()
 
     expect(page).to_have_url(URL_REGISTER_PAGE)
@@ -99,6 +100,7 @@ def test_register_password_valid(page: Page) -> None:
     expect(register_page["fullname_input"]).to_have_value(full_name)
     expect(register_page["email_input"]).to_have_value(email)
     expect(register_page["password_input"]).to_have_value("")
+    expect(register_page["password2_input"]).to_have_value("")
 
 
 def test_register_passwords_must_match(page: Page) -> None:
@@ -122,3 +124,27 @@ def test_register_passwords_must_match(page: Page) -> None:
 
     # Expect an error message that passwords do not match
     expect(page.locator("#password-error")).to_have_text("Passwords do not match.")
+
+
+def test_register_user_email_already_exists(register_user) -> None:
+    page, user = register_user
+
+    page.goto(URL_REGISTER_PAGE)
+
+    # Ensure the registration page loads correctly
+    register_page = assert_register_page(page)
+
+    # Fill in the registration form
+    register_page["fullname_input"].fill(user.full_name)
+    register_page["email_input"].fill(user.email)
+    register_page["password_input"].fill(user.password)
+    register_page["password2_input"].fill(user.password)
+
+    # Submit the form
+    register_page["register_button"].click()
+
+    expect(page).to_have_url(URL_REGISTER_PAGE)
+
+    expect(page.locator("#notification-message")).to_contain_text(
+        f"A user with email {user.email} already exists"
+    )

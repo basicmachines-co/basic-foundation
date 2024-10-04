@@ -1,9 +1,9 @@
 from fastapi import Request
 from foundation.core.users.deps import UserServiceDep
-from starlette.responses import RedirectResponse
+from starlette.responses import RedirectResponse, HTMLResponse
 
 from foundation.web.deps import CurrentUserDep, LoginRequired, AdminRequired
-from foundation.web.templates import templates
+from foundation.web.templates import templates, render
 from foundation.web.utils import HTMLRouter
 
 router = HTMLRouter()
@@ -52,18 +52,13 @@ async def dashboard_users_count(request: Request, user_service: UserServiceDep):
     :return: A TemplateResponse object with user count statistics
 
     Asynchronously retrieves the total number of users from the user service.
-    Renders the `partials/stat.html` template with the user count data.
+    Renders the `Stat` component with the user count data.
     """
     users_count = await user_service.get_users_count()
-    return templates.TemplateResponse(
-        "partials/stat.html",
-        {
-            "request": request,
-            "name": "Total Users",
-            "id": "user-count",
-            "value": users_count,
-        },
+    modal_component = render(
+        "Stat", id="user-count", stat_name="Total Users", value=users_count
     )
+    return HTMLResponse(modal_component)
 
 
 @router.get("/dashboard/users/active_count", dependencies=[AdminRequired])
@@ -80,15 +75,11 @@ async def dashboard_active_users_count(request: Request, user_service: UserServi
         async def dashboard_active_users_count(request: Request, user_service: UserServiceDep)
     """
     count = await user_service.get_active_users_count()
-    return templates.TemplateResponse(
-        "partials/stat.html",
-        {
-            "request": request,
-            "name": "Active Users",
-            "id": "active-user-count",
-            "value": count,
-        },
+
+    modal_component = render(
+        "Stat", id="active-user-count", stat_name="Active Users", value=count
     )
+    return HTMLResponse(modal_component)
 
 
 @router.get("/dashboard/users/admin_count", dependencies=[AdminRequired])
@@ -101,15 +92,10 @@ async def dashboard_admin_users_count(request: Request, user_service: UserServic
     Retrieve the count of admin users using `user_service` and render an HTML fragment displaying this count.
     """
     count = await user_service.get_admin_users_count()
-    return templates.TemplateResponse(
-        "partials/stat.html",
-        {
-            "request": request,
-            "name": "Admin Users",
-            "id": "admin-user-count",
-            "value": count,
-        },
+    modal_component = render(
+        "Stat", id="admin-user-count", stat_name="Admin Users", value=count
     )
+    return HTMLResponse(modal_component)
 
 
 @router.get("/profile", dependencies=[LoginRequired])

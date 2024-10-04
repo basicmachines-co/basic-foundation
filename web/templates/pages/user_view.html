@@ -1,11 +1,7 @@
-{% extends "layouts/page.html" %}
-
-{% block page_content %}
+<Page :page_title="{{ user.full_name }}" :current_user="{{ current_user }}">
   <section id="user_page">
     {% if current_user.is_admin %}
-      {% with item={"link": "/users", "name": "Users"} %}
-        {% include "partials/breadcrumb.html" %}
-      {% endwith %}
+      <Breadcrumbs :items="[{'link': '/users', 'name': 'Users'}]" />
     {% endif %}
 
     <!-- header -->
@@ -18,7 +14,7 @@
     </div>
     <!-- detail -->
     <div class="mt-4 border-t border-gray-100 dark:border-gray-800">
-      {% include "partials/user/user_detail_view.html" %}
+      <user.UserDetailView :user="{{ user }}" />
     </div>
   </section>
-{% endblock page_content %}
+</Page>

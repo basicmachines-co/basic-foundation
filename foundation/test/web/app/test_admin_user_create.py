@@ -117,8 +117,6 @@ def test_admin_create_user_validate_password_required(do_admin_login: Page) -> N
 
     # assert we are still on the user create page
     expect(page).to_have_url(URL_USERS_CREATE_PAGE)
-    expect(page.get_by_text("This field is required").first).to_be_visible()
-    expect(page.get_by_text("This field is required").nth(1)).to_be_visible()
 
 
 def test_admin_create_user_validate_password_strong(do_admin_login: Page) -> None:

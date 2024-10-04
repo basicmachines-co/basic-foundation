@@ -40,6 +40,28 @@ def test_reset_password(register_user):
     expect(success_message).to_contain_text("Your password has been updated!")
 
 
+def test_reset_password_invalid_form(register_user) -> None:
+    page, user = register_user
+
+    password_reset_token = generate_password_reset_token(email=user.email)
+    page.goto(f"{BASE_URL}/reset-password?token={password_reset_token}")
+
+    new_password_input, submit_button = assert_reset_password_page(
+        page, password_reset_token
+    )
+
+    # login with an invalid email
+    new_password_input.fill("foo")
+    submit_button.click()
+
+    expect(
+        page.get_by_text("Password must be at least 8 characters long.")
+    ).to_be_visible()
+
+    # still on page
+    page.goto(f"{BASE_URL}/reset-password?token={password_reset_token}")
+
+
 def test_reset_password_invalid_token(register_user):
     page, user = register_user
 

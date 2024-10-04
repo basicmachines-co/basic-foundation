@@ -50,7 +50,8 @@ format-python:
 	poetry run ruff format .
 
 format-prettier:
-	cd web && npx prettier templates --write
+	cd web && npx prettier . --write
+
 
 format: format-python format-prettier
 

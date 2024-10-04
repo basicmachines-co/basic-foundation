@@ -1,0 +1,12 @@
+{#def
+  url, name, currentPath
+#}
+<a
+  href="{{ url }}"
+  :class="{
+            'block border-l-4 border-slate-500 bg-slate-50 py-2 pl-3 pr-4 text-base font-medium text-slate-700 dark:bg-gray-800 dark:text-gray-200': {{ currentPath }}.startsWith('{{ url }}'),
+            'block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800': !{{ currentPath }}.startsWith('{{ url }}')
+            }"
+>
+  {{ name }}
+</a>

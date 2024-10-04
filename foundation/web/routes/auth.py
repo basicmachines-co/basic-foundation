@@ -8,7 +8,7 @@ from foundation.core.users.deps import UserServiceDep
 from foundation.core.users.models import User
 from foundation.core.users.schemas import AuthTokenPayload
 from foundation.core.users.services import UserCreateError, UserNotFoundError
-from starlette.responses import RedirectResponse
+from starlette.responses import RedirectResponse, HTMLResponse
 
 from foundation.core.config import settings
 from foundation.core.security import verify_password_reset_token
@@ -19,8 +19,8 @@ from foundation.web.forms import (
     ForgotPasswordForm,
     ResetPasswordForm,
 )
-from foundation.web.templates import templates, template
-from foundation.web.utils import HTMLRouter, error_notification
+from foundation.web.templates import templates, template, render
+from foundation.web.utils import HTMLRouter, error_notification, notification
 
 router = HTMLRouter()
 
@@ -52,19 +52,29 @@ async def register_post(
     :return: An HTTP response, either rendering a form with errors or redirecting upon successful registration
     """
     form = await RegisterForm.from_formdata(request)
+    if not await form.validate():
+        return HTMLResponse(
+            render("auth.RegisterForm", form=form),
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        )
 
-    if await form.validate():
-        try:
-            user = await user_service.create_user(create_dict=form.data)
-            return await login_user(request, user)
-        except UserCreateError as e:
-            return error_notification(request, e.args[0])
-
-    return template(
-        request,
-        "partials/auth/register_form.html",
-        {"form": form},
-    )
+    try:
+        user = await user_service.create_user(create_dict=form.data)
+        return await login_user(request, user)
+    except UserCreateError as e:
+        return HTMLResponse(
+            render(
+                "auth.RegisterForm",
+                form=form,
+                notification={
+                    "error": True,
+                    "title": "Error",
+                    "message": e.args[0],
+                    "hx_swap_oob": True,
+                },
+            ),
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 @router.get("/login")
@@ -94,7 +104,10 @@ async def login_post(
     """
     form = await LoginForm.from_formdata(request)
     if not await form.validate():
-        return template(request, "partials/auth/login_form.html", {"form": form})
+        return HTMLResponse(
+            render("auth.LoginForm", form=form),
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        )
 
     message = None
     assert form.username.data is not None
@@ -111,19 +124,17 @@ async def login_post(
     elif not user.is_active:
         message = "Your account is not active"
 
-    return template(
-        request,
-        "partials/auth/login_form.html",
-        {
-            "form": form,
-            "notification": {
-                "error": True,
-                "title": "Error",
-                "message": message,
-                "hx_swap_oob": True,
-            },
+    modal_component = render(
+        "auth.LoginForm",
+        form=form,
+        notification={
+            "error": True,
+            "title": "Error",
+            "message": message,
+            "hx_swap_oob": True,
         },
     )
+    return HTMLResponse(modal_component, status_code=status.HTTP_400_BAD_REQUEST)
 
 
 async def login_user(request: Request, user: User):
@@ -191,8 +202,10 @@ async def forgot_password_post(request: Request, user_service: UserServiceDep):
     """
     form = await ForgotPasswordForm.from_formdata(request)
     if not await form.validate():
-        return template(
-            request, "partials/auth/forgot_password_form.html", {"form": form}
+        component = render("auth.ForgotPasswordForm", form=form)
+        return HTMLResponse(
+            component,
+            # status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
         )
 
     assert form.email.data is not None
@@ -202,18 +215,17 @@ async def forgot_password_post(request: Request, user_service: UserServiceDep):
         return error_notification(request, e.args[0])
 
     # sends a sucess notification via hx-swap-oob
-    return template(
-        request,
-        "partials/auth/forgot_password_form.html",
-        {
-            "form": form,
-            "notification": {
-                "title": "OK!",
-                "message": f"An email was sent to {form.email.data}",
-                "hx_swap_oob": True,
-            },
+    modal_component = render(
+        "auth.ForgotPasswordForm",
+        form=form,
+        notification={
+            "error": False,
+            "title": "OK!",
+            "message": f"An email was sent to {form.email.data}",
+            "hx_swap_oob": True,
         },
     )
+    return HTMLResponse(modal_component)
 
 
 @router.get("/reset-password")
@@ -269,27 +281,25 @@ async def reset_password_post(
     form = await ResetPasswordForm.from_formdata(request)
 
     if not await form.validate():
-        return template(
-            request, "partials/auth/reset_password_form.html", {"form": form}
-        )
+        return HTMLResponse(render("auth.ResetPasswordForm", form=form))
 
     # get the users email by verifying the token
     assert form.token.data is not None
     email = verify_password_reset_token(token=form.token.data)
     if not email:
-        return template(
-            request,
-            "partials/auth/reset_password_form.html",
-            {"error": "Invalid token"},
+        return HTMLResponse(
+            render("auth.ResetPasswordForm", form=form, error="Invalid token")
         )
 
     try:
         user = await user_service.get_user_by_email(email=email)
         if not user.is_active:
-            return template(
-                request,
-                "partials/auth/reset_password_form.html",
-                {"error": "Your account is not active"},
+            return HTMLResponse(
+                render(
+                    "auth.ResetPasswordForm",
+                    form=form,
+                    error="Your account is not active",
+                )
             )
 
         await user_service.update_user(
@@ -298,12 +308,14 @@ async def reset_password_post(
                 "password": form.new_password.data,
             },
         )
-        return template(
-            request,
-            "partials/auth/reset_password_form.html",
-            {"success": "Your password has been updated!"},
+        return HTMLResponse(
+            render(
+                "auth.ResetPasswordForm",
+                form=form,
+                success="Your password has been updated!",
+            )
         )
     except UserNotFoundError as e:
-        return template(
-            request, "partials/auth/reset_password_form.html", {"error": e.args[0]}
+        return HTMLResponse(
+            render("auth.ResetPasswordForm", form=form, error=e.args[0])
         )

@@ -42,6 +42,21 @@ def test_forgot_password_page_email_sent(page: Page):
     )
 
 
+def test_forgot_password_invalid_form(page: Page) -> None:
+    page.goto(f"{BASE_URL}/forgot-password")
+
+    email_input, submit_button = assert_forgot_password_page(page)
+
+    # login with an invalid email
+    email_input.fill("foo@c")
+    submit_button.click()
+
+    expect(page.get_by_text("Invalid email address.")).to_be_visible()
+
+    # still on login page
+    page.goto(f"{BASE_URL}/forgot-password")
+
+
 def test_forgot_password_page_email_not_found(page: Page):
     """
     Verify password recovery email is sent

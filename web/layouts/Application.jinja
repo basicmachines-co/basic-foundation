@@ -1,0 +1,33 @@
+{#def
+  title
+#}
+<!doctype html>
+<html
+  class="h-full bg-gray-50 dark:bg-zinc-950"
+  lang="en"
+  :class="{ 'dark': darkMode }"
+  x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }"
+  x-init="$watch('darkMode', value => localStorage.setItem('darkMode', value))"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Basic Foundation - {{ title }}</title>
+    <!-- Include the Alpine.js library -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+    <!-- Include the TailwindCSS library -->
+    <link href="/static/dist/css/output.css" rel="stylesheet" />
+    {#  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>#}
+    <!-- tailwind inter font -->
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <!-- htmx -->
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/response-targets.js"></script>
+    <script>
+      htmx.logAll();
+    </script>
+  </head>
+  <!-- base.html -->
+  {{ content }}
+</html>

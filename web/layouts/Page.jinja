@@ -1,0 +1,22 @@
+{#def
+  current_user,
+  page_title
+#}
+<Admin :page_title="{{ page_title }}" :current_user="{{ current_user }}">
+  <!-- padding for large screen -->
+  <div class="lg:pl-2 lg:pr-2">
+    <!-- page content -->
+    <section id="page_content">
+      <!-- notification popup -->
+      <div id="notification"></div>
+      <!-- Modal container -->
+      <div id="modal"></div>
+      <!--  page content card -->
+      <div
+        class="bg-white lg:rounded-lg lg:border lg:border-gray-200 dark:bg-black lg:dark:border-gray-700"
+      >
+        {{ content }}
+      </div>
+    </section>
+  </div>
+</Admin>

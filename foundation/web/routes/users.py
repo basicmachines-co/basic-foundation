@@ -3,6 +3,9 @@ from uuid import UUID
 from fastapi import Request, Header, HTTPException
 from fastapi import Response
 from fastapi import status
+from starlette.responses import HTMLResponse
+
+from foundation.api.routes.users import update_user
 from foundation.core.users.deps import UserServiceDep, UserPaginationDep
 from foundation.core.users.models import User
 from foundation.core.users.schemas import UserPublic
@@ -17,7 +20,7 @@ from starlette_wtf.csrf import get_csrf_token
 
 from foundation.web.deps import CurrentUserDep, LoginRequired, AdminRequired
 from foundation.web.forms import UserEditForm, UserCreateForm
-from foundation.web.templates import template
+from foundation.web.templates import template, render
 from foundation.web.utils import HTMLRouter, error_notification
 
 router = HTMLRouter(dependencies=[LoginRequired])
@@ -77,7 +80,7 @@ async def users_list(
     Error Cases:
     - If `order_by` is not "full_name" or "email", it defaults to "full_name".
     HTMX Specific Behavior:
-    - Returns a partial template "partials/user/user_list.html" containing the paginated user list.
+    - Returns a UserList component containing the paginated user list.
     """
     if order_by not in ["full_name", "email"]:
         order_by = "full_name"
@@ -93,11 +96,10 @@ async def users_list(
         request, query, page_size=page_size, order_by=order_by, asc=ascending
     )
     page = await pagination.page(page=page_num)
-    return template(
-        request,
-        "partials/user/user_list.html",
-        {"current_user": current_user, "page": page},
-    )
+
+    # Render the component and return it in response
+    modal_component = render("user.UserList", current_user=current_user, page=page)
+    return HTMLResponse(modal_component)
 
 
 @router.get("/users/create", dependencies=[AdminRequired])
@@ -141,16 +143,14 @@ async def user_create_post(
     - Form validation failure: Returns a template with HTTP 422 status code.
     - User creation failure: Returns an error notification rendered from an exception message.
     HTMX Specific Behavior:
-    - If form validation fails, returns a partial template "partials/user/user_create.html" with status 422.
+    - If form validation fails, returns a UserCreate component with status 422.
     - On success, returns a response with status 307 to redirect to the user detail view.
     """
     form = await UserCreateForm.from_formdata(request)
     if not await form.validate():
-        return template(
-            request,
-            "partials/user/user_create.html",
-            {"current_user": current_user, "form": form},
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        modal_component = render("user.UserCreate", form=form)
+        return HTMLResponse(
+            modal_component, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
         )
     try:
         created_user = await user_service.create_user(create_dict=form.data)
@@ -221,11 +221,11 @@ async def user_detail_edit(
     edit_user = await user_service.get_user_by_id(user_id=user_id)
     form = UserEditForm(request, obj=edit_user)
     authorize_admin_or_owner(user=edit_user, current_user=current_user)
-    return template(
-        request,
-        "partials/user/user_detail_edit.html",
-        {"user": edit_user, "form": form},
+
+    modal_component = render(
+        "user.UserDetailEdit", request=request, user=edit_user, form=form
     )
+    return HTMLResponse(modal_component)
 
 
 @router.put("/users/detail/{user_id}")
@@ -260,11 +260,9 @@ async def user_detail_put(
     authorize_admin_or_owner(user=user, current_user=current_user)
     if not await form.validate():
         # display the page with errors
-        return template(
-            request,
-            "partials/user/user_detail_edit.html",
-            {"user": {"id": user_id}, "form": form},
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        modal_component = render("user.UserDetailEdit", user=user, form=form)
+        return HTMLResponse(
+            modal_component, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
         )
     try:
         # if the user is not an admin, they can not set these fields
@@ -280,11 +278,10 @@ async def user_detail_put(
         )
     except UserValueError as e:
         return error_notification(request, e.args[0])
-    return template(
-        request,
-        "partials/user/user_detail_view.html",
-        {"user": updated_user, "form": form, "hx_swap_oob": True},
-    )
+
+    # show the detail view
+    modal_component = render("user.UserDetailView", user=updated_user, hx_swap_oob=True)
+    return HTMLResponse(modal_component)
 
 
 @router.get("/users/modal/{user_id}/edit", dependencies=[AdminRequired])
@@ -308,7 +305,12 @@ async def user_modal_edit(
     """
     edit_user = await user_service.get_user_by_id(user_id=user_id)
     form = UserEditForm(request, obj=edit_user)
-    return template(request, "pages/user_modal.html", {"user": edit_user, "form": form})
+
+    # Render the component and return it in response
+    modal_component = render(
+        "user.UserModal", request=request, user=edit_user, form=form
+    )
+    return HTMLResponse(modal_component)
 
 
 @router.put("/users/modal/{user_id}", dependencies=[AdminRequired])
@@ -334,12 +336,12 @@ async def user_modal_put(
     user = await user_service.get_user_by_id(user_id=user_id)
     form = await UserEditForm.from_formdata(request)
     if not await form.validate():
-        # display the form with errors
-        return template(
-            request,
-            "partials/user/user_modal_edit.html",
-            {"user": user, "form": form},
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        # Render the component and return it in response with errors
+        modal_component = render(
+            "user.UserModal", request=request, user=user, form=form
+        )
+        return HTMLResponse(
+            modal_component, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
         )
     try:
         updated_user = await user_service.update_user(
@@ -348,12 +350,17 @@ async def user_modal_put(
         )
     except UserValueError as e:
         return error_notification(request, e.args[0])
-    return template(
-        request,
-        "pages/user_modal.html",
-        {"user": updated_user, "form": form, "close_modal": True},
-        headers={"HX-Trigger": "refresh"},
+
+    # Render the model as closed
+    # return a trigger to refresh the user list
+    modal_component = render(
+        "user.UserModal",
+        request=request,
+        user=updated_user,
+        form=form,
+        close_modal=True,
     )
+    return HTMLResponse(modal_component, headers={"HX-Trigger": "refresh"})
 
 
 @router.get("/users/modal/{user_id}/delete", dependencies=[AdminRequired])
@@ -373,15 +380,13 @@ async def user_delete_modal_confirm(
     :return: Renders the user deletion confirmation modal template with relevant data.
 
     HTMX Specific Behavior:
-    - Returns a partial template "partials/user/user_delete_modal_confirm.html" for confirming the user deletion.
+    - Returns a UserModalDeleteConfirm confirming the user deletion.
     """
     user = await user_service.get_user_by_id(user_id=user_id)
     token = csrf_token(request)
-    return template(
-        request,
-        "partials/user/user_delete_modal_confirm.html",
-        {"user": user, "current_user": current_user, "csrf_token": token},
-    )
+
+    modal_component = render("user.UserModalDeleteConfirm", user=user, csrf_token=token)
+    return HTMLResponse(modal_component)
 
 
 @router.delete("/users/{user_id}", dependencies=[AdminRequired])
