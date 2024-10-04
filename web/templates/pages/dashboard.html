@@ -9,11 +9,11 @@
     <!-- row of stats -->
     <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
       <!-- Total Users -->
-      <Stat hx_get="/dashboard/users/count" hx_trigger="load"/>
+      <Loading hx_get="/dashboard/users/count" hx_trigger="load"/>
       <!-- Active Users -->
-      <Stat hx_get="/dashboard/users/active_count" hx_trigger="load"/>
+      <Loading hx_get="/dashboard/users/active_count" hx_trigger="load"/>
       <!-- Admin Users -->
-      <Stat hx_get="/dashboard/users/admin_count" hx_trigger="load"/>
+      <Loading hx_get="/dashboard/users/admin_count" hx_trigger="load"/>
     </dl>
   </div>
 </Application>

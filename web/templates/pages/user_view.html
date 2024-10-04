@@ -1,9 +1,7 @@
 <Page page_title="User: {{ user.full_name }}" current_user={{ current_user }}>
   <section id="user_page">
     {% if current_user.is_admin %}
-      {% with item={"link": "/users", "name": "Users"} %}
-        {% include "partials/breadcrumb.html" %}
-      {% endwith %}
+      <Breadcrumbs items={{ [{"link": "/users", "name": "Users"}] }}/>
     {% endif %}
 
     <!-- header -->

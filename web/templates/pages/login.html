@@ -1,19 +1,14 @@
-{% extends "layouts/auth.html" %}
-{% set title = "Login" %}
-
-{% block heading_text %}Log in{% endblock heading_text %}
-
-{% block content %}
+<Auth page_title="Login" header_text="Log in">
   <section id="login_page">
-    {% include "partials/auth/login_form.html" %}
+    <auth.LoginForm form={{ form }}></auth.LoginForm>
     <p class="mt-10 text-center text-sm text-gray-500 dark:text-gray-400">
       Don't have an account?
       <a
-        href="/register"
-        class="font-semibold leading-6 text-slate-600 hover:text-slate-500 dark:text-slate-300 dark:hover:text-slate-400"
+          href="/register"
+          class="font-semibold leading-6 text-slate-600 hover:text-slate-500 dark:text-slate-300 dark:hover:text-slate-400"
       >
         Register
       </a>
     </p>
   </section>
-{% endblock content %}
+</Auth>

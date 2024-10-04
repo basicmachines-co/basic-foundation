@@ -1,8 +1,18 @@
 {#def
-  hx_get: str,
-  hx_trigger: str,
-  hx_swap: str = "outerHTML"
+  id,
+  stat_name,
+  value
 #}
-<div hx-get="{{ hx_get }}" hx-trigger="{{ hx_trigger }}" hx-swap="{{ hx_swap }}">
-  <SvgLoader/>
+<div class="stat-item">
+  <div
+      class="overflow-hidden rounded-lg border border-gray-200 bg-white px-4 py-5 hover:border-gray-400 sm:p-6 dark:border-gray-700 dark:bg-black dark:hover:border-gray-400"
+  >
+    <dt class="truncate text-sm font-medium text-gray-500 dark:text-gray-400">{{ stat_name }}</dt>
+    <dd
+        id="{{ id }}"
+        class="mt-1 text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100"
+    >
+      {{ value }}
+    </dd>
+  </div>
 </div>
