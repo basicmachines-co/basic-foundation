@@ -1,102 +1,61 @@
 {#def
-  form
+  form,
+  notification = None
 #}
 <!-- REGISTRATION FORM -->
-<form
-    class="space-y-6"
-    hx-post="/register"
-    hx-swap="outerHTML"
-    hx-target="this"
+<form.Form
+    _class="space-y-6"
+    hx_post="/register"
+    hx_target="this"
+    hx_target_422="this"
+    hx_target_400="this"
     hx-target-error="#notification"
+    hx_swap="outerHTML"
+    :notification="{{ notification }}"
+    :csrf_token="{{ form.csrf_token() }}"
 >
-  {{ form.csrf_token() }}
-  <!-- full_name -->
-  <div>
-    <label for="full_name" class="block text-sm font-medium leading-6 text-gray-900">
-      Full Name
-    </label>
-    <div class="mt-2">
-      <input
-          id="full_name"
-          name="full_name"
-          type="text"
-          placeholder="Full Name"
-          value="{{ form.full_name.data|d('', true) }}"
-          required
-          class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-      />
-      {% if form.full_name.errors %}
-        <p class="mt-2 text-sm text-red-600">{{ form.full_name.errors[0] }}</p>
-      {% endif %}
-    </div>
-  </div>
-  <!-- email -->
-  <div class="mt-2">
-    <label for="email" class="block text-sm font-medium leading-6 text-gray-900">
-      Email address
-    </label>
-    <div class="mt-2">
-      <input
-          id="email"
-          name="email"
-          type="email"
-          autocomplete="email"
-          placeholder="your@email.com"
-          value="{{ form.email.data|d('', true) }}"
-          required
-          class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-      />
-      {% if form.email.errors %}
-        <p class="mt-2 text-sm text-red-600">{{ form.email.errors[0] }}</p>
-      {% endif %}
-    </div>
-  </div>
-  <!-- password -->
-  <div class="mt-2">
-    <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
-    <div class="mt-2">
-      <input
-          id="password"
-          name="password"
-          type="password"
-          placeholder="••••••••"
-          required
-          class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-      />
-      {% if form.password.errors %}
-        <p class="mt-2 text-sm text-red-600">{{ form.password.errors[0] }}</p>
-      {% endif %}
-    </div>
-  </div>
-  <!-- password2 -->
-  <div class="mt-2">
-    <label
-        class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5 dark:text-gray-100"
-        for="password_2"
-    >
-      Repeat Password
-    </label>
-    <div class="mt-2">
-      <input
-          id="password_2"
-          name="password_2"
-          type="password"
-          placeholder="••••••••"
-          value="{{ form.password_2.data|default('', true) }}"
-          class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-      />
-      {% if form.password_2.errors %}
-        <p id="password-error" class="mt-2 text-sm text-red-600">{{ form.password_2.errors[0] }}</p>
-      {% endif %}
-    </div>
-  </div>
-  <div>
-    <button
-        type="submit"
-        class="flex w-full justify-center rounded-md bg-black px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600"
-    >
-      Register
-    </button>
-  </div>
-</form>
+  <form.TextInput
+      id="full_name"
+      name="full_name"
+      label="Full Name"
+      type="text"
+      autocomplete=""
+      placeholder="Full Name"
+      required
+      :value="{{ form.full_name.data|default('', true) }}"
+      :errors="{{ form.full_name.errors }}"
+  />
+  <form.TextInput
+      id="email"
+      name="email"
+      label="Email address"
+      type="email"
+      autocomplete="email"
+      placeholder="your@email.com"
+      required
+      :value="{{ form.email.data|default('', true) }}"
+      :errors="{{ form.email.errors }}"
+  />
+  <form.TextInput
+      id="password"
+      name="password"
+      label="Password"
+      type="password"
+      autocomplete=""
+      placeholder="••••••••"
+      required
+      :errors="{{ form.password.errors }}"
+  />
+  <form.TextInput
+      id="password_2"
+      name="password_2"
+      label="Repeat Password"
+      type="password"
+      autocomplete=""
+      placeholder="••••••••"
+      required
+      :errors="{{ form.password_2.errors }}"
+  />
+  <form.Submit id="register-button" type="submit">Register</form.Submit>
+</form.Form>
 <!-- /REGISTRATION FORM -->

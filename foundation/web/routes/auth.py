@@ -52,16 +52,29 @@ async def register_post(
     :return: An HTTP response, either rendering a form with errors or redirecting upon successful registration
     """
     form = await RegisterForm.from_formdata(request)
+    if not await form.validate():
+        return HTMLResponse(
+            render("auth.RegisterForm", form=form),
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        )
 
-    if await form.validate():
-        try:
-            user = await user_service.create_user(create_dict=form.data)
-            return await login_user(request, user)
-        except UserCreateError as e:
-            return error_notification(request, e.args[0])
-
-    modal_component = render("auth.RegisterForm", form=form)
-    return HTMLResponse(modal_component)
+    try:
+        user = await user_service.create_user(create_dict=form.data)
+        return await login_user(request, user)
+    except UserCreateError as e:
+        return HTMLResponse(
+            render(
+                "auth.RegisterForm",
+                form=form,
+                notification={
+                    "error": True,
+                    "title": "Error",
+                    "message": e.args[0],
+                    "hx_swap_oob": True,
+                },
+            ),
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 @router.get("/login")
@@ -91,10 +104,9 @@ async def login_post(
     """
     form = await LoginForm.from_formdata(request)
     if not await form.validate():
-        component = render("auth.LoginForm", form=form)
         return HTMLResponse(
-            component,
-            # status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
+            render("auth.LoginForm", form=form),
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         )
 
     message = None
@@ -122,7 +134,7 @@ async def login_post(
             "hx_swap_oob": True,
         },
     )
-    return HTMLResponse(modal_component)
+    return HTMLResponse(modal_component, status_code=status.HTTP_400_BAD_REQUEST)
 
 
 async def login_user(request: Request, user: User):
@@ -190,8 +202,10 @@ async def forgot_password_post(request: Request, user_service: UserServiceDep):
     """
     form = await ForgotPasswordForm.from_formdata(request)
     if not await form.validate():
-        return template(
-            request, "partials/auth/forgot_password_form.html", {"form": form}
+        component = render("auth.ForgotPasswordForm", form=form)
+        return HTMLResponse(
+            component,
+            # status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
         )
 
     assert form.email.data is not None
@@ -267,9 +281,7 @@ async def reset_password_post(
     form = await ResetPasswordForm.from_formdata(request)
 
     if not await form.validate():
-        return template(
-            request, "partials/auth/reset_password_form.html", {"form": form}
-        )
+        return HTMLResponse(render("auth.ResetPasswordForm", form=form))
 
     # get the users email by verifying the token
     assert form.token.data is not None

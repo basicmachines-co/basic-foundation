@@ -1,8 +1,10 @@
 {#def
-    _class: str = "space-y-6",
+    _class: str,
     hx_post: str,
-    hx_target: str = "this",
-    hx_target_error: str = "#notification",
+    hx_target: str,
+    hx_target_422: str = None,
+    hx_target_400: str = None,
+    hx_target_error: str = None,
     hx_swap: str = "outerHTML",
     csrf_token,
     notification = None
@@ -11,6 +13,8 @@
     class="{{ _class }}"
     hx-post="{{ hx_post }}"
     hx-target="{{ hx_target }}"
+    hx-target-422="{{ hx_target_422 }}"
+    hx-target-400="{{ hx_target_400 }}"
     hx-target-error="{{ hx_target_error }}"
     hx-swap="{{ hx_swap }}"
 >
