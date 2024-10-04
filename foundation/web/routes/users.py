@@ -222,7 +222,9 @@ async def user_detail_edit(
     form = UserEditForm(request, obj=edit_user)
     authorize_admin_or_owner(user=edit_user, current_user=current_user)
 
-    modal_component = render("user.UserDetailEdit", user=edit_user, form=form)
+    modal_component = render(
+        "user.UserDetailEdit", request=request, user=edit_user, form=form
+    )
     return HTMLResponse(modal_component)
 
 
@@ -305,7 +307,9 @@ async def user_modal_edit(
     form = UserEditForm(request, obj=edit_user)
 
     # Render the component and return it in response
-    modal_component = render("user.UserModal", user=edit_user, form=form)
+    modal_component = render(
+        "user.UserModal", request=request, user=edit_user, form=form
+    )
     return HTMLResponse(modal_component)
 
 
@@ -333,7 +337,9 @@ async def user_modal_put(
     form = await UserEditForm.from_formdata(request)
     if not await form.validate():
         # Render the component and return it in response with errors
-        modal_component = render("user.UserModal", user=user, form=form)
+        modal_component = render(
+            "user.UserModal", request=request, user=user, form=form
+        )
         return HTMLResponse(
             modal_component, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
         )
@@ -348,7 +354,11 @@ async def user_modal_put(
     # Render the model as closed
     # return a trigger to refresh the user list
     modal_component = render(
-        "user.UserModal", user=updated_user, form=form, close_modal=True
+        "user.UserModal",
+        request=request,
+        user=updated_user,
+        form=form,
+        close_modal=True,
     )
     return HTMLResponse(modal_component, headers={"HX-Trigger": "refresh"})
 

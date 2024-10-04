@@ -4,12 +4,14 @@
 <section id="user_create">
   <div class="px-6">
     <!-- USER CREATE FORM -->
-    <form
+    <form.Form
         hx-post="/users/create"
         hx-swap="outerHTML"
         hx-target="#user_create"
         hx-target-422="#user_create"
         hx-target-400="#notification"
+        _class=""
+        :csrf_token="{{ form.csrf_token() }}"
     >
       <user.UserFormContent form={{ form }} create={{ True }}></user.UserFormContent>
       <div class="px-4 py-6 sm:px-6">
@@ -21,14 +23,9 @@
             >Cancel
             </button>
           </a>
-          <button
-              class="inline-flex justify-center rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600 dark:bg-white dark:text-black dark:hover:bg-slate-400 dark:focus-visible:outline-slate-300"
-              type="submit"
-          >
-            Save
-          </button>
+          <form.Submit id="save-button" type="submit">Save</form.Submit>
         </div>
       </div>
-    </form>
+    </form.Form>
   </div>
 </section>

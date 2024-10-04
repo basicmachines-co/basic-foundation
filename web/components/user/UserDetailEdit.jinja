@@ -1,16 +1,18 @@
 {#def
+  request,
   user,
   form,
 #}
 <section id="user_edit">
   <div class="p-6">
-    <form
-        hx-put="/users/detail/{{ user.id }}"
-        hx-target="#user_edit"
-        hx-target-422="#user_edit"
-        hx-target-400="#notification"
-        hx-swap="outerHTML"
-        method="put"
+    <form.Form
+        :hx_put="{{ url_for('user_detail_put', user_id=user.id) }}"
+        hx_target="#user_edit"
+        hx_target-422="#user_edit"
+        hx_target-400="#notification"
+        hx_swap="outerHTML"
+        _class=""
+        :csrf_token="{{ form.csrf_token() }}"
     >
       <user.UserFormContent form={{ form }}></user.UserFormContent>
       <!-- save/cancel buttons -->
@@ -39,7 +41,7 @@
           Delete
         </button>
       </div>
-    </form>
+    </form.Form>
   </div>
   <!-- /edit form -->
 </section>
