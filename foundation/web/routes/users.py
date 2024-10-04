@@ -97,7 +97,7 @@ async def users_list(
     )
     page = await pagination.page(page=page_num)
 
-    # Render the component and return it in response with errors
+    # Render the component and return it in response
     modal_component = render("user.UserList", current_user=current_user, page=page)
     return HTMLResponse(modal_component)
 
@@ -143,16 +143,14 @@ async def user_create_post(
     - Form validation failure: Returns a template with HTTP 422 status code.
     - User creation failure: Returns an error notification rendered from an exception message.
     HTMX Specific Behavior:
-    - If form validation fails, returns a partial template "partials/user/user_create.html" with status 422.
+    - If form validation fails, returns a UserCreate component with status 422.
     - On success, returns a response with status 307 to redirect to the user detail view.
     """
     form = await UserCreateForm.from_formdata(request)
     if not await form.validate():
-        return template(
-            request,
-            "partials/user/user_create.html",
-            {"current_user": current_user, "form": form},
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        modal_component = render("user.UserCreate", form=form)
+        return HTMLResponse(
+            modal_component, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
         )
     try:
         created_user = await user_service.create_user(create_dict=form.data)
@@ -223,11 +221,9 @@ async def user_detail_edit(
     edit_user = await user_service.get_user_by_id(user_id=user_id)
     form = UserEditForm(request, obj=edit_user)
     authorize_admin_or_owner(user=edit_user, current_user=current_user)
-    return template(
-        request,
-        "partials/user/user_detail_edit.html",
-        {"user": edit_user, "form": form},
-    )
+
+    modal_component = render("user.UserDetailEdit", user=edit_user, form=form)
+    return HTMLResponse(modal_component)
 
 
 @router.put("/users/detail/{user_id}")
@@ -262,11 +258,9 @@ async def user_detail_put(
     authorize_admin_or_owner(user=user, current_user=current_user)
     if not await form.validate():
         # display the page with errors
-        return template(
-            request,
-            "partials/user/user_detail_edit.html",
-            {"user": {"id": user_id}, "form": form},
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        modal_component = render("user.UserDetailEdit", user=user, form=form)
+        return HTMLResponse(
+            modal_component, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
         )
     try:
         # if the user is not an admin, they can not set these fields
@@ -282,11 +276,10 @@ async def user_detail_put(
         )
     except UserValueError as e:
         return error_notification(request, e.args[0])
-    return template(
-        request,
-        "partials/user/user_detail_view.html",
-        {"user": updated_user, "form": form, "hx_swap_oob": True},
-    )
+
+    # show the detail view
+    modal_component = render("user.UserDetailView", user=updated_user, hx_swap_oob=True)
+    return HTMLResponse(modal_component)
 
 
 @router.get("/users/modal/{user_id}/edit", dependencies=[AdminRequired])

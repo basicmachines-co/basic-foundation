@@ -1,7 +1,6 @@
 {#def
   current_user
 #}
-{% from "macros.html" import svg_loader %}
 <Page page_title="Users" current_user={{ current_user }}>
   <!--  header-->
   <div>
@@ -28,7 +27,7 @@
             hx-get="/users/list"
             hx-trigger="load"
         >
-          {{ svg_loader() }}
+          <SvgLoader/>
         </div>
       </div>
     </div>

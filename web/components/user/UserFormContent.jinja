@@ -1,5 +1,6 @@
 {#def
-  form
+  form,
+  create: bool = False
 #}
 <!-- CSRF Token -->
 {{ form.csrf_token() }}
@@ -96,7 +97,7 @@
 </div>
 <!-- Status  -->
 {# only display the status on edit  #}
-{% if form.status %}
+{% if not create %}
   <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
     <label
         class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5 dark:text-gray-100"
