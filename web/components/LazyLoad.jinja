@@ -1,8 +1,9 @@
 {#def
   hx_get: str,
   hx_trigger: str,
-  hx_swap: str = "outerHTML"
+  hx_swap: str = "outerHTML",
 #}
+<!-- lazy load -->
 <div hx-get="{{ hx_get }}" hx-trigger="{{ hx_trigger }}" hx-swap="{{ hx_swap }}">
-  <SvgLoader />
+  <SvgLoading />
 </div>

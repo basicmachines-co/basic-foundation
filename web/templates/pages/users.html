@@ -17,18 +17,12 @@
         </a>
       </div>
     </div>
-    <!-- list -->
+    <!-- list users -->
     <div class="mt-8 flow-root px-4 py-3 sm:px-6">
+      <!-- overflow for row highlight -->
       <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <!-- lazily load the list of users, replace div content with response returned from hx-get -->
-        <div
-          id="get-user-list"
-          class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8"
-          hx-get="/users/list"
-          hx-trigger="load"
-        >
-          <SvgLoader />
-        </div>
+        <LazyLoad hx_get="/users/list" hx_trigger="load" />
       </div>
     </div>
     <!-- list -->

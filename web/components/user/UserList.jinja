@@ -35,6 +35,7 @@
 
 <section
   id="user_list"
+  class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8"
   hx-get="{{ get_users_list(page.page, page.page_size, page.order_by, page.ascending) }}"
   hx-trigger="refresh from:body"
 >

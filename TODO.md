@@ -7,7 +7,7 @@ golive:
 - [x] Pre-commit hookspo
 - [x] Schema changes
 - [-] Error handling in the services
-- [ ] Add more comments to the code
+- [x] Add more comments to the code
 - [ ] Demo deployment environment
 - [ ] Developer docs
 - [ ] Screenshots
