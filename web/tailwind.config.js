@@ -2,7 +2,7 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
   darkMode: "selector",
-  content: ["./templates/**/*.html", "./static/**/*.js"],
+  content: ["./templates/**/*.html", "./**/*.jinja", "./static/**/*.js"],
   plugins: [require("@tailwindcss/forms")],
   theme: {
     extend: {
