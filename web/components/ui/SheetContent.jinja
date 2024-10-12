@@ -1,0 +1,27 @@
+{# def
+    id: str = "sheet-content",
+    side: str = "right",
+    className: str = "",
+#}
+<SheetOverlay />
+<div
+  x-show="open"
+  @keydown.escape.window="open = false"
+  @click.away="open = false"
+  x-transition:enter="transition ease-in-out duration-300"
+  x-transition:enter-start="opacity-0"
+  x-transition:enter-end="opacity-100"
+  x-transition:leave="transition ease-in-out duration-300"
+  x-transition:leave-start="opacity-100"
+  x-transition:leave-end="opacity-0"
+  class="{% if side == 'top' %}inset-x-0 top-0 border-b slide-in-from-top{% endif %} {% if side == 'bottom' %}
+    inset-x-0 bottom-0 border-t slide-in-from-bottom
+  {% endif %} {% if side == 'left' %}
+    inset-y-0 left-0 h-full w-3/4 border-r slide-in-from-left sm:max-w-sm
+  {% endif %} {% if side == 'right' %}
+    inset-y-0 right-0 h-full w-3/4 border-l slide-in-from-right sm:max-w-sm
+  {% endif %} {{ className }} fixed z-50 gap-4 bg-white p-6 shadow-lg transition ease-in-out dark:bg-zinc-950"
+>
+  {{ content }}
+  <SheetClose />
+</div>

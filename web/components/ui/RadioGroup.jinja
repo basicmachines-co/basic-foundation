@@ -1,0 +1,23 @@
+{# def
+    name: str = "",
+    options: list[str, str] = [],
+    value: str = "",
+    className: str = "",
+#}
+
+<div class="{{ className }} space-y-4">
+  {% for option in options %}
+    <div class="flex items-center space-x-2">
+      <input
+        type="radio"
+        id="{{ option.id }}"
+        name="{{ name }}"
+        value="{{ option.value }}"
+        class="form-radio border-zinc-200 text-indigo-600 accent-black focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-950 dark:focus:ring-indigo-300"
+      />
+      <label for="{{ option.id }}" class="flex cursor-pointer items-center">
+        <span class="ml-2">{{ option.label }}</span>
+      </label>
+    </div>
+  {% endfor %}
+</div>

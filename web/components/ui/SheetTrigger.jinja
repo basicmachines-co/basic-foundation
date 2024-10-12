@@ -1,0 +1,13 @@
+{# def
+    id: str = "sheet-trigger",
+    className: str = "",
+#}
+<!-- SheetTrigger -->
+{#<Button variant="outline"#}
+{#    @click="open = true"#}
+{#    #}
+{#    class="inline-flex items-center justify-center rounded-md border border-input bg-background hover:bg-accent {{ className }}"#}
+{#>#}
+{#  {{ content }}#}
+{#</Button>#}
+<div @click="open = true" class="{{ className }}">{{ content }}</div>

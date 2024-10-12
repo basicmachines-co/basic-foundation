@@ -1,0 +1,19 @@
+{# def
+    label: str = "",
+    className: str = "",
+    checked: bool = False,
+    disabled: bool = False
+#}
+<div
+  x-data="{ isDark: window.matchMedia('(prefers-color-scheme: dark)').matches }"
+  {{ attrs.render() }}
+>
+  <input
+    type="checkbox"
+    name="checkbox"
+    class="{{ className }} form-checkbox border-zinc-200 text-indigo-600 accent-black dark:border-zinc-50 dark:border-zinc-700 dark:ring-offset-zinc-950 dark:focus-visible:ring-zinc-300 dark:data-[state=checked]:bg-zinc-50 dark:data-[state=checked]:text-zinc-900"
+    {% if checked %}checked{% endif %}
+    {% if disabled %}disabled{% endif %}
+  />
+  <label for="{{ attrs.get("id", "") }}" class="ml-2 text-sm">{{ label }}</label>
+</div>

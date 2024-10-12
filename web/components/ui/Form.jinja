@@ -1,0 +1,14 @@
+{# def
+    method: str = "POST",
+    action: str = "",
+    className: str = ""
+#}
+
+<form
+  method="{{ method }}"
+  action="{{ action }}"
+  class="{{ className }} space-y-2"
+  {{ attrs.render() }}
+>
+  {{ content }}
+</form>

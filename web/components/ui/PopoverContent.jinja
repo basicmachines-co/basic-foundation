@@ -1,0 +1,19 @@
+{# def
+    className: str = "",
+    sideOffset: int = 4,
+#}
+<div
+  x-show="open"
+  @keydown.escape.window="open = false"
+  @click.away="open = false"
+  x-transition:enter="transition ease-out duration-200"
+  x-transition:leave="transition ease-in duration-150"
+  x-transition:enter-start="opacity-0 scale-90"
+  x-transition:enter-end="opacity-100 scale-100"
+  x-transition:leave-start="opacity-100 scale-100"
+  x-transition:leave-end="opacity-0 scale-90"
+  class="{{ className }} absolute z-50 w-72 rounded-md border border-zinc-200 bg-white p-4 text-zinc-950 shadow-md dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50"
+  style="margin-top: {{ sideOffset }}px;"
+>
+  {{ content }}
+</div>

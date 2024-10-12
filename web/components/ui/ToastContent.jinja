@@ -1,0 +1,27 @@
+{# def
+  type: str = "default",  # options: default, success, error, warning
+  title: str = "",
+  description: str = "",
+#}
+{%-
+  set type_class = {
+    "default": "bg-white text-zinc-900 border border-zinc-200 dark:bg-zinc-950 dark:text-zinc-50 dark:border-zinc-700",
+    "success": "bg-green-100 text-green-900 border border-green-200 dark:bg-green-900 dark:text-green-100 dark:border-green-800",
+    "error": "bg-red-100 text-red-900 border border-red-200 dark:bg-red-900 dark:text-red-100 dark:border-red-800",
+    "warning": "bg-yellow-100 text-yellow-900 border border-yellow-200 dark:bg-yellow-900 dark:text-yellow-100 dark:border-yellow-800"
+  }[type]
+%}
+<div class="{{ type_class }} w-full max-w-md rounded-md p-4 shadow-lg">
+  <div class="flex items-center justify-between">
+    <div>
+      <p class="font-medium">{{ title }}</p>
+      <p class="text-sm text-zinc-500 dark:text-zinc-400">{{ description }}</p>
+    </div>
+    <button
+      @click="show = false"
+      class="ml-4 text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
+    >
+      <X alt="Close" class="h-4 w-4" />
+    </button>
+  </div>
+</div>

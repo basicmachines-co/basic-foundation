@@ -1,0 +1,24 @@
+{# def
+  id: str = "",
+  className: str = "",
+  sorted: bool = False,
+  sortOrder: str = "asc",
+  href: str = "#"
+#}
+<th
+  class="{{ className }} h-12 px-4 text-left align-middle font-medium text-zinc-500 dark:text-zinc-400"
+  {{ attrs.render() }}
+>
+  <a href="{{ href }}" class="group inline-flex">
+    {{ content }}
+    <span
+      class="{% if sorted %}opacity-100{% else %}opacity-25{% endif %} ml-2 flex-none rounded text-zinc-400 group-hover:visible group-focus:visible"
+    >
+      {% if sortOrder == 'asc' %}
+        <ChevronUp className="h-4 w-4" />
+      {% else %}
+        <ChevronDown className="h-4 w-4" />
+      {% endif %}
+    </span>
+  </a>
+</th>

@@ -1,0 +1,22 @@
+{# def
+  value: str = "",
+  selected: str = "",
+  label: str = "",
+  className: str = "",
+#}
+<li
+  role="option"
+  class="{{ className }} relative cursor-default select-none py-2 pl-3 pr-9 font-normal text-zinc-900 hover:bg-zinc-100 dark:text-zinc-50 dark:hover:bg-zinc-800"
+  @click="selected = '{{ value }}'; open = false"
+  :class="{ 'font-semibold': selected === '{{ value }}', 'font-normal': selected !== '{{ value }}' }"
+>
+  <span class="block truncate">{{ label }}</span>
+
+  <span
+    x-show="selected === '{{ value }}'"
+    class="absolute inset-y-0 right-0 flex items-center pr-4 text-zinc-600 dark:text-zinc-400"
+    style="display: none;"
+  >
+    <Check className="h-4 w-4" />
+  </span>
+</li>

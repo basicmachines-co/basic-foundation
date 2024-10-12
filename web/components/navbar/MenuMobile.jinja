@@ -3,7 +3,7 @@
   menu_link="block px-4 py-2 text-base font-medium text-black hover:bg-gray-100 hover:text-gray-800 dark:text-gray-500"
 #}
 <!-- Mobile menu -->
-<div x-show="mobileMenuOpen" class="min-h-screen bg-white sm:hidden dark:bg-black">
+<div x-show="mobileMenuOpen" class="min-h-screen bg-white dark:bg-black sm:hidden">
   {% if current_user.is_admin %}
     <div class="space-y-1 pb-3 pt-2">
       <navbar.MenuMobileNavLink

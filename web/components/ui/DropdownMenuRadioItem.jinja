@@ -1,0 +1,13 @@
+{# def
+    name: str = "",
+    className: str = "",
+    options: list[str, str] = [],
+    value: str = ""
+#}
+
+<DropdownMenuItem class="{{ className }}">
+  <div class="relative flex items-center">
+    <RadioGroup :name="{{ name }}" :options="{{ options }}" :value="{{ value }}" />
+    <span class="ml-2">{{ name }}</span>
+  </div>
+</DropdownMenuItem>
