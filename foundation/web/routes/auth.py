@@ -124,7 +124,7 @@ async def login_post(
     elif not user.is_active:
         message = "Your account is not active"
 
-    modal_component = render(
+    component = render(
         "auth.LoginForm",
         form=form,
         notification={
@@ -134,7 +134,7 @@ async def login_post(
             "hx_swap_oob": True,
         },
     )
-    return HTMLResponse(modal_component, status_code=status.HTTP_400_BAD_REQUEST)
+    return HTMLResponse(component, status_code=status.HTTP_400_BAD_REQUEST)
 
 
 async def login_user(request: Request, user: User):

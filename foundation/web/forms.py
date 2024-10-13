@@ -1,11 +1,11 @@
 from typing import Sequence
 
-from foundation.core.users import StatusEnum, RoleEnum
 from starlette_wtf import StarletteForm
 from wtforms import StringField, PasswordField, validators
 from wtforms import ValidationError
 from wtforms.fields.choices import SelectField
 
+from foundation.core.users import StatusEnum, RoleEnum
 from foundation.core.users.schemas import validate_password
 
 
@@ -43,8 +43,19 @@ def password_validator_admin(form, field):
 
 
 class LoginForm(StarletteForm):
-    username = StringField("Email", [validators.DataRequired(), validators.Email()])
-    password = PasswordField("Password", [validators.DataRequired()])
+    username = StringField(
+        "Email address",
+        [validators.DataRequired(), validators.Email()],
+        id="username",
+        render_kw={"placeholder": "your@email.com", "aria-label": "Email address"},
+    )
+
+    password = PasswordField(
+        "Password",
+        [validators.DataRequired()],
+        id="password",
+        render_kw={"placeholder": "••••••••"},
+    )
 
 
 class RegisterForm(StarletteForm):
