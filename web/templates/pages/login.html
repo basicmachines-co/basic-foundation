@@ -1,22 +1,5 @@
-<Auth page_title="Login" header_text="Log in">
+<Auth page_title="Login">
   <section id="login_page">
-    <auth.LoginForm :form="{{ form }}"></auth.LoginForm>
-    <p class="mt-10 text-center text-sm text-gray-500 dark:text-gray-400">
-      <a
-        href="/forgot-password"
-        class="font-semibold text-slate-600 hover:text-slate-400 hover:text-slate-500 dark:text-slate-300"
-      >
-        Forgot password?
-      </a>
-    </p>
-    <p class="mt-2 text-center text-sm text-gray-500 dark:text-gray-400">
-      Don't have an account?
-      <a
-        href="/register"
-        class="font-semibold leading-6 text-slate-600 hover:text-slate-500 dark:text-slate-300 dark:hover:text-slate-400"
-      >
-        Register
-      </a>
-    </p>
+    <blocks.Login :form="{{ form }}" />
   </section>
 </Auth>
