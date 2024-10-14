@@ -1,7 +1,7 @@
 {#def
   page_title,
 #}
-<Application :title="{{ page_title }}">
+<BaseLayout :title="{{ page_title }}">
   <body class="h-full" hx-ext="response-targets">
   <div class="px-4 sm:px-6 lg:px-8">
     <div class="flex h-16 justify-end">
@@ -22,12 +22,12 @@
             <Logo>BASIC FOUNDATION</Logo>
           </div>
         </div>
-        <!-- content -->
-        <!-- notification popup -->
+        <!-- notification popup placeholder -->
         <div id="notification"></div>
+        <!-- content -->
         {{ content }}
       </div>
     </main>
   </div>
   </body>
-</Application>
+</BaseLayout>

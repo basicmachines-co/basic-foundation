@@ -1,4 +1,4 @@
-<Page :page_title="{{ user.full_name }}" :current_user="{{ current_user }}">
+<PageLayout :page_title="{{ user.full_name }}" :current_user="{{ current_user }}">
   <section id="user_page">
     {% if current_user.is_admin %}
       <Breadcrumbs :items="[{'link': '/users', 'name': 'Users'}]" />
@@ -17,4 +17,4 @@
       <user.UserDetailView :user="{{ user }}" />
     </div>
   </section>
-</Page>
+</PageLayout>

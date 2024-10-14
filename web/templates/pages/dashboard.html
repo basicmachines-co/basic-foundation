@@ -1,7 +1,7 @@
 {#def
   current_user
 #}
-<Admin page_title="Dashboard" :current_user="{{ current_user }}">
+<AdminLayout page_title="Dashboard" :current_user="{{ current_user }}">
   <div class="p-2 py-6">
     <h1 class="pl-2 pt-2 text-lg font-semibold leading-6 text-gray-900 dark:text-gray-200">
       Dashboard
@@ -16,4 +16,4 @@
       <LazyLoad hx_get="/dashboard/users/admin_count" hx_trigger="load" />
     </dl>
   </div>
-</Admin>
+</AdminLayout>
