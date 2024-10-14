@@ -4,6 +4,7 @@ from starlette_wtf import StarletteForm
 from wtforms import StringField, PasswordField, validators
 from wtforms import ValidationError
 from wtforms.fields.choices import SelectField
+from wtforms.fields.simple import HiddenField
 
 from foundation.core.users import StatusEnum, RoleEnum
 from foundation.core.users.schemas import validate_password
@@ -113,7 +114,9 @@ class ForgotPasswordForm(StarletteForm):
 
 
 class ResetPasswordForm(StarletteForm):
-    token = StringField("Token", [validators.DataRequired()])
+    token = HiddenField("Token", [validators.DataRequired()])
     new_password = PasswordField(
-        "Password", [validators.DataRequired(), password_validator]
+        "New Password",
+        [validators.DataRequired(), password_validator],
+        render_kw={"placeholder": "••••••••"},
     )
