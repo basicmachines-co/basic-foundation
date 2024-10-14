@@ -1,5 +1,24 @@
 <Auth page_title="Login">
-  <section id="login_page">
-    <blocks.Login :form="{{ form }}" />
-  </section>
+  <Card className="mx-auto max-w-sm">
+    <CardHeader>
+      <CardTitle className="text-2xl">Log in</CardTitle>
+      <CardDescription>
+        Enter your email below to log in to your account
+      </CardDescription>
+    </CardHeader>
+    <CardContent>
+      <auth.LoginForm :form="{{ form }}" />
+      <div class="mt-4 text-center">
+        <Link href="/forgot-password" className="ml-auto inline-block text-sm underline">
+        Forgot your password?
+        </Link>
+      </div>
+      <div class="mt-4 text-center text-sm">
+        Don&apos;t have an account?
+        <Link href="/register" className="underline">
+        Register
+        </Link>
+      </div>
+    </CardContent>
+  </Card>
 </Auth>
