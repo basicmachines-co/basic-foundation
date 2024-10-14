@@ -96,7 +96,11 @@ class UserEditForm(UserCreateForm):
 
 
 class ForgotPasswordForm(StarletteForm):
-    email = StringField("Email", [validators.DataRequired(), validators.Email()])
+    email = StringField(
+        "Email address",
+        [validators.DataRequired(), validators.Email()],
+        render_kw={"placeholder": "your@email.com", "aria-label": "Email address"},
+    )
 
 
 class ResetPasswordForm(StarletteForm):
