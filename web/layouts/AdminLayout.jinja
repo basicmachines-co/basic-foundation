@@ -2,9 +2,95 @@
   current_user,
   page_title
 #}
+{% set nav_items = [
+  { "name": "Dashboard", "url": "/dashboard"},
+  { "name": "Users", "url": "/users"},
+] %}
 <BaseLayout :title="{{ page_title }}">
   <body class="h-full" hx-ext="response-targets">
-  <navbar.Navbar :current_user="{{ current_user }}"></navbar.Navbar>
+  <header class="sticky top-0 flex h-16 items-center gap-4 border-b bg-white px-4 md:px-6 dark:bg-zinc-950">
+    <!-- desktop navbar -->
+    <nav class="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
+      <Link
+        href="/"
+        className="flex items-center gap-2 text-lg font-semibold md:text-base"
+      >
+      <SquareTerminal className="h-6 w-6" />
+      <span class="sr-only">Basic Foundation</span>
+      </Link>
+      {% if current_user.is_admin %}
+        {% for item in nav_items %}
+          <Link
+            :href="{{ item.url }}"
+            className="text-zinc-500 transition-colors hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-50"
+          >
+            {{ item.name }}
+          </Link>
+        {% endfor %}
+      {% endif %}
+    </nav>
+    <!-- mobile navbar -->
+    <Sheet>
+      <SheetTrigger>
+        <Button
+          variant="outline"
+          size="icon"
+          className="shrink-0 md:hidden"
+        >
+          <Menu className="h-5 w-5" />
+          <span class="sr-only">Toggle navigation menu</span>
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="left">
+        <nav class="grid gap-6 text-lg font-medium">
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-lg font-semibold"
+          >
+          <SquareTerminal className="h-6 w-6" />
+          <span class="sr-only">Basic Foundation</span>
+          </Link>
+          {% if current_user.is_admin %}
+            {% for item in nav_items %}
+              <Link
+                href="{{ item.url }}"
+                className="text-zinc-500 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-50"
+              >
+                {{ item.name }}
+              </Link>
+            {% endfor %}
+          {% endif %}
+        </nav>
+      </SheetContent>
+    </Sheet>
+    <!-- nav rhs -->
+    <div class="w-full flex justify-end">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="ml-2"
+        @click="toggleMode(mode === 'dark' ? 'light' : 'dark')"
+      >
+        <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+        <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+        <span class="sr-only">Toggle theme</span>
+      </Button>
+      <DropdownMenu id="profile-menu">
+        <DropdownMenuTrigger>
+          <Button variant="secondary" size="icon" className="rounded-full">
+            <CircleUser className="h-5 w-5" />
+            <span class="sr-only">Toggle user menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuItem><a href="/profile">Profile</a></DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem><a href="/logout">Log out</a></DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  </header>
   <!-- Main content -->
   <main class="lg:min-w-0 lg:pb-2 lg:pt-2">
     <!-- content -->

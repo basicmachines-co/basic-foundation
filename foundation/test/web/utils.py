@@ -122,4 +122,6 @@ def assert_user_detail_view(
     expect(page.get_by_text("Status", exact=True)).to_be_visible()
     expect(page.get_by_role("button", name=status.capitalize())).to_be_visible()
     expect(page.get_by_text("Role", exact=True)).to_be_visible()
-    expect(page.get_by_role("button", name=role.capitalize())).to_be_visible()
+    expect(
+        page.get_by_role("button", name=role.capitalize(), exact=True)
+    ).to_be_visible()
