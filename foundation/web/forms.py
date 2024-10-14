@@ -60,15 +60,24 @@ class LoginForm(StarletteForm):
 
 class RegisterForm(StarletteForm):
     full_name = StringField(
-        "Full Name", [validators.DataRequired(), validators.Length(min=2, max=100)]
+        "Full Name",
+        [validators.DataRequired(), validators.Length(min=2, max=100)],
+        render_kw={"placeholder": "Full Name", "aria-label": "Full Name"},
     )
-    email = StringField("Email", [validators.DataRequired(), validators.Email()])
+    email = StringField(
+        "Email address",
+        [validators.DataRequired(), validators.Email()],
+        render_kw={"placeholder": "your@email.com", "aria-label": "Email address"},
+    )
     password = PasswordField(
-        "Password", [validators.DataRequired(), password_validator]
+        "Password",
+        [validators.DataRequired(), password_validator],
+        render_kw={"placeholder": "••••••••"},
     )
     password_2 = PasswordField(
         "Repeat Password",
         [validators.DataRequired(), password_validator, password_2_validator],
+        render_kw={"placeholder": "••••••••"},
     )
 
 

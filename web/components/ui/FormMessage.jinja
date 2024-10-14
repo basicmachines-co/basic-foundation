@@ -1,8 +1,10 @@
 {# def
+    id: str = "",
     error: bool = True,
     className: str = ""
 #}
 <p
+  {% if id %}id="{{ id }}"{% endif %}
   class="{% if error %}text-red-500 dark:text-red-800{% endif %} {{ className }} text-sm font-medium"
 >
   {{ content }}
