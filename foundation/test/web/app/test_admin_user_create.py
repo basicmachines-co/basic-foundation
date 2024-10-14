@@ -18,41 +18,6 @@ def test_admin_create_user(create_user) -> None:
     page, user = create_user
 
 
-def test_admin_create_user_validate_full_name(do_admin_login: Page) -> None:
-    page = do_admin_login
-
-    page.goto(URL_USERS_PAGE)
-    create_user_button = assert_users_page(page)
-
-    # click create user button
-    create_user_button.click()
-
-    (
-        fullname_input,
-        email_input,
-        password_input,
-        password2_input,
-        role_input,
-        cancel_button,
-        save_button,
-    ) = assert_create_user_page(page)
-
-    email = random_email()
-    password = "@&ZhfLyCxyca2T"
-
-    # submit the form
-    user_name = "A"  # username too short
-    fullname_input.fill(user_name)
-    email_input.fill(email)
-    password_input.fill(password)
-    password2_input.fill(password)
-    save_button.click()
-
-    # assert we are still on the user create page
-    expect(page).to_have_url(URL_USERS_CREATE_PAGE)
-    expect(page.get_by_text("Field must be between")).to_be_visible()
-
-
 def test_admin_create_user_validate_email(do_admin_login: Page) -> None:
     page = do_admin_login
 

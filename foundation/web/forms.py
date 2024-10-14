@@ -87,6 +87,7 @@ class UserCreateForm(RegisterForm):
         "Role",
         choices=choices_list(RoleEnum.values()),
         validators=[validators.DataRequired()],
+        description="Admins can edit other users",
     )
 
 

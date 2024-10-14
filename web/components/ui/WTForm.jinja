@@ -74,13 +74,13 @@
           {{ field(class_=field_class) }}
         {% endif %}
       </FormControl>
-      <FormDescription>{{ field.description }}</FormDescription>
 
       {% if field.errors %}
         {% set error_id = field.id + "-error" %}
         <FormMessage :id="{{ error_id }}">{{ field.errors[0] }}</FormMessage>
       {% endif %}
     </FormItem>
+    <FormDescription>{{ field.description }}</FormDescription>
   {% endfor %}
   {{ content }}
 </form>
