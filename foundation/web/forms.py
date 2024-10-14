@@ -97,12 +97,19 @@ class UserEditForm(UserCreateForm):
         choices=choices_list(StatusEnum.values()),
         validators=[validators.DataRequired()],
     )
-    password = PasswordField("Password", [password_validator_admin])
+    password = PasswordField(
+        "Password",
+        [password_validator_admin],
+        render_kw={"placeholder": "••••••••"},
+        description="Password is only required if updating value",
+    )
     password_2 = PasswordField(
         "Repeat Password",
         [
             password_validator_admin,
         ],
+        render_kw={"placeholder": "••••••••"},
+        description="Password is only required if updating value",
     )
 
 
