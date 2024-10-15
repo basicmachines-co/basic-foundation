@@ -120,8 +120,6 @@ def assert_user_detail_view(
     expect(page.locator("#email")).to_contain_text(email)
     # status values
     expect(page.get_by_text("Status", exact=True)).to_be_visible()
-    expect(page.get_by_role("button", name=status.capitalize())).to_be_visible()
+    expect(page.get_by_text(status.capitalize())).to_be_visible()
     expect(page.get_by_text("Role", exact=True)).to_be_visible()
-    expect(
-        page.get_by_role("button", name=role.capitalize(), exact=True)
-    ).to_be_visible()
+    expect(page.get_by_text(role.capitalize(), exact=True)).to_be_visible()

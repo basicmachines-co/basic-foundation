@@ -53,7 +53,7 @@
           {% if current_user.is_admin %}
             {% for item in nav_items %}
               <Link
-                href="{{ item.url }}"
+                :href="{{ item.url }}"
                 className="text-zinc-500 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-50"
               >
                 {{ item.name }}

@@ -2,21 +2,19 @@
   form: UserCreateForm
 #}
 <section id="user_create">
-  <div class="p-6">
-    <WTForm
-      :form="{{ form }}"
-      hx-post="/users/create"
-      hx-swap="outerHTML"
-      hx-target="#user_create"
-      hx-target-422="#user_create"
-      hx-target-400="#notification"
-    >
-      <div class="mt-6 flex items-center justify-end gap-x-2">
-        <a href="/users">
-          <Button variant="link" type="button">Cancel</Button>
-        </a>
-        <Button id="save-button" type="submit">Save</Button>
-      </div>
-    </WTForm>
-  </div>
+  <WTForm
+    :form="{{ form }}"
+    hx-post="/users/create"
+    hx-swap="outerHTML"
+    hx-target="#user_create"
+    hx-target-422="#user_create"
+    hx-target-400="#notification"
+  >
+    <div class="mt-6 flex items-center justify-end gap-x-2">
+      <a href="/users">
+        <Button variant="link" type="button">Cancel</Button>
+      </a>
+      <Button id="save-button" type="submit">Save</Button>
+    </div>
+  </WTForm>
 </section>

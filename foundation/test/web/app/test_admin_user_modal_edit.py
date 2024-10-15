@@ -54,7 +54,7 @@ def edit_user_in_modal(page, user):
     row_button.click(timeout=10000)
 
     # click edit link in menu
-    menu_edit_link = page.get_by_role("link", name="Edit")
+    menu_edit_link = page.get_by_role("list").get_by_text("Edit")
     menu_edit_link.click(timeout=10000)
 
 
@@ -181,7 +181,7 @@ def test_admin_user_modal_edit_delete(create_user) -> None:
     row_button.click(timeout=10000)
 
     # click edit link in menu
-    menu_delete_link = page.get_by_role("link", name="Delete")
+    menu_delete_link = page.get_by_role("list").get_by_text("Delete")
     menu_delete_link.click(timeout=10000)
 
     # assert modal confirmation

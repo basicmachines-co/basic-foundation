@@ -4,30 +4,28 @@
   form,
 #}
 <section id="user_edit">
-  <div class="p-6">
-    <WTForm
-      :form="{{ form }}"
-      :hx_put="{{ url_for('user_detail_put', user_id=user.id) }}"
-      hx_target="#user_edit"
-      hx_target-422="#user_edit"
-      hx_target-400="#notification"
-      hx_swap="outerHTML"
-    >
-      <!-- save/cancel buttons -->
-      <div class="mt-6 flex items-center justify-end gap-x-2">
-        <a href="/users/{{ user.id }}">
-          <Button variant="link" type="button">Cancel</Button>
-        </a>
-        <Button id="save-button" type="submit">Save</Button>
-        <Button
-          :hx-get="{{ url_for('user_delete_modal_confirm', user_id=user.id) }}"
-          hx-target="#modal"
-          hx-swap="outerHTML"
-          type="button"
-          variant="outline"
-        >Delete
-        </Button>
-      </div>
-    </WTForm>
-  </div>
+  <WTForm
+    :form="{{ form }}"
+    :hx_put="{{ url_for('user_detail_put', user_id=user.id) }}"
+    hx_target="#user_edit"
+    hx_target-422="#user_edit"
+    hx_target-400="#notification"
+    hx_swap="outerHTML"
+  >
+    <!-- save/cancel buttons -->
+    <div class="mt-6 flex items-center justify-end gap-x-2">
+      <a href="/users/{{ user.id }}">
+        <Button variant="link" type="button">Cancel</Button>
+      </a>
+      <Button id="save-button" type="submit">Save</Button>
+      <Button
+        :hx-get="{{ url_for('user_delete_modal_confirm', user_id=user.id) }}"
+        hx-target="#modal"
+        hx-swap="outerHTML"
+        type="button"
+        variant="outline"
+      >Delete
+      </Button>
+    </div>
+  </WTForm>
 </section>

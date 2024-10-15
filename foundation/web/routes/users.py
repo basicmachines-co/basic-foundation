@@ -98,7 +98,9 @@ async def users_list(
     page = await pagination.page(page=page_num)
 
     # Render the component and return it in response
-    modal_component = render("user.UserList", current_user=current_user, page=page)
+    modal_component = render(
+        "user.UserList", request=request, current_user=current_user, page=page
+    )
     return HTMLResponse(modal_component)
 
 

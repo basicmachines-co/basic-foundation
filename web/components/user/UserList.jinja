@@ -1,107 +1,112 @@
 {#def
+  request,
   current_user,
   page: Page
 #}
-
-{% macro up_down(column_name, order_by, ascending) %}
-  {% if column_name == order_by and ascending %}
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke-width="1.5"
-      stroke="currentColor"
-      class="ml-2 h-4 w-4 transition-transform duration-200 ease-in-out"
-    >
-      <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
-    </svg>
-  {% elif column_name == order_by %}
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke-width="1.5"
-      stroke="currentColor"
-      class="ml-2 h-4 w-4 transition-transform duration-200 ease-in-out"
-    >
-      <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-    </svg>
-  {% endif %}
-{% endmacro %}
 
 {% macro get_users_list(page_num, page_size, order_by, ascending) %}
   /users/list?page={{ page_num }}&page_size={{ page_size }}&order_by={{ order_by }}&ascending={{ ascending }}
 {% endmacro %}
 
+{% macro user_row(user) %}
+  <!-- Display a user in a table row  -->
+  {% set row_id="user-row-" + user.id|string %}
+  {% set row_link="window.location.href='/users/" + user.id|string + "'" %}
+  <TableRow
+    :id="{{ row_id }}"
+    :click="{{ row_link }}"
+  >
+    <TableCell>
+      {{ user.full_name }}
+    </TableCell>
+    <TableCell>
+      {{ user.email }}
+    </TableCell>
+    <TableCell>
+      {% set status_test_id="status-" + user.email %}
+      <Badge data-testid={{ status_test_id }}>
+        {{ user.status|capitalize }}
+      </Badge>
+    </TableCell>
+    <TableCell>
+      {% set role_test_id="role-" + user.email %}
+      <Badge data-testid={{ role_test_id }}>
+        {{ user.role|capitalize }}
+      </Badge>
+    </TableCell>
+    <TableCell className="justify-end">
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          {% set edit_delete_test_id="edit-delete-button-" + user.email %}
+          <Button variant="ghost" data-testid={{ edit_delete_test_id }}>
+            <Ellipsis class="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem
+            clickAction="open = false; modal = true"
+            :hx-get="{{ url_for('user_modal_edit', user_id=user.id) }}"
+            hx-target="#modal"
+            hx-swap="innerHTML"
+          >Edit
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            clickAction="open = false; modal = true"
+            :hx-get="{{ url_for('user_delete_modal_confirm', user_id=user.id) }}"
+            hx-target="#modal"
+            hx-swap="innerHTML"
+          >Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </TableCell>
+  </TableRow>
+
+{% endmacro %}
+
 <section
   id="user_list"
-  class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8"
   hx-get="{{ get_users_list(page.page, page.page_size, page.order_by, page.ascending) }}"
   hx-trigger="refresh from:body"
 >
-  <!-- Table Layout -->
-  <table class="min-w-full divide-y divide-gray-300 dark:divide-gray-600">
-    <thead>
-      <tr>
-        <!-- Name -->
-        <th
-          scope="col"
-          class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100"
-        >
-          <div
-            class="flex cursor-pointer items-center"
-            hx-get="{{ get_users_list(page.page, page.page_size, "full_name", not page.ascending) }}"
+  <div class="rounded-md border">
+    <!-- Table Layout -->
+    <table class="min-w-full">
+      <TableHeader>
+        <TableRow>
+          <TableHead
+            :hx-get="{{ get_users_list(page.page, page.page_size, "full_name", not page.ascending) }}"
             hx-target="#user_list"
             hx-swap="outerHTML"
-          >
-            <span>Name</span>
-            {{ up_down("full_name", page.order_by, page.ascending) }}
-          </div>
-        </th>
-        <!-- Email Column with Sorting -->
-        <th
-          scope="col"
-          class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100"
-        >
-          <div
-            class="flex cursor-pointer items-center"
-            hx-get="{{ get_users_list(page.page, page.page_size, "email", not page.ascending) }}"
+            sortable :sorted={{ True if "full_name" == page.order_by else False }} :ascending={{ page.ascending }}
+          >Name
+          </TableHead>
+          <!-- Email Column with Sorting -->
+          <!-- sorted: '{{ "sorted" if "email" == page.order_by }}' ascending: '{{ "ascending" if  page.ascending }}' -->
+          <TableHead
+            :hx-get="{{ get_users_list(page.page, page.page_size, "email", not page.ascending) }}"
             hx-target="#user_list"
             hx-swap="outerHTML"
-          >
-            <span>Email</span>
-            {{ up_down("email", page.order_by, page.ascending) }}
-          </div>
-        </th>
-        <!-- Status and Role columns (no sorting) -->
-        <th
-          class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100"
-          scope="col"
-        >
-          Status
-        </th>
-        <th
-          class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100"
-          scope="col"
-        >
-          Role
-        </th>
-        <th class="px-3 py-3.5 text-right text-sm font-semibold text-gray-400" scope="col">Edit</th>
-      </tr>
-    </thead>
-    <!-- Table Body -->
-    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-      {% for user in page.items %}
-        <user.UserListRow :user="{{ user }}" />
-      {% endfor %}
-    </tbody>
-    <!-- Pagination Controls -->
-    <tfoot>
-      <tr>
-        <td colspan="5">
-          <Pagination :page="{{ page }}" />
-        </td>
-      </tr>
-    </tfoot>
-  </table>
+            sortable :sorted={{ True if "email" == page.order_by else False }} :ascending={{ page.ascending }}
+          >Email
+          </TableHead>
+          <!-- Status and Role columns (no sorting) -->
+          <TableHead>
+            Status
+          </TableHead>
+          <TableHead>
+            Role
+          </TableHead>
+          <TableHead>Actions</TableHead>
+        </TableRow>
+      </TableHeader>
+      <!-- Table Body -->
+      <TableBody>
+        {% for user in page.items %}
+          {{ user_row(user) }}
+        {% endfor %}
+      </TableBody>
+    </table>
+  </div>
+  <Pagination :page="{{ page }}" />
 </section>
