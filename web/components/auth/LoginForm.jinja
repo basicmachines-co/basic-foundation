@@ -1,39 +1,23 @@
 {#def
-  form,
+  form: LoginForm,
   notification = None
 #}
-<!-- LOGIN FORM -->
-<form.Form
-  _class="space-y-6"
+<WTForm
+  :form="{{ form }}"
   hx_post="/login"
   hx_target="this"
   hx_target_422="this"
   hx_target_400="this"
   hx_swap="outerHTML"
-  :notification="{{ notification }}"
-  :csrf_token="{{ form.csrf_token() }}"
 >
-  <form.TextInput
-    id="username"
-    name="username"
-    label="Email address"
-    type="email"
-    autocomplete="email"
-    placeholder="your@email.com"
-    required
-    :value="{{ form.username.data|default('', true) }}"
-    :errors="{{ form.username.errors }}"
-  />
-  <form.TextInput
-    id="password"
-    name="password"
-    label="Password"
-    type="password"
-    autocomplete="current-password"
-    placeholder="••••••••"
-    required
-    :value="{{ form.password.data|default('', true) }}"
-    :errors="{{ form.password.errors }}"
-  />
-  <form.Submit id="login-button" type="submit">Log in</form.Submit>
-</form.Form>
+  <Button id="login-button" type="submit" className="w-full">Log in</Button>
+</WTForm>
+{# notification sent via hx-swap-oob to the #notification css selector #}
+{% if notification %}
+  <Notification
+    :error="{{ notification.error }}"
+    :title="{{ notification.title }}"
+    :message="{{ notification.message }}"
+    :hx_swap_oob="{{ notification.hx_swap_oob }}"
+  ></Notification>
+{% endif %}

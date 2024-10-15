@@ -1,0 +1,60 @@
+{# dev
+  className: str = ""
+  variant: str = "outline"
+#}
+{#
+<!--
+  store dark mode them settings in localStorage, values: dark, light, system
+-->
+<html
+    x-data="{
+        mode: localStorage.getItem('mode') || 'system',
+        init() {
+            this.applyMode();
+        },
+        applyMode() {
+            if (this.mode === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else if (this.mode === 'light') {
+                document.documentElement.classList.remove('dark');
+            } else {
+                // System preference
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (prefersDark) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }
+        },
+        toggleMode(mode) {
+            this.mode = mode;
+            localStorage.setItem('mode', mode);
+            this.applyMode();
+        }
+    }"
+    x-init="init()"
+>
+<!-- set body text/background default values -->
+<body class="bg-white dark:bg-black text-black dark:text-white">
+#}
+<DropdownMenu>
+  <DropdownMenuTrigger>
+    <!-- prettier-ignore -->
+    <Button variant="ghost" size="icon">
+      <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+      <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+    </Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent align="right-0">
+    <DropdownMenuItem click="toggleMode('light')">
+      <span>Light</span>
+    </DropdownMenuItem>
+    <DropdownMenuItem click="toggleMode('dark')">
+      <span>Dark</span>
+    </DropdownMenuItem>
+    <DropdownMenuItem click="toggleMode('system')">
+      <span>System</span>
+    </DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>

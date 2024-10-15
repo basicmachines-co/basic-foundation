@@ -27,7 +27,7 @@ def assert_login_page(page: Page) -> dict[str, Any]:
     password_input = page.get_by_label("Password")
     expect(password_input).to_be_visible()
 
-    forgot_password_link = page.get_by_role("link", name="Forgot password?")
+    forgot_password_link = page.get_by_role("link", name="Forgot your password?")
     expect(forgot_password_link).to_be_visible()
 
     login_button = page.get_by_role("button", name="Log in")

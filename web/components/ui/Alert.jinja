@@ -1,0 +1,19 @@
+{# def
+    className: str = "",
+    variant: str = "default"
+#}
+{% set baseClassName = "relative w-full rounded-lg border p-4 flex items-start dark:border-zinc-700" %}
+{%
+  set variantClassName = {
+      'default': 'border-zinc-200 bg-white text-zinc-950 dark:bg-zinc-950 dark:text-zinc-50',
+      'destructive': 'border-red-500/50 text-red-500 dark:border-red-700 dark:text-red-800'
+  }[variant]
+%}
+
+<div
+  class="{{ baseClassName }} {{ variantClassName }} {{ className }}"
+  role="alert"
+  {{ attrs.render() }}
+>
+  {{ content }}
+</div>

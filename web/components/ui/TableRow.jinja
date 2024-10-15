@@ -1,0 +1,13 @@
+{# def
+  id: str = "",
+  click: str = "",
+  className: str = ""
+#}
+<tr
+  {% if id %}id="{{ id }}"{% endif %}
+  class="{{ className }} border-b border-zinc-200 transition-colors hover:bg-zinc-100/50 data-[state=selected]:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800/50 dark:data-[state=selected]:bg-zinc-800"
+  {% if click %}@click="{{ click }}"{% endif %}
+  {{ attrs.render() }}
+>
+  {{ content }}
+</tr>

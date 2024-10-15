@@ -1,0 +1,10 @@
+<div
+  x-show="subOpen"
+  @mouseenter="subOpen = true"
+  @mouseleave="subOpen = false"
+  class="absolute left-full top-0 z-50 -ml-2 w-32 rounded-md border bg-white p-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50"
+>
+  <ul>
+    {{ content }}
+  </ul>
+</div>

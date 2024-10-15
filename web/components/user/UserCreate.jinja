@@ -1,32 +1,20 @@
 {#def
-  form
+  form: UserCreateForm
 #}
 <section id="user_create">
-  <div class="px-6">
-    <!-- USER CREATE FORM -->
-    <form.Form
-      hx-post="/users/create"
-      hx-swap="outerHTML"
-      hx-target="#user_create"
-      hx-target-422="#user_create"
-      hx-target-400="#notification"
-      _class=""
-      :csrf_token="{{ form.csrf_token() }}"
-    >
-      <user.UserFormContent :form="{{ form }}" :create="{{ True }}"></user.UserFormContent>
-      <div class="px-4 py-6 sm:px-6">
-        <div class="mt-6 flex items-center justify-end gap-x-2">
-          <a href="/users">
-            <button
-              class="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-100"
-              type="button"
-            >
-              Cancel
-            </button>
-          </a>
-          <form.Submit id="save-button" type="submit">Save</form.Submit>
-        </div>
-      </div>
-    </form.Form>
-  </div>
+  <WTForm
+    :form="{{ form }}"
+    hx-post="/users/create"
+    hx-swap="outerHTML"
+    hx-target="#user_create"
+    hx-target-422="#user_create"
+    hx-target-400="#notification"
+  >
+    <div class="mt-6 flex items-center justify-end gap-x-2">
+      <a href="/users">
+        <Button variant="link" type="button">Cancel</Button>
+      </a>
+      <Button id="save-button" type="submit">Save</Button>
+    </div>
+  </WTForm>
 </section>

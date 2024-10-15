@@ -1,0 +1,6 @@
+{# def
+  className: str = "",
+  toast_target: str = "",
+#}
+{% set click_action="$dispatch('show-toast', '" + toast_target + "')" %}
+<button :@click="{{ click_action }}" class="{{ className }}">{{ content }}</button>

@@ -1,0 +1,14 @@
+{# def
+    label: str = "",
+    className: str = "",
+    checked: bool = False,
+    disabled: bool = False,
+#}
+<DropdownMenuItem
+  class="{{ className }} data-[state=checked]:bg-zinc-100 data-[state=checked]:text-zinc-900 dark:data-[state=checked]:bg-zinc-800 dark:data-[state=checked]:text-zinc-50"
+>
+  <div class="relative flex items-center">
+    <Checkbox :checked="{{ checked }}" :disabled="{{ disabled }}" />
+    <span class="ml-2">{{ label }}</span>
+  </div>
+</DropdownMenuItem>

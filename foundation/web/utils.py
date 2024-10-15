@@ -13,16 +13,16 @@ class HTMLRouter(APIRouter):
 
 
 def notification(request, message, title="OK!", status_code=status.HTTP_200_OK):
-    modal_component = render("Notification", title=title, message=message)
+    component = render("Notification", title=title, message=message)
     return HTMLResponse(
-        modal_component, status_code=status_code, headers={"HX-Trigger": "notification"}
+        component, status_code=status_code, headers={"HX-Trigger": "notification"}
     )
 
 
 def error_notification(
     request, message, title="An error occurred", status_code=status.HTTP_400_BAD_REQUEST
 ):
-    modal_component = render("Notification", error=True, title=title, message=message)
+    component = render("Notification", error=True, title=title, message=message)
     return HTMLResponse(
-        modal_component, status_code=status_code, headers={"HX-Trigger": "notification"}
+        component, status_code=status_code, headers={"HX-Trigger": "notification"}
     )

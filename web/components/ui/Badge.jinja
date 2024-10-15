@@ -1,0 +1,17 @@
+{# def
+    className: str = "",
+    variant: str = "default"
+#}
+{% set baseclassName = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors" %}
+{%
+  set variantclassName = {
+      'default': 'bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50',
+      'secondary': 'bg-zinc-200 text-zinc-900 dark:bg-zinc-700 dark:text-zinc-50',
+      'destructive': 'bg-red-500 text-zinc-50 dark:bg-red-900',
+      'outline': 'border border-zinc-200 text-zinc-900 dark:border-zinc-700 dark:text-zinc-50'
+  }[variant]
+%}
+
+<span class="{{ baseclassName }} {{ variantclassName }} {{ className }}" {{ attrs.render() }}>
+  {{ content }}
+</span>

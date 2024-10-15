@@ -1,4 +1,5 @@
 {#def
+  request,
   page
 #}
 <!-- pagination -->
@@ -18,33 +19,33 @@
   <!-- Dropdown to select page size -->
   <!-- Navigation buttons for previous/next pages -->
   <div class="flex flex-1 justify-between sm:justify-end">
-    <div class="px-2">
+    <div class="gap-2">
       <span class="text-sm text-gray-700 dark:text-gray-200">Rows per page:</span>
+      <!-- note: Sadly, the Select component does not play well with htmx -->
       <select
         class="rounded-md border-gray-300 dark:border-gray-600 dark:bg-black dark:text-gray-200"
-        :hx-get="/users/list?page={{ page.page }}&page_size={{ page.page_size }}"
-        hx-target="#user-list"
+        hx-get="/users/list?page_num={{ page.page }}&page_size={{ page.page_size }}"
+        hx-target="#user_list"
         hx-trigger="change"
         name="page_size"
       >
+        {#        <option value="1" {% if page.page_size == 1 %}selected{% endif %}>1</option>#}
         <option value="10" {% if page.page_size == 10 %}selected{% endif %}>10</option>
         <option value="25" {% if page.page_size == 25 %}selected{% endif %}>25</option>
         <option value="50" {% if page.page_size == 50 %}selected{% endif %}>50</option>
       </select>
+      <Button
+        hx-get={{ page.previous_page }}
+          hx-target="#user_list"
+        variant="outline"
+        :disabled={{ not page.has_previous }}>Previous
+      </Button>
+      <Button
+        hx-get={{ page.next_page }}
+          hx-target="#user_list"
+        variant="outline"
+        :disabled={{ not page.has_next }}>Next
+      </Button>
     </div>
-    <a
-      hx-get="{{ page.previous_page }}"
-      hx-target="#user-list"
-      class="{{ 'bg-white dark:bg-black text-gray-800 dark:text-gray-100 ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-950' if page.has_previous else 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 ring-gray-200 dark:ring-gray-700 cursor-not-allowed' }} relative inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold ring-1 ring-inset"
-    >
-      Previous
-    </a>
-    <a
-      hx-get="{{ page.next_page }}"
-      hx-target="#user-list"
-      class="{{ 'bg-white dark:bg-black text-gray-800 dark:text-gray-100 ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-950' if page.has_next else 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 ring-gray-200 dark:ring-gray-700 cursor-not-allowed' }} relative ml-3 inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold ring-1 ring-inset"
-    >
-      Next
-    </a>
   </div>
 </div>

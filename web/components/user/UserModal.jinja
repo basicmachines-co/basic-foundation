@@ -4,10 +4,34 @@
   form,
   close_modal: bool = False
 #}
-<modal.Modal title="Edit user" :close_modal="{{ close_modal }}">
-  <user.UserModalEdit
-    :request="{{ request }}"
-    :user="{{ user }}"
-    :form="{{ form }}"
-  ></user.UserModalEdit>
-</modal.Modal>
+{% if close_modal %}
+  <div id="modal" x-data="{dialog_open: false}"></div>
+{% else %}
+  <Dialog id="modal" open="true">
+    <DialogOverlay />
+    <DialogContent>
+      <DialogClose />
+      <DialogHeader>
+        <DialogTitle>Edit User</DialogTitle>
+      </DialogHeader>
+      <DialogBody className="mt-4">
+        <WTForm
+          :form="{{ form }}"
+          :hx_put="{{ url_for('user_modal_put', user_id=user.id) }}"
+          hx-target="#modal"
+          hx-target-422="#modal"
+          hx-target-400="#notification"
+          hx-swap="outerHTML"
+        >
+          <!-- save/cancel buttons -->
+          <div class="mt-6 flex items-center justify-end gap-x-2">
+            <a href="/users">
+              <Button variant="link" type="button" @click="dialog_open = false">Cancel</Button>
+            </a>
+            <Button id="save-button" type="submit">Save</Button>
+          </div>
+        </WTForm>
+      </DialogBody>
+    </DialogContent>
+  </Dialog>
+{% endif %}

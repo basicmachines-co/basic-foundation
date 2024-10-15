@@ -1,0 +1,21 @@
+{#def
+  current_user,
+  page_title
+#}
+<AdminLayout
+  :page_title="{{ page_title }}"
+  :current_user="{{ current_user }}"
+>
+  <!-- padding for large screen -->
+  <div class="p-2">
+    <!-- page content -->
+    <section id="page_content">
+      <!-- notification popup placeholder -->
+      <div id="notification"></div>
+      <!-- Modal container placeholder -->
+      <div id="modal"></div>
+      <!--  page content card -->
+      {{ content }}
+    </section>
+  </div>
+</AdminLayout>

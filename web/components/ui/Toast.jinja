@@ -1,0 +1,26 @@
+{# def
+  className: str = "",
+  duration: int = 5000,  # duration in milliseconds
+#}
+<div
+  x-data="{
+    show: true,
+    resetTimeout() {
+      clearTimeout(this.timeoutId);
+      this.timeoutId = setTimeout(() => { this.show = false }, {{ duration }});
+    }
+  }"
+  x-init="show = true; resetTimeout()"
+  x-show="show"
+  x-transition:enter="transition ease-out duration-300"
+  x-transition:enter-start="opacity-0 transform -translate-y-2"
+  x-transition:enter-end="opacity-100 transform translate-y-0"
+  x-transition:leave="transition ease-in duration-200"
+  x-transition:leave-start="opacity-100 transform translate-y-0"
+  x-transition:leave-end="opacity-0 transform -translate-y-2"
+  class="{{ className }} fixed inset-x-0 top-5 z-50 flex justify-center"
+  role="alert"
+  {{ attrs.render() }}
+>
+  {{ content }}
+</div>

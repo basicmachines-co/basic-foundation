@@ -50,10 +50,11 @@ format-python:
 	poetry run ruff format .
 
 format-prettier:
-	cd web && npx prettier . --write
+	cd web && npx prettier . --write --log-level warn
 
 
-format: format-python format-prettier
+format: format-python
+#format: format-python format-prettier
 
 type-check:
 	poetry run pyright

@@ -1,11 +1,12 @@
 from typing import Sequence
 
-from foundation.core.users import StatusEnum, RoleEnum
 from starlette_wtf import StarletteForm
 from wtforms import StringField, PasswordField, validators
 from wtforms import ValidationError
 from wtforms.fields.choices import SelectField
+from wtforms.fields.simple import HiddenField
 
+from foundation.core.users import StatusEnum, RoleEnum
 from foundation.core.users.schemas import validate_password
 
 
@@ -43,21 +44,41 @@ def password_validator_admin(form, field):
 
 
 class LoginForm(StarletteForm):
-    username = StringField("Email", [validators.DataRequired(), validators.Email()])
-    password = PasswordField("Password", [validators.DataRequired()])
+    username = StringField(
+        "Email address",
+        [validators.DataRequired(), validators.Email()],
+        id="username",
+        render_kw={"placeholder": "your@email.com", "aria-label": "Email address"},
+    )
+
+    password = PasswordField(
+        "Password",
+        [validators.DataRequired()],
+        id="password",
+        render_kw={"placeholder": "••••••••"},
+    )
 
 
 class RegisterForm(StarletteForm):
     full_name = StringField(
-        "Full Name", [validators.DataRequired(), validators.Length(min=2, max=100)]
+        "Full Name",
+        [validators.DataRequired(), validators.Length(min=2, max=100)],
+        render_kw={"placeholder": "Full Name", "aria-label": "Full Name"},
     )
-    email = StringField("Email", [validators.DataRequired(), validators.Email()])
+    email = StringField(
+        "Email address",
+        [validators.DataRequired(), validators.Email()],
+        render_kw={"placeholder": "your@email.com", "aria-label": "Email address"},
+    )
     password = PasswordField(
-        "Password", [validators.DataRequired(), password_validator]
+        "Password",
+        [validators.DataRequired(), password_validator],
+        render_kw={"placeholder": "••••••••"},
     )
     password_2 = PasswordField(
         "Repeat Password",
         [validators.DataRequired(), password_validator, password_2_validator],
+        render_kw={"placeholder": "••••••••"},
     )
 
 
@@ -66,6 +87,7 @@ class UserCreateForm(RegisterForm):
         "Role",
         choices=choices_list(RoleEnum.values()),
         validators=[validators.DataRequired()],
+        description="Admins can edit other users",
     )
 
 
@@ -75,21 +97,39 @@ class UserEditForm(UserCreateForm):
         choices=choices_list(StatusEnum.values()),
         validators=[validators.DataRequired()],
     )
-    password = PasswordField("Password", [password_validator_admin])
+    password = PasswordField(
+        "Password",
+        [password_validator_admin],
+        render_kw={"placeholder": "••••••••"},
+        description="Password is only required if updating value",
+    )
     password_2 = PasswordField(
         "Repeat Password",
         [
             password_validator_admin,
         ],
+        render_kw={"placeholder": "••••••••"},
+        description="Password is only required if updating value",
     )
 
 
 class ForgotPasswordForm(StarletteForm):
-    email = StringField("Email", [validators.DataRequired(), validators.Email()])
+    email = StringField(
+        "Email address",
+        [validators.DataRequired(), validators.Email()],
+        render_kw={"placeholder": "your@email.com", "aria-label": "Email address"},
+    )
 
 
 class ResetPasswordForm(StarletteForm):
-    token = StringField("Token", [validators.DataRequired()])
-    new_password = PasswordField(
-        "Password", [validators.DataRequired(), password_validator]
+    token = HiddenField("Token", [validators.DataRequired()])
+    password = PasswordField(
+        "New Password",
+        [validators.DataRequired(), password_validator],
+        render_kw={"placeholder": "••••••••"},
+    )
+    password_2 = PasswordField(
+        "Repeat Password",
+        [validators.DataRequired(), password_validator, password_2_validator],
+        render_kw={"placeholder": "••••••••"},
     )

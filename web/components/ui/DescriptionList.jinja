@@ -1,0 +1,8 @@
+{#def
+  className: str = ""
+#}
+<dl class="divide-y divide-gray-100 dark:divide-gray-800 {{ className }}"
+  {{ attrs.render() }}
+>
+  {{ content }}
+</dl>

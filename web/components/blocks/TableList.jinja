@@ -1,0 +1,78 @@
+<div class="h-full flex-1 flex-col space-y-8 p-8 md:flex">
+  <div class="flex items-center justify-between space-y-2">
+    <div>
+      <h2 class="text-2xl font-bold tracking-tight">Welcome back!</h2>
+      <p class="text-muted-foreground">Here's a list of your tasks for this month!</p>
+    </div>
+  </div>
+  <div class="w-full">
+    <div class="flex items-center py-4">
+      <input
+        placeholder="Filter tasks..."
+        className="max-w-sm"
+        attrs="{'type': 'search', 'aria-label': 'Filter tasks'}"
+      />
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <button variant="outline" className="ml-auto">
+            Columns
+            <ChevronDown class="ml-2 h-4 w-4" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <!-- Add logic for columns here -->
+          <DropdownMenuCheckboxItem className="capitalize">Column Name</DropdownMenuCheckboxItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+    <div class="rounded-md border">
+      <table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Select</TableHead>
+            <TableHead>Task</TableHead>
+            <TableHead>Title</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Priority</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <TableCell>
+              <Checkbox />
+            </TableCell>
+            <TableCell>Task ID</TableCell>
+            <TableCell>Task Title</TableCell>
+            <TableCell>Status</TableCell>
+            <TableCell>Priority</TableCell>
+            <TableCell>
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <button variant="ghost">
+                    <Ellipsis class="h-4 w-4" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem>Edit</DropdownMenuItem>
+                  <DropdownMenuItem>Delete</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </TableCell>
+          </TableRow>
+          <!-- Repeat TableRow for each task item -->
+        </TableBody>
+      </table>
+    </div>
+    <div class="flex items-center justify-end space-x-2 py-4">
+      <div class="text-muted-foreground flex-1 text-sm">
+        <!-- Selected rows summary here -->
+        0 of 5 row(s) selected.
+      </div>
+      <div class="space-x-2">
+        <button variant="outline" size="sm">Previous</button>
+        <button variant="outline" size="sm">Next</button>
+      </div>
+    </div>
+  </div>
+</div>

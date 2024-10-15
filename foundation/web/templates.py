@@ -13,7 +13,10 @@ templates.env.add_extension(DebugExtension)
 templates.env.add_extension(jinjax.JinjaX)  # pyright: ignore [reportPrivateImportUsage]
 catalog = jinjax.Catalog(jinja_env=templates.env)  # pyright: ignore [reportPrivateImportUsage]
 catalog.add_folder(f"{BASE_DIR}/web/components")
+catalog.add_folder(f"{BASE_DIR}/web/components/ui")
+catalog.add_folder(f"{BASE_DIR}/web/components/icons")
 catalog.add_folder(f"{BASE_DIR}/web/layouts")
+catalog.add_folder(f"{BASE_DIR}/webexamples")
 
 
 def template(

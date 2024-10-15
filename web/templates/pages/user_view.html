@@ -1,20 +1,13 @@
-<Page :page_title="{{ user.full_name }}" :current_user="{{ current_user }}">
-  <section id="user_page">
-    {% if current_user.is_admin %}
-      <Breadcrumbs :items="[{'link': '/users', 'name': 'Users'}]" />
-    {% endif %}
-
-    <!-- header -->
-    <div id="user_name" class="px-4 sm:flex sm:items-center sm:px-6 sm:py-2 lg:py-6">
-      <div class="sm:flex-auto">
-        <h1 class="text-base font-semibold leading-6 text-gray-900 dark:text-gray-100">
-          {{ user.full_name }}
-        </h1>
-      </div>
-    </div>
-    <!-- detail -->
-    <div class="mt-4 border-t border-gray-100 dark:border-gray-800">
+<PageLayout :page_title="{{ user.full_name }}" :current_user="{{ current_user }}">
+  <Card className="mx-auto">
+    <CardHeader>
+      {% if current_user.is_admin %}
+        <Breadcrumbs :items="[{'link': '/users', 'name': 'Users'}]" />
+      {% endif %}
+      <CardTitle id="user_naame" className="text-2xl">{{ user.full_name }}</CardTitle>
+    </CardHeader>
+    <CardContent>
       <user.UserDetailView :user="{{ user }}" />
-    </div>
-  </section>
-</Page>
+    </CardContent>
+  </Card>
+</PageLayout>

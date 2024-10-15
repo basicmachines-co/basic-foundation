@@ -1,0 +1,13 @@
+{# def
+  align="left-0"
+#}
+<div
+  x-show="open"
+  @click.away="open = false"
+  class="absolute {{ align }} z-50 mt-2 w-48 rounded-md border bg-white p-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50"
+  class="absolute right-0 z-50 mt-2 w-48 rounded-md border bg-white p-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50"
+>
+  <ul>
+    {{ content }}
+  </ul>
+</div>

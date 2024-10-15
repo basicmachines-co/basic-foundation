@@ -2,17 +2,17 @@ from unittest.mock import Mock
 
 import pytest
 import pytest_asyncio
-from sqlalchemy import select
 from fastapi import Request
-from foundation.core.users.deps import UserPagination
-from foundation.core.users.models import User
-from foundation.core.pagination import Paginator
 from mockito import when, mock
+from sqlalchemy import select
 from starlette import requests
 from starlette.datastructures import URL
 
+from foundation.core.pagination import Paginator
 from foundation.core.repository import Repository
 from foundation.core.users import StatusEnum
+from foundation.core.users.deps import UserPagination
+from foundation.core.users.models import User
 
 pytestmark = pytest.mark.asyncio
 
@@ -24,8 +24,12 @@ pytestmark = pytest.mark.asyncio
 def mock_request():  # pyright: ignore
     request = mock(requests.Request)
     request.url = mock(URL)  # pyright: ignore [reportAttributeAccessIssue]
-    when(request.url).include_query_params(page=2, page_size=1).thenReturn(mock(URL))
-    when(request.url).include_query_params(page=1, page_size=1).thenReturn(mock(URL))
+    when(request.url).include_query_params(page_num=2, page_size=1).thenReturn(
+        mock(URL)
+    )
+    when(request.url).include_query_params(page_num=1, page_size=1).thenReturn(
+        mock(URL)
+    )
     when(requests).Request(scope="http").thenReturn(request)
     return request
 

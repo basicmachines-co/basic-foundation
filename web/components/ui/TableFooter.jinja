@@ -1,0 +1,10 @@
+{# def
+  id: str = "",
+  className: str = ""
+#}
+<tfoot
+  class="{{ className }} border-t border-zinc-200 bg-zinc-100/50 font-medium dark:border-zinc-700 dark:bg-zinc-800/50"
+  {{ attrs.render() }}
+>
+  {{ content }}
+</tfoot>

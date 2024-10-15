@@ -1,0 +1,89 @@
+{#def
+  current_user,
+  page_title
+#}
+{% set nav_items = [
+  { "name": "Dashboard", "url": "/dashboard"},
+  { "name": "Users", "url": "/users"},
+] %}
+<BaseLayout :title="{{ page_title }}">
+  <header class="sticky top-0 flex h-16 px-4 md:px-6 items-center gap-4 border-b border-zinc-200 dark:border-zinc-800">
+    <!-- desktop navbar -->
+    <nav class="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
+      <Link
+        href="/"
+        className="flex items-center gap-2 text-lg font-semibold md:text-base"
+      >
+      <SquareTerminal className="h-6 w-6" />
+      <span class="sr-only">Basic Foundation</span>
+      </Link>
+      {% if current_user.is_admin %}
+        {% for item in nav_items %}
+          <Link
+            :href="{{ item.url }}"
+            className="text-zinc-500 transition-colors hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-50"
+          >
+            {{ item.name }}
+          </Link>
+        {% endfor %}
+      {% endif %}
+    </nav>
+    <!-- mobile navbar -->
+    <Sheet>
+      <SheetTrigger>
+        <Button
+          variant="outline"
+          size="icon"
+          className="shrink-0 md:hidden"
+        >
+          <Menu className="h-5 w-5" />
+          <span class="sr-only">Toggle navigation menu</span>
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="left">
+        <nav class="grid gap-6 text-lg font-medium">
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-lg font-semibold"
+          >
+          <SquareTerminal className="h-6 w-6" />
+          <span class="sr-only">Basic Foundation</span>
+          </Link>
+          {% if current_user.is_admin %}
+            {% for item in nav_items %}
+              <Link
+                :href="{{ item.url }}"
+                className="text-zinc-500 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-50"
+              >
+                {{ item.name }}
+              </Link>
+            {% endfor %}
+          {% endif %}
+        </nav>
+      </SheetContent>
+    </Sheet>
+    <!-- nav rhs -->
+    <div class="w-full flex justify-end">
+      <ModeToggle variant="ghost" />
+      <DropdownMenu id="profile-menu">
+        <DropdownMenuTrigger>
+          <Button variant="ghost" size="icon" className="rounded-full">
+            <CircleUser className="h-5 w-5" />
+            <span class="sr-only">Toggle user menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="right-0">
+          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuItem click="window.location.href='/profile'">Profile</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem click="window.location.href='/logout'">Log out</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  </header>
+  <!-- Main content -->
+  <main class="lg:min-w-0 lg:pb-2">
+    <!-- content -->
+    {{ content }}
+  </main>
+</BaseLayout>

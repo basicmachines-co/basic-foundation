@@ -1,0 +1,21 @@
+{# def
+className: str = ""
+#}
+
+<h3 class="flex">
+  <button
+    type="button"
+    class="{{ className }} flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline"
+    @click="toggleItem($el.closest('[value]').getAttribute('value'))"
+    :aria-expanded="isOpen"
+    {{ attrs.render() }}
+  >
+    {{ content }}
+    <template x-if="isOpen">
+      <ChevronUp className="h-4 w-4 shrink-0 transition-transform duration-200" />
+    </template>
+    <template x-if="!isOpen">
+      <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+    </template>
+  </button>
+</h3>

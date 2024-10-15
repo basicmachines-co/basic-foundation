@@ -1,0 +1,17 @@
+{# def
+value: str = "",
+className: str = ""
+#}
+
+<div
+  x-data="{
+    get isOpen() {
+      return activeItem === '{{ value }}';
+    }
+  }"
+  class="{{ className }} border-b"
+  value="{{ value }}"
+  {{ attrs.render() }}
+>
+  {{ content }}
+</div>

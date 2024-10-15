@@ -1,7 +1,19 @@
-<Auth page_title="Register" header_text="Register">
-  <auth.RegisterForm :form="{{ form }}" />
-  <p class="mt-10 text-center text-sm text-gray-500">
-    Already have an account?
-    <a href="/login" class="font-semibold leading-6 text-slate-600 hover:text-slate-500">Login</a>
-  </p>
-</Auth>
+<AuthLayout page_title="Register">
+  <Card className="mx-auto max-w-sm">
+    <CardHeader>
+      <CardTitle className="text-2xl">Register</CardTitle>
+      <CardDescription>
+        Enter your information to register an account
+      </CardDescription>
+    </CardHeader>
+    <CardContent>
+      <auth.RegisterForm :form="{{ form }}" />
+      <div class="mt-10 text-center">
+        <p class="text-sm text-gray-500">
+          Already have an account?
+          <a href="/login" class="font-semibold leading-6 text-slate-600 hover:text-slate-500">Login</a>
+        </p>
+      </div>
+    </CardContent>
+  </Card>
+</AuthLayout>

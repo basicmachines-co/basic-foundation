@@ -1,0 +1,29 @@
+{#def
+  page_title,
+#}
+<BaseLayout :title="{{ page_title }}">
+  <div class="px-4 sm:px-6 lg:px-8">
+    <div class="flex h-16 justify-end">
+      <!-- Left-aligned section for logo and menu links -->
+      <div class="flex">
+        <!-- Right-aligned section for dark mode toggle and profile dropdown -->
+        <div class="hidden sm:ml-6 sm:flex sm:items-center">
+          <ModeToggle />
+        </div>
+      </div>
+    </div>
+    <main>
+      <!-- centered on page -->
+      <div class="mx-auto max-w-7xl p-8 sm:px-6 lg:px-8">
+        <!-- heading -->
+        <div class="min-h-full flex items-center justify-center px-6 lg:px-8 py-12">
+          <SquareTerminal className="h-12 w-12" />
+        </div>
+        <!-- notification popup placeholder -->
+        <div id="notification"></div>
+        <!-- content -->
+        {{ content }}
+      </div>
+    </main>
+  </div>
+</BaseLayout>
