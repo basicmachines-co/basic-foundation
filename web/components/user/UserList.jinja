@@ -42,17 +42,16 @@
             <Ellipsis class="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent align="right-12">
           <DropdownMenuItem
-            clickAction="open = false; modal = true"
             :hx-get="{{ url_for('user_modal_edit', user_id=user.id) }}"
             hx-target="#modal"
             hx-swap="innerHTML"
           >Edit
           </DropdownMenuItem>
           <DropdownMenuItem
-            clickAction="open = false; modal = true"
             :hx-get="{{ url_for('user_delete_modal_confirm', user_id=user.id) }}"
+            className="text-red-500 dark:text-red-800"
             hx-target="#modal"
             hx-swap="innerHTML"
           >Delete

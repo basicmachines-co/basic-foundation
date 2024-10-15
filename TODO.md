@@ -2,10 +2,11 @@
 
 ## todo
 
-- [ ] rename layouts
+- [-] rename layouts
 - [ ] fix dark mode
 - [ ] reset password - password2
 - [ ] notifications on auth - move to page
+- [ ] modal components
 
 golive:
 
