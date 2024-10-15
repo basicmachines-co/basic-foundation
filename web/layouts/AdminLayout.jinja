@@ -7,8 +7,7 @@
   { "name": "Users", "url": "/users"},
 ] %}
 <BaseLayout :title="{{ page_title }}">
-  <body class="h-full" hx-ext="response-targets">
-  <header class="sticky top-0 flex h-16 items-center gap-4 border-b bg-white px-4 md:px-6 dark:bg-zinc-950">
+  <header class="sticky top-0 flex h-16 px-4 md:px-6 items-center gap-4 border-b border-zinc-200 dark:border-zinc-800">
     <!-- desktop navbar -->
     <nav class="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
       <Link
@@ -65,19 +64,10 @@
     </Sheet>
     <!-- nav rhs -->
     <div class="w-full flex justify-end">
-      <Button
-        variant="ghost"
-        size="icon"
-        className="ml-2"
-        @click="toggleMode(mode === 'dark' ? 'light' : 'dark')"
-      >
-        <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-        <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-        <span class="sr-only">Toggle theme</span>
-      </Button>
+      <ModeToggle variant="ghost" />
       <DropdownMenu id="profile-menu">
         <DropdownMenuTrigger>
-          <Button variant="secondary" size="icon" className="rounded-full">
+          <Button variant="ghost" size="icon" className="rounded-full">
             <CircleUser className="h-5 w-5" />
             <span class="sr-only">Toggle user menu</span>
           </Button>
@@ -92,9 +82,8 @@
     </div>
   </header>
   <!-- Main content -->
-  <main class="lg:min-w-0 lg:pb-2 lg:pt-2">
+  <main class="lg:min-w-0 lg:pb-2">
     <!-- content -->
     {{ content }}
   </main>
-  </body>
 </BaseLayout>

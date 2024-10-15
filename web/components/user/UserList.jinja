@@ -34,7 +34,7 @@
         {{ user.role|capitalize }}
       </Badge>
     </TableCell>
-    <TableCell className="justify-end">
+    <TableCell className="justify-end hidden md:table-cell">
       <DropdownMenu>
         <DropdownMenuTrigger>
           {% set edit_delete_test_id="edit-delete-button-" + user.email %}
@@ -42,7 +42,7 @@
             <Ellipsis class="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="right-12">
+        <DropdownMenuContent align="right-0">
           <DropdownMenuItem
             :hx-get="{{ url_for('user_modal_edit', user_id=user.id) }}"
             hx-target="#modal"
@@ -68,7 +68,7 @@
   hx-get="{{ get_users_list(page.page, page.page_size, page.order_by, page.ascending) }}"
   hx-trigger="refresh from:body"
 >
-  <div class="rounded-md border">
+  <div class="rounded-md border border-1 border-zinc-200 dark:border-zinc-700 overflow-scroll md:overflow-visible">
     <!-- Table Layout -->
     <table class="min-w-full">
       <TableHeader>
@@ -96,7 +96,7 @@
           <TableHead>
             Role
           </TableHead>
-          <TableHead>Actions</TableHead>
+          <TableHead className="hidden md:table-cell">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <!-- Table Body -->

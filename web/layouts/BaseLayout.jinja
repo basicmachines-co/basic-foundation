@@ -3,11 +3,35 @@
 #}
 <!doctype html>
 <html
-  class="h-full bg-gray-50 dark:bg-zinc-950"
+  class="h-full"
   lang="en"
-  :class="{ 'dark': darkMode }"
-  x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }"
-  x-init="$watch('darkMode', value => localStorage.setItem('darkMode', value))"
+  x-data="{
+        mode: localStorage.getItem('mode') || 'system',
+        init() {
+            this.applyMode();
+        },
+        applyMode() {
+            if (this.mode === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else if (this.mode === 'light') {
+                document.documentElement.classList.remove('dark');
+            } else {
+                // System preference
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (prefersDark) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }
+        },
+        toggleMode(mode) {
+            this.mode = mode;
+            localStorage.setItem('mode', mode);
+            this.applyMode();
+        }
+    }"
+  x-init="init()"
 >
 <head>
   <meta charset="UTF-8" />
@@ -28,5 +52,7 @@
     htmx.logAll();
   </script>
 </head>
+<body class="bg-white dark:bg-black text-black dark:text-white" hx-ext="response-targets">
 {{ content }}
+</body>
 </html>
