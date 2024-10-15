@@ -84,12 +84,16 @@ class Page:
     @property
     def previous_page(self) -> URL:
         page_num = self.page - 1 if self.has_previous else 1
-        return self.url.include_query_params(page=page_num, page_size=self.page_size)
+        return self.url.include_query_params(
+            page_num=page_num, page_size=self.page_size
+        )
 
     @property
     def next_page(self) -> URL:
         page_num = self.page + 1 if self.has_next else self.pages
-        return self.url.include_query_params(page=page_num, page_size=self.page_size)
+        return self.url.include_query_params(
+            page_num=page_num, page_size=self.page_size
+        )
 
 
 class Paginator:

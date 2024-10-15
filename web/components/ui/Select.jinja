@@ -11,8 +11,7 @@
   @click.away="open = false"
 >
   <!-- Hidden input for form submission -->
-  <input type="hidden" name="{{ name }}" x-model="selected" value="{{ selected }}" />
-
+  <input type="hidden" name="{{ name }}" x-model="selected" value="{{ selected }}" {{ attrs.render() }} />
   <!-- Button trigger for dropdown -->
   <button
     type="button"
@@ -23,13 +22,11 @@
     :class="{ 'focus:ring-2': open }"
   >
     <span class="block truncate" x-text="selected || 'Select'">Select</span>
-
     <!-- Icon -->
     <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
       <ChevronDown className="h-4 w-4" />
     </span>
   </button>
-
   <!-- Dropdown list -->
   <ul
     x-show="open"

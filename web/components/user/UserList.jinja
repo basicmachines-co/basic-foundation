@@ -5,7 +5,7 @@
 #}
 
 {% macro get_users_list(page_num, page_size, order_by, ascending) %}
-  /users/list?page={{ page_num }}&page_size={{ page_size }}&order_by={{ order_by }}&ascending={{ ascending }}
+  /users/list?page_num={{ page_num }}&page_size={{ page_size }}&order_by={{ order_by }}&ascending={{ ascending }}
 {% endmacro %}
 
 {% macro user_row(user) %}
@@ -107,5 +107,5 @@
       </TableBody>
     </table>
   </div>
-  <Pagination :page="{{ page }}" />
+  <Pagination :request="{{ request }}" :page="{{ page }}" />
 </section>
