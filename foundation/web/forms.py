@@ -123,8 +123,13 @@ class ForgotPasswordForm(StarletteForm):
 
 class ResetPasswordForm(StarletteForm):
     token = HiddenField("Token", [validators.DataRequired()])
-    new_password = PasswordField(
+    password = PasswordField(
         "New Password",
         [validators.DataRequired(), password_validator],
+        render_kw={"placeholder": "••••••••"},
+    )
+    password_2 = PasswordField(
+        "Repeat Password",
+        [validators.DataRequired(), password_validator, password_2_validator],
         render_kw={"placeholder": "••••••••"},
     )

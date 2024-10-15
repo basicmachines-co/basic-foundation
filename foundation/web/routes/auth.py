@@ -305,7 +305,7 @@ async def reset_password_post(
         await user_service.update_user(
             user_id=user.id,
             update_dict={
-                "password": form.new_password.data,
+                "password": form.password.data,
             },
         )
         return HTMLResponse(
