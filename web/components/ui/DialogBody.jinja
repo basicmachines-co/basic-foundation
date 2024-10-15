@@ -1,2 +1,5 @@
+{# def
+    className: str = ""
+#}
 <!-- DialogBody -->
-<div {{ attrs.render() }}>{{ content }}</div>
+<div class="{{ className }} text-sm" {{ attrs.render() }}>{{ content }}</div>

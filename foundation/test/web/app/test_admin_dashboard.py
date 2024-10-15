@@ -50,7 +50,7 @@ def test_admin_profile(do_admin_login: Page) -> None:
     profile_menu_button.click()
 
     # click the profile button
-    profile_menu_link = page.get_by_role("link", name="Profile")
+    profile_menu_link = page.get_by_text("Profile")
     profile_menu_link.click()
 
     # go to register page
@@ -68,7 +68,7 @@ def test_admin_logout(do_admin_login: Page) -> None:
     profile_menu_button.click()
 
     # click the log out button
-    profile_menu_link = page.get_by_role("link", name="Log out")
+    profile_menu_link = page.get_by_text("Log out")
     profile_menu_link.click()
 
     # go to register page

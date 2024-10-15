@@ -119,12 +119,10 @@ def test_admin_user_detail_delete(create_user) -> None:
     # assert modal confirmation
     page.wait_for_timeout(1)
     # expect(page.locator("#modal")).to_be_visible()
-    expect(page.get_by_role("heading", name="Delete user")).to_be_visible()
+    expect(page.get_by_role("heading", name="Delete User")).to_be_visible()
     expect(page.get_by_text("Are you sure you want to")).to_be_visible()
 
-    expect(
-        page.locator("#modal-content").get_by_role("button", name="Cancel")
-    ).to_be_visible()
+    expect(page.locator("#modal").get_by_role("button", name="Cancel")).to_be_visible()
     page.get_by_role("button", name="Yes, Really").click()
 
     # on users page
