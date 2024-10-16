@@ -2,9 +2,10 @@
   user,
   hx_swap_oob: bool = False
 #}
+{% set class="py-6 grid grid-cols-3 gap-2 sm:gap-4" %}
 <section id="user_detail">
   <DescriptionList>
-    <div class="py-6 sm:grid sm:grid-cols-3 sm:gap-4">
+    <div class="{{ class }}">
       <DescriptionTerm>
         Full Name
       </DescriptionTerm>
@@ -12,7 +13,7 @@
         {{ user.full_name }}
       </DescriptionDetails>
     </div>
-    <div class="py-6 sm:grid sm:grid-cols-3 sm:gap-4">
+    <div class="{{ class }}">
       <DescriptionTerm>
         Email address
       </DescriptionTerm>
@@ -20,7 +21,7 @@
         {{ user.email }}
       </DescriptionDetails>
     </div>
-    <div class="py-6 sm:grid sm:grid-cols-3 sm:gap-4">
+    <div class="{{ class }}">
       <DescriptionTerm>
         Status
       </DescriptionTerm>
@@ -28,7 +29,7 @@
         <Badge>{{ user.status | capitalize }}</Badge>
       </DescriptionDetails>
     </div>
-    <div class="py-6 sm:grid sm:grid-cols-3 sm:gap-4">
+    <div class="{{ class }}">
       <DescriptionTerm>
         Role
       </DescriptionTerm>

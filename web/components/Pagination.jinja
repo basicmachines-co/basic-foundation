@@ -17,9 +17,8 @@
     </p>
   </div>
   <!-- Dropdown to select page size -->
-  <!-- Navigation buttons for previous/next pages -->
-  <div class="flex flex-1 justify-between sm:justify-end">
-    <div class="gap-2">
+  <div class="flex flex-col sm:flex-row flex-1 justify-between sm:justify-end space-y-2 sm:space-y-0 sm:space-x-2">
+    <div class="flex items-center space-x-2">
       <span class="text-sm text-gray-700 dark:text-gray-200">Rows per page:</span>
       <!-- note: Sadly, the Select component does not play well with htmx -->
       <select
@@ -34,6 +33,9 @@
         <option value="25" {% if page.page_size == 25 %}selected{% endif %}>25</option>
         <option value="50" {% if page.page_size == 50 %}selected{% endif %}>50</option>
       </select>
+    </div>
+    <!-- Navigation buttons for previous/next pages -->
+    <div class="flex justify-between sm:justify-end space-x-2">
       <Button
         hx-get={{ page.previous_page }}
           hx-target="#user_list"
