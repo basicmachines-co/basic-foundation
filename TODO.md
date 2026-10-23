@@ -10,7 +10,7 @@
 
 golive:
 
-- [x] Pre-commit hookspo
+- [x] Pre-commit hooks
 - [x] Schema changes
 - [-] Error handling in the services
 - [x] Add more comments to the code
@@ -36,7 +36,7 @@ golive:
 - [x] permission checks
     - [x] has to be at least one admin
     - [x] only admins can create/edit users
-- [x] make active/admin colums enums
+- [x] make active/admin columns enums
 - [x] db: rename is_superuser to is_admin
 - [-] page_size is appended to url
 - [x] use fixtures in web tests
@@ -140,7 +140,7 @@ golive:
     - return Errors from service
 - [x] modify frontend routes
 - [x] remove all print() calls
-- [-] add faastapi-problems for error responses: https://github.com/NRWLDev/fastapi-problem
+- [-] add fastapi-problems for error responses: https://github.com/NRWLDev/fastapi-problem
 - [x] remove fastapi-users
 - [x] web htmx frontend
     - [x] crud users happy path
